@@ -2,6 +2,7 @@
 
 Player player;
 levelHandler levelHandler;
+soundHandler soundHandler = new soundHandler();
 int difficulty = 1;
 
 
@@ -11,12 +12,13 @@ void setup() {
 
   // Setup
   player = new Player();
-  levelHandler = new levelHandler(player);
+  levelHandler = new levelHandler(player, soundHandler);
 
 }
 
 void draw() {
 
   levelHandler.display();
+  levelHandler.update();
 
 }

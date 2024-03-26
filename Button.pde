@@ -1,5 +1,7 @@
 // Nathan Dejesus - Buttons for the game
 
+boolean mouseClicked = false;
+
 class rButton {
 
     String text;
@@ -19,7 +21,7 @@ class rButton {
 
     void update() {}
 
-    boolean mouseWithin(int mouseX, int mouseY) {
+    boolean mouseWithin() {
         return mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h;
     }
 
@@ -39,7 +41,7 @@ class menuButton extends rButton {
 
     void display() {
         stroke(255);
-        textSize(32);
+        textFont(mainFont, 36);
         noFill();  
         textAlign(CENTER, CENTER);
         text(text, x, y-5, w, h);
@@ -47,18 +49,22 @@ class menuButton extends rButton {
     }
 
     void update() {
-        if (mouseWithin(mouseX, mouseY) && mousePressed) {
+        if (mouseWithin() && mouseClicked) {
             System.out.println(text);
-            if (text.equals("Start")) {
+            if (false && text.equals("Start")) {
                 // levelHandler.setLevel(1);
             } else if (text.equals("Quit")) {
                 levelHandler.quit();
             } else if (text.equals("Difficulty")) {
                 levelHandler.changeDifficulty();
             }
-             
+            mouseClicked = false;
         } 
     }
+
+   
+
+    
   
 
 

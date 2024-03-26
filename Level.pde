@@ -66,6 +66,7 @@ class mainMenu extends Level {
     startButton = new menuButton("Start", width/2 - 300, height/2 + 50, levelHandler);
     quitButton = new menuButton("Quit",width/2 + 100, height/2 + 50, levelHandler);
     difficultyButton = new menuButton( "Difficulty",width/2 - 100, height/2 + 250, levelHandler);
+
   }
 
   void display() {
@@ -84,7 +85,7 @@ class mainMenu extends Level {
   void displayTitle() {
     background(0);
     fill(255);
-    textSize(82);
+    textFont(titleFont,148);
     textAlign(CENTER);
     text("Gattlestar\nBalactica", width/2, height/4);
   }

@@ -2,6 +2,7 @@
 
 Player player;
 levelHandler levelHandler;
+int difficulty = 1;
 
 
 void setup() {

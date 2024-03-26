@@ -5,12 +5,11 @@ class levelHandler {
   Player player;
   Level currentLevel;
   Level[] levels = new Level[6];
-  int difficulty = 0;
   
   levelHandler(Player player) {
     this.player = player;
     // Level Setup
-    levels[0] = new mainMenu();
+    levels[0] = new mainMenu(this);
     levels[1] = new mapLevel();
     levels[2] = new gameLevel1();
     levels[3] = new gameLevel2();
@@ -27,12 +26,12 @@ class levelHandler {
   void update() {
   }
 
-  void setDifficulty(int difficulty) {
-    this.difficulty = difficulty;
+  void changeDifficulty() {
+    
   }
 
-  void changeLevel(Level newLevel) {
-    currentLevel = newLevel;
+  void setLevel(int newLevel) {
+    currentLevel = levels[newLevel];
   }
 
   void quit() {
@@ -54,19 +53,24 @@ class Level {
 class mainMenu extends Level {
 
   rButton startButton, quitButton, difficultyButton;
+  levelHandler levelHandler;
 
-  mainMenu() {
+  mainMenu(levelHandler levelHandler) {
+    this.levelHandler = levelHandler;
     // Main Menu Buttons ---------------------
-    startButton = new menuButton("Start", width/2 - 200, height/2 + 100);
-    quitButton = new menuButton("Quit",width/2 + 200, height/2 + 100);
-    difficultyButton = new menuButton( "Difficulty",width/2, height/2 + 300);
+    startButton = new menuButton("Start", width/2 - 300, height/2 + 50, levelHandler);
+    quitButton = new menuButton("Quit",width/2 + 100, height/2 + 50, levelHandler);
+    difficultyButton = new menuButton( "Difficulty",width/2 - 100, height/2 + 250, levelHandler);
   }
 
   void display() {
     displayTitle();
     startButton.display();
+    startButton.update();
     quitButton.display();
+    quitButton.update();
     difficultyButton.display();
+    difficultyButton.update();
     
   }
 

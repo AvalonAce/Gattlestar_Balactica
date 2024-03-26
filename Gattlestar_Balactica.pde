@@ -2,6 +2,7 @@
 
 Player player;
 levelHandler levelHandler;
+graphicsHandler graphicsHandler;
 soundHandler soundHandler = new soundHandler();
 int difficulty = 1;
 PFont mainFont, titleFont;
@@ -14,7 +15,8 @@ void setup() {
 
   // Setup
   player = new Player();
-  levelHandler = new levelHandler(player, soundHandler);
+  graphicsHandler = new graphicsHandler();
+  levelHandler = new levelHandler(player, soundHandler, graphicsHandler);
 
   // Camera
   camera(width/2.0, height/2.0, (height/2.0) / tan(PI*30.0 / 180.0), width/2.0, height/2.0, 0, 0, 1, 0);
@@ -26,6 +28,8 @@ void draw() {
 
   levelHandler.display();
   levelHandler.update();
+
+  graphicsHandler.display();
 
 }
 

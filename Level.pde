@@ -6,7 +6,7 @@ class levelHandler {
   Level currentLevel;
   Level[] levels = new Level[6];
   
-  levelHandler(Player player, soundHandler soundHandler) {
+  levelHandler(Player player, soundHandler soundHandler, graphicsHandler graphicsHandler) {
     this.player = player;
     // Level Setup
     levels[0] = new mainMenu(this, soundHandler);

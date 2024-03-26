@@ -44,6 +44,7 @@ class menuButton extends rButton {
         textFont(mainFont, 36);
         noFill();  
         textAlign(CENTER, CENTER);
+        strokeWeight(2);
         text(text, x, y-5, w, h);
         rect(x, y, w, h);
     }

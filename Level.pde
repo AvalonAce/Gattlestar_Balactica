@@ -28,6 +28,12 @@ class levelHandler {
     currentLevel.update();
   }
   void changeDifficulty() {
+
+    difficulty++;
+    if (difficulty > 3) difficulty = 1;
+
+    // Display difficulty
+    
     
   }
 

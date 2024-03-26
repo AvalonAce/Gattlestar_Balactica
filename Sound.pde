@@ -11,12 +11,12 @@ class soundHandler {
 
     boolean soundOn = true;
 
-    soundHandler() {
-        // dialogueClick = new SoundFile(this, "snd/dialogue_click.mp3");
-        // shoot = new SoundFile(this, "snd/shoot.mp3");
-        // enemyDeath = null;
-        // playerDeath =  null;
-        // menuClick = new SoundFile(this, "snd/menu_click.mp3");
+    soundHandler(PApplet p) {
+        dialogueClick = new SoundFile(p, "snd/dialogue_click.mp3");
+        shoot = new SoundFile(p, "snd/shoot.mp3");
+        enemyDeath = null;
+        playerDeath =  null;
+        menuClick = new SoundFile(p, "snd/menu_click.mp3");
     }
 
 

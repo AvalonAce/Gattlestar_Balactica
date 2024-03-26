@@ -3,23 +3,31 @@
 Player player;
 levelHandler levelHandler;
 graphicsHandler graphicsHandler;
-soundHandler soundHandler = new soundHandler();
-int difficulty = 1;
+soundHandler soundHandler;
+int difficulty = 0;
+int startTime = 0;
+float cameraX, cameraY, cameraZ;
 PFont mainFont, titleFont;
 
 void setup() {
   size(1000,1000,P3D);
   background(0);
+  // Font
   mainFont = createFont("./font/main.otf", 32);
   titleFont = createFont("./font/title.ttf", 148);
+  // Sounds
+
 
   // Setup
   player = new Player();
+  soundHandler = new soundHandler(this);
   graphicsHandler = new graphicsHandler();
   levelHandler = new levelHandler(player, soundHandler, graphicsHandler);
 
   // Camera
-  camera(width/2.0, height/2.0, (height/2.0) / tan(PI*30.0 / 180.0), width/2.0, height/2.0, 0, 0, 1, 0);
+  cameraX = width/2.0; cameraY = height/2.0; cameraZ = (height/2.0) / tan(PI*30.0 / 180.0);
+  camera(cameraX, cameraY, cameraZ, width/2.0, height/2.0, 0, 0, 1, 0);
+  System.out.println("Camera: " +(height/2.0) / tan(PI*30.0 / 180.0));
 
 }
 

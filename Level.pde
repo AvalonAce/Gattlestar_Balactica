@@ -207,12 +207,11 @@ class gameLevel1 extends Level {
     
       // Display Title
       if (startTime + 2000 < millis()) {
-        // graphicsHandler.setStarFlag(true);
-        graphicsHandler.setStarFlag(false);
-        fill(255);
-        textFont(titleFont,148);
-        textAlign(CENTER);
-        text("Game Level 1", width/2, height/4);
+        graphicsHandler.setStarFlag(true);
+        // fill(255);
+        // textFont(titleFont,148);
+        // textAlign(CENTER);
+        // text("Game Level 1", width/2, height/4);
 
         player.display();
       }

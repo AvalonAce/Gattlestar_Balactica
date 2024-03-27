@@ -11,11 +11,12 @@ class graphicsHandler {
       
       // Init stars
       for (int i = 0; i < stars.length; i++) {
-          stars[i] = new Star((int)random(width+500),(int)random(height+500),(int)random(-600,500), (int)random(2,11));
+          stars[i] = new Star((int)random(-1000,width+1000),(int)random(-1000,height+1000),(int)random(-1000,500), (int)random(2,11));
       }
       // Init crosshair
         crosshair.resize(50,50);
       cursor(crosshair);
+
 
     }
 
@@ -26,7 +27,9 @@ class graphicsHandler {
         // System.out.println("Star Flag: " + star_flag);
         // System.out.println("Title Flag: " + title_anim);
 
+    }
 
+    void update() {
     }
 
     void setStarFlag(boolean flag) {
@@ -37,13 +40,114 @@ class graphicsHandler {
         title_anim = flag;
     }
 
-    void setAcc(int acc) {
+    void setStarAcc(int acc) {
         star_acc = acc;
     }
 
      void moveStarsBack() {
         for (int i = 0; i < stars.length; i++) stars[i].move(0,0,-1000);
     }
+
+}
+
+class Camera {
+
+    // Class for handling camera rotation and movement
+    // Uses global variables for position of eye and scene center
+
+    // Debug: Link to mouse position first for testing
+
+    float rotX, rotY, rotZ;
+    float MAX_X = 4, MAX_Y = 4, MAX_Z = 4;
+    boolean flying_ship = false;
+    float camAcc = 0.1f;
+
+    Camera() {
+        rotX = 0;
+        rotY = 0;
+        rotZ = 0;
+
+
+    }
+
+    void update() {
+        // System.out.println("flying_ship: " + flying_ship);
+
+        // Link to mouse position
+        if (flying_ship) {
+
+            // Player movements translate to camera movements using Input
+
+            if (input.isGoingUp()) incX(camAcc);
+            else incX(-camAcc);
+            if (input.isGoingDown()) incX(-camAcc);
+            else incX(camAcc);
+            if (input.isGoingLeft()) incY(-camAcc);
+            else incY(camAcc);
+            if (input.isGoingRight()) incY(camAcc);
+            else incY(-camAcc);
+
+
+            // MAX CHECK
+            if (rotX > MAX_X) rotX = MAX_X;
+            if (rotX < -MAX_X) rotX = -MAX_X;
+            if (rotY > MAX_Y) rotY = MAX_Y;
+            if (rotY < -MAX_Y) rotY = -MAX_Y;
+            if (rotZ > MAX_Z) rotZ = MAX_Z;
+            if (rotZ < -MAX_Z) rotZ = -MAX_Z;
+
+
+            // Apply rotations
+            beginCamera();
+            camera();
+            rotX();
+            rotY();
+            rotZ();
+            endCamera();
+        }
+    }
+
+    void resetRot() {
+        rotX = 0;
+        rotY = 0;
+        rotZ = 0;
+    }
+
+    void resetCam() {
+        beginCamera();
+        camera();
+        endCamera();
+    }
+
+    void incX(float inc) {
+        rotX += inc;
+    }
+
+    void incY(float inc) {
+        rotY += inc;
+    }
+
+    void incZ(float inc) {
+        rotZ += inc;
+    }
+
+    void rotX() {
+        rotateX(radians(rotX));
+    }
+
+    void rotY() {
+        rotateY(radians(rotY));
+    }
+
+    void rotZ() {
+        rotateZ(radians(rotZ));
+    }
+
+    void flyingFlag(boolean flag) {
+        flying_ship = flag;
+    }
+
+    
 
 }
 
@@ -77,9 +181,9 @@ class Star {
     }
     
     void reset() {
-        this.x = (int)random(width+500);
-        this.y = (int)random(height+500);
-        this.z = (int)random(-600,500);
+        this.x = (int)random(-1000,width+1000);
+        this.y = (int)random(-1000,height+1000);
+        this.z = (int)random(-1000,200);
         this.wgt = (int)random(2,11);
     }
 

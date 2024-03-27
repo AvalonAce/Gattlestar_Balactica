@@ -6,7 +6,7 @@ graphicsHandler graphicsHandler;
 soundHandler soundHandler;
 int difficulty = 0;
 int startTime = 0;
-float cameraX, cameraY, cameraZ;
+float cameraX, cameraY, cameraZ, centerX, centerY, centerZ;
 PFont mainFont, titleFont;
 
 void setup() {
@@ -26,18 +26,20 @@ void setup() {
 
   // Camera
   cameraX = width/2.0; cameraY = height/2.0; cameraZ = (height/2.0) / tan(PI*30.0 / 180.0);
-  camera(cameraX, cameraY, cameraZ, width/2.0, height/2.0, 0, 0, 1, 0);
+  centerX = width/2.0; centerY = height/2.0; centerZ = 0;
   System.out.println("Camera: " +(height/2.0) / tan(PI*30.0 / 180.0));
 
 }
 
 
 void draw() {
+  
 
   levelHandler.display();
   levelHandler.update();
 
   graphicsHandler.display();
+  
 
 }
 

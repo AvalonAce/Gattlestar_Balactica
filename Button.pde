@@ -30,14 +30,13 @@ class rButton {
         // Keep translating button along z-axis until gone
         pushMatrix();
         translate(0, 0, z);
-        if (z > -7000) z-=25;
+        if (z > -7000) z-=100;
         else {
             popMatrix();
             animating = false;
             disable();
-
         }
-        System.out.println(z);
+        // System.out.println(z);
         
     }
 
@@ -77,11 +76,6 @@ class menuButton extends rButton {
         if (animating) fadeBack();
 
         if (disabled) {
-            
-
-            // levelHandler.setLevel(2);
-            // graphicsHandler.setStarFlag(true);
-            // graphicsHandler.setTitleFlag(false);
 
             return;
         }
@@ -110,13 +104,16 @@ class menuButton extends rButton {
         if (!disabled && mouseWithin() && mouseClicked) {
             System.out.println(text);
             if (text.equals("Start")) {
-                
                 soundHandler.playSound("menuClick");
+                
+                // Start animation
+                startTime = millis();
 
                 // Begin animation
                 levelHandler.getLevels()[0].getButton("Start").animating = true;
                 levelHandler.getLevels()[0].getButton("Quit").animating = true;
                 levelHandler.getLevels()[0].getButton("Difficulty").animating = true;
+                tanim = true;
                 graphicsHandler.setStarFlag(false);
                 graphicsHandler.setTitleFlag(true);
                 

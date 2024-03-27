@@ -23,6 +23,9 @@ class graphicsHandler {
         if (star_flag) drawProceduralStars(stars, star_acc);
         else if (title_anim) drawTitleStars(stars, 10, title_anim);
 
+        // System.out.println("Star Flag: " + star_flag);
+        // System.out.println("Title Flag: " + title_anim);
+
 
     }
 
@@ -36,6 +39,10 @@ class graphicsHandler {
 
     void setAcc(int acc) {
         star_acc = acc;
+    }
+
+     void moveStarsBack() {
+        for (int i = 0; i < stars.length; i++) stars[i].move(0,0,-1000);
     }
 
 }
@@ -72,7 +79,8 @@ class Star {
     void reset() {
         this.x = (int)random(width+500);
         this.y = (int)random(height+500);
-        this.z = -300 * wgt;
+        this.z = (int)random(-600,500);
+        this.wgt = (int)random(2,11);
     }
 
     void drawStar() {
@@ -82,6 +90,8 @@ class Star {
     }
     
     int getZ() { return z; }
+
+   
 
 }
 
@@ -97,6 +107,7 @@ void drawProceduralStars(Star[] stars, int star_acc) {
     // Reset the stars if beyond sight
     for (int i = 0; i < stars.length; i++) {
        if (stars[i].getZ() > 866) stars[i].reset();
+
     }
 
 }

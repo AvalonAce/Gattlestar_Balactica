@@ -83,12 +83,14 @@ class Level {
 
 }
 
+boolean tanim = false;
 class mainMenu extends Level {
 
   rButton startButton, quitButton, difficultyButton;
   levelHandler levelHandler;
   soundHandler soundHandler;
-  boolean anim_title = false;
+  float tHeight = height/4.0;
+
 
   mainMenu(levelHandler levelHandler, soundHandler soundHandler) {
     this.levelHandler = levelHandler;
@@ -101,6 +103,7 @@ class mainMenu extends Level {
   }
 
   void display() {
+    background(0);
     displayTitle();
     startButton.display();
     quitButton.display();
@@ -114,32 +117,47 @@ class mainMenu extends Level {
   }
 
   void displayTitle() {
-    background(0);
     fill(255);
     textFont(titleFont,148);
     textAlign(CENTER);
+    camera(cameraX, cameraY, cameraZ, centerX, centerY, centerZ, 0, 1, 0);
+
+    
 
     // Animate Title
-    if (anim_title && startTime + 5000 < millis()) {
-      translate(0,-0,1);
-    } 
+    if (tanim && startTime + 4000 > millis()) {
+      // Move Title downward
+      tHeight += 2;
+      if (tHeight > height/2 - 50) {
+        tHeight = height/2 - 50;
+      }
+      
+    } else if (tanim && startTime + 4000 < millis()) {
+      tanim = false;
+      startTime = 0;
+      graphicsHandler.setStarFlag(false);
+      graphicsHandler.setTitleFlag(false);
+      levelHandler.setLevel(2);
+      startTime = millis();
+      graphicsHandler.moveStarsBack();
+    }
 
     // Based on difficulty, change add title animation
     switch (difficulty) {
       case 1:
-        text("Gattlestar\nBalactica", width/2, height/4);
+        text("Gattlestar\nBalactica", width/2, tHeight);
         break;
       case 2:
         text("Gattlestar", width/2, height/4);
         fill(1, 206, 178);
-        text("Balactica", width/2 + (random(-2,2)), height/4 + 171 + (random(-2,2)));
+        text("Balactica", width/2 + (random(-2,2)), tHeight + 171 + (random(-2,2)));
         break;
       case 3:
         fill(1, 206, 178);
-        text("Gattlestar\nBalactica", width/2 + (random(-5,5)), height/4 + (random(-5,5)));
+        text("Gattlestar\nBalactica", width/2 + (random(-5,5)), tHeight + (random(-5,5)));
         break;
       default:
-        text("Gattlestar\nBalactica", width/2,height/4);
+        text("Gattlestar\nBalactica", width/2,tHeight);
         break;
     }
 
@@ -157,11 +175,7 @@ class mainMenu extends Level {
     return null;
   }
 
-  void animateTitle() {
-    anim_title = true;
-  }
-
-
+ 
 
 }
 
@@ -169,19 +183,42 @@ class mapLevel extends Level {}
 
 class gameLevel1 extends Level {
 
+    boolean introFlag = true;
+
     gameLevel1() {
     
     }
 
     void display() {
       background(0);
-      fill(255);
-      textFont(titleFont, 48);
-      textAlign(CENTER);
-      text("Game Level 1", width/2, height/2);
+      if (introFlag) intro();
+      
+    
     }
 
     void update() {
+
+      
+    }
+
+    void intro() {
+      
+      
+    
+      // Display Title
+      if (startTime + 2000 < millis()) {
+        graphicsHandler.setStarFlag(true);
+        fill(255);
+        textFont(titleFont,148);
+        textAlign(CENTER);
+        text("Game Level 1", width/2, height/4);
+      }
+
+
+
+
+
+      
       
     }
 

@@ -148,7 +148,7 @@ class mainMenu extends Level {
         text("Gattlestar\nBalactica", width/2, tHeight);
         break;
       case 2:
-        text("Gattlestar", width/2, height/4);
+        text("Gattlestar", width/2, tHeight);
         fill(1, 206, 178);
         text("Balactica", width/2 + (random(-2,2)), tHeight + 171 + (random(-2,2)));
         break;
@@ -207,11 +207,14 @@ class gameLevel1 extends Level {
     
       // Display Title
       if (startTime + 2000 < millis()) {
-        graphicsHandler.setStarFlag(true);
+        // graphicsHandler.setStarFlag(true);
+        graphicsHandler.setStarFlag(false);
         fill(255);
         textFont(titleFont,148);
         textAlign(CENTER);
         text("Game Level 1", width/2, height/4);
+
+        player.display();
       }
 
 

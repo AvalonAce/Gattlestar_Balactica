@@ -151,17 +151,6 @@ class Camera {
 
 }
 
-class deathScreen {}
-
-class settingsBox {}
-
-class dialogueBox {}
-
-class potraitBox {}
-
-class portrait {}
-
-
 class Star {
 
     int x, y, z;

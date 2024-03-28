@@ -8,6 +8,7 @@ class soundHandler {
     SoundFile enemyDeath;
     SoundFile playerDeath;
     SoundFile menuClick;
+    Sound s;
 
     boolean soundOn = true;
 
@@ -17,6 +18,11 @@ class soundHandler {
         enemyDeath = null;
         playerDeath =  null;
         menuClick = new SoundFile(p, "snd/menu_click.mp3");
+        s = new Sound(p);
+    }
+
+    void update() {
+        s.volume(1);
     }
 
 
@@ -27,6 +33,7 @@ class soundHandler {
                     dialogueClick.play();
                     break;
                 case "shoot":
+                    s.volume(0.25); // Lower volume for shooting
                     shoot.play();
                     break;
                 case "enemyDeath":

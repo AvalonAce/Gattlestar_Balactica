@@ -4,33 +4,59 @@ class Player {
 
     int x, y;
     int health;
+    int currentLazer;
     Ship ship;
     boolean hidden;
+    Lazer[] lazers = new Lazer[8];
 
     public Player() {
         x = width / 2;
         y = height / 2;
         health = 100;
         ship = new Ship();
+        currentLazer = 0;
         hidden = true;
     }
 
     void display() {
         if (false) return;
 
+        // Lazer display
+        checkfire();
+        for (int i = 0; i < lazers.length; i++) { // Reset lazers
+            if (lazers[i] != null && !lazers[i].isActive()) lazers[i] = null;
+        }
+        for (int i = 0; i < lazers.length; i++) { // Display lazers
+            if (lazers[i] != null && lazers[i].isActive()) lazers[i].update();
+            if (lazers[i] != null && lazers[i].isActive()) lazers[i].display();
+        }
+
+         // Ship display
         ship.activatePlayerCamera();
         moveShip();
         ship.display(x,y);
+        
 
+        
     }
 
     void update() {
-
-
-
+        
     }
     
-    void fire() {
+    void checkfire() {
+        // Fire lazer on mouse click
+        // Delay fire rate using frameCount
+        if (input.fire) {
+            if (frameCount % 10 != 0) return; 
+            lazers[currentLazer] = new Lazer(x, y, mouseX+(int)map(mouseX, 0, width, -20, 20), mouseY+(int)map(mouseY, 0, height, -20, 20));
+            soundHandler.playSound("shoot");
+            currentLazer++;
+            if (currentLazer > 7) currentLazer = 0;
+            
+            
+            
+        }
 
 
     }
@@ -85,7 +111,7 @@ class Ship {
     void display(int x, int y) {
         
         // Draw ship 
-        strokeWeight(2); rectMode(CENTER);
+        strokeWeight(2); rectMode(CENTER); stroke(255);
         drawBody(x,y);
         drawEngines(x,y);
         drawWings(x,y);
@@ -151,6 +177,50 @@ class Ship {
         vertex(x, y-12, -30);
         endShape();
     }
+}
+
+class Lazer {
+
+    int x, y;
+    int xTarget, yTarget;
+    int speed, length;
+    boolean active = false;
+
+    Lazer(int x, int y, int xTarget, int yTarget) {
+        this.x = x;
+        this.y = y;
+        this.xTarget = xTarget;
+        this.yTarget = yTarget;
+        speed = 10;
+        length = 10;
+        active = true;
+    }
+
+    Lazer() {
+        active = false;
+    }
+
+    void display() {
+        if (!active) return;
+        stroke(255,0,0);
+        strokeWeight(2);
+        // Draw line in direction of mouse of length 10
+        line(x, y, x + (xTarget - x) / speed, y + (yTarget - y) / speed);
+    }
+
+    void update() {
+        if (!active) return;
+        if (dist(x, y, xTarget, yTarget) < length+10) active = false;
+        x += (xTarget - x) / speed;
+        y += (yTarget - y) / speed;
+    }
+
+    boolean isActive() {
+        return active;
+    }
+
+
+
 }
 
 class Input {

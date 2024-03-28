@@ -24,9 +24,8 @@ class settingsBox {}
 
 class dialogueBox {}
 
-class potraitBox {
+class portraitBox {
 
-    PImage box;
     PImage portrait;
     int x, y;
 

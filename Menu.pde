@@ -123,8 +123,6 @@ class Health {
 
 }
 
-class levelBar {}
-
 
 class portraitBox {
 

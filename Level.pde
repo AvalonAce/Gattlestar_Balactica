@@ -204,16 +204,13 @@ class gameLevel1 extends Level {
     }
 
     void intro() {
+      player.reset();
       
       
     
       // Display Title
       if (startTime + 2000 < millis()) {
         graphicsHandler.setStarFlag(true);
-        // fill(255);
-        // textFont(titleFont,148);
-        // textAlign(CENTER);
-        // text("Game Level 1", width/2, height/4);
 
         player.display();
         player.update();
@@ -223,6 +220,10 @@ class gameLevel1 extends Level {
 
         menu.fadeGastorIn();
         menu.fadeSolaraOut();
+        menu.fadeDialogueBoxIn();
+
+ 
+        
 
       }
 

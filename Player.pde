@@ -78,6 +78,14 @@ class Player {
         hidden = true;
     }
 
+    void hideHealth() {
+        health.hide();
+    }
+
+    void unhideHealth() {
+        health.unhide();
+    }
+
     void show() {
         x = width / 2;
         y = height / 2;
@@ -90,6 +98,10 @@ class Player {
 
     int getY() {
         return y;
+    }
+
+    void reset() {
+        health.reset();
     }
     
 

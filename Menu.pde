@@ -3,23 +3,31 @@
 class Menu {
 
     portraitBox Gastor, Solara, unknown;
+    dialogueBox dialogueBox;
+    dialogueMenu dialogueMenu;
 
     Menu() {
         Gastor = new portraitBox(-500,0,"Gastor");
         Solara = new portraitBox(width+500,0,"Solara");
         unknown = new portraitBox(width+500,0,"unknown");
+        dialogueBox = new dialogueBox(width/2-140,-500);
+        dialogueMenu = new dialogueMenu(width/2-350,height/2+60);
     }
 
     void display() {
         Gastor.display();
         Solara.display();
         unknown.display();
+        dialogueBox.display();
+        dialogueMenu.display();
     }
 
     void update() {
         Gastor.update();
         Solara.update();
         unknown.update();
+        dialogueBox.update();
+        dialogueMenu.update();
     }
 
     void fadeGastorIn() {
@@ -58,6 +66,17 @@ class Menu {
         }
     }
 
+    void fadeDialogueBoxIn() {
+        if (!dialogueBox.inFrame()) {
+            dialogueBox.fadeIn();
+        }
+    }
+
+    void fadeDialogueBoxOut() {
+        if (!dialogueBox.outFrame()) {
+            dialogueBox.fadeOut();
+        }
+    }
      
 
 }
@@ -66,8 +85,7 @@ class Health {
 
     int health, maxHealth;
     int healthbarX, healthbarY, healthcaseX, healthcaseY;
-    int IN_FRAME = 0, OUT_FRAME = -300;
-    boolean isDead = false;
+    boolean isDead = false, hide = false;
     PImage healthcase, healthbar;
 
     Health(int maxHealth) {
@@ -84,6 +102,7 @@ class Health {
     }
 
     void display() {
+        if (hide) return;
         pushMatrix();
 
         // Rotate the healthbar and healthcase opposite of camera rotation to keep them facing the camera
@@ -119,6 +138,14 @@ class Health {
 
     boolean isDead() {
         return isDead;
+    }
+
+    void hide() {
+        hide = true;
+    }
+
+    void unhide() {
+        hide = false;
     }
 
 }

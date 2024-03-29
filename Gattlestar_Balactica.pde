@@ -6,6 +6,7 @@ Camera cam;
 levelHandler levelHandler;
 graphicsHandler graphicsHandler;
 soundHandler soundHandler;
+
 int difficulty = 0;
 int startTime = 0;
 float cameraX, cameraY, cameraZ, centerX, centerY, centerZ;
@@ -39,6 +40,8 @@ void setup() {
 
 void draw() {
   
+  cam.update();
+  input.update();
 
   levelHandler.display();
   levelHandler.update();
@@ -46,8 +49,7 @@ void draw() {
   graphicsHandler.display();
   graphicsHandler.update();
   
-  cam.update();
-  input.update();
+
 
 
   // // Display camera axis

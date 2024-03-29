@@ -16,7 +16,7 @@ class soundHandler {
         dialogueClick = new SoundFile(p, "snd/dialogue_click.mp3");
         shoot = new SoundFile(p, "snd/shoot.mp3");
         enemyDeath = null;
-        playerDeath =  null;
+        playerDeath = new SoundFile(p, "snd/player_death.mp3");
         menuClick = new SoundFile(p, "snd/menu_click.mp3");
         s = new Sound(p);
     }

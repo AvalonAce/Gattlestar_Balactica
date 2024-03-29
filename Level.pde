@@ -15,7 +15,7 @@ class levelHandler {
     levels[3] = new gameLevel2();
     levels[4] = new gameLevel3();
     levels[5] = new gameLevel4();
-    currentLevel = levels[0];
+    currentLevel = levels[2];
   }
 
   void display() {
@@ -183,9 +183,11 @@ class mapLevel extends Level {}
 
 class gameLevel1 extends Level {
 
+    Menu menu;
     boolean introFlag = true;
 
     gameLevel1() {
+      menu = new Menu();
     
     }
 
@@ -214,6 +216,14 @@ class gameLevel1 extends Level {
         // text("Game Level 1", width/2, height/4);
 
         player.display();
+        player.update();
+
+        menu.display();
+        menu.update();
+
+        menu.fadeGastorIn();
+        menu.fadeSolaraOut();
+
       }
 
 

@@ -3,19 +3,20 @@
 class Player {
 
     int x, y;
-    int health;
+    Health health;
     int currentLazer;
     Ship ship;
-    boolean hidden;
+    boolean hidden, damaged;
     Lazer[] lazers = new Lazer[8];
 
     public Player() {
         x = width / 2;
         y = height / 2;
-        health = 100;
+        health = new Health(100);
         ship = new Ship();
         currentLazer = 0;
         hidden = true;
+        damaged = false;
     }
 
     void display() {
@@ -34,13 +35,16 @@ class Player {
          // Ship display
         ship.activatePlayerCamera();
         moveShip();
-        ship.display(x,y);
+        ship.display(x,y, damaged);
         
-
+        // Health display
+        health.display();
         
     }
 
     void update() {
+        // Health update
+        health.update();
         
     }
     
@@ -53,9 +57,6 @@ class Player {
             soundHandler.playSound("shoot");
             currentLazer++;
             if (currentLazer > 7) currentLazer = 0;
-            
-            
-            
         }
 
 
@@ -71,10 +72,6 @@ class Player {
         if (x > width - 25) x = width - 25;
         if (y < 25) y = 25;
         if (y > height - 25) y = height - 25;
-    }
-
-    void resetPlayer() {
-        health = 100;
     }
 
     void hide() {
@@ -108,13 +105,15 @@ class Ship {
 
     }
 
-    void display(int x, int y) {
-        
+    void display(int x, int y, boolean damaged) {
+        if (damaged) stroke(255,0,0);
+        else stroke(255);
+
         // Draw ship 
-        strokeWeight(2); rectMode(CENTER); stroke(255);
+        strokeWeight(2); rectMode(CENTER); 
+        drawWings(x,y);
         drawBody(x,y);
         drawEngines(x,y);
-        drawWings(x,y);
         activatePlayerCamera();
         
     }
@@ -148,19 +147,21 @@ class Ship {
     }
 
     void drawEngines(int x, int y) {
-        fill(255);
+        fill(1, 206, 178); 
         pushMatrix();
         translate(x,y,5);
         box(20,10,10);
         translate(-35, 0, -15);
+        stroke(1, 206, 178);
         sphere(8);
         translate(70,0, 0);
         sphere(8);
         popMatrix();
+        stroke(255);
     }
 
     void drawWings(int x, int y) {
-        fill(255);
+        fill(1, 206, 178);
         beginShape(); // Left Wing
         vertex(x-27, y, -30);
         vertex(x-65, y, -30);

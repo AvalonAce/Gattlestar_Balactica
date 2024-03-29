@@ -147,6 +147,17 @@ class Camera {
         flying_ship = flag;
     }
 
+    float getRotX() {
+        return radians(rotX);
+    }
+
+    float getRotY() {
+        return radians(rotY);
+    }
+
+    float getRotZ() {
+        return radians(rotZ);
+    }
     
 
 }

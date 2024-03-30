@@ -50,8 +50,6 @@ void draw() {
 
   graphicsHandler.display();
   graphicsHandler.update();
-  
-
 
 
   // // Display camera axis

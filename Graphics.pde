@@ -4,6 +4,7 @@ class graphicsHandler {
 
     Star[] stars = new Star[200];
     boolean star_flag = true, title_anim = false;
+    int SLOW_STAR_ACC = 1, FAST_STAR_ACC = 5;
     int star_acc = 1;
     PImage crosshair = loadImage("./img/crosshair.png");
 
@@ -11,7 +12,7 @@ class graphicsHandler {
       
       // Init stars
       for (int i = 0; i < stars.length; i++) {
-          stars[i] = new Star((int)random(-1000,width+1000),(int)random(-1000,height+1000),(int)random(-1000,500), (int)random(2,11));
+          stars[i] = new Star((int)random(-1000,width+1000),(int)random(-1000,height+1000),(int)random(-1500,500), (int)random(2,11));
       }
       // Init crosshair
       crosshair.resize(50,50);
@@ -42,6 +43,14 @@ class graphicsHandler {
 
     void setStarAcc(int acc) {
         star_acc = acc;
+    }
+
+    void setFastStarAcc() {
+        star_acc = FAST_STAR_ACC;
+    }
+
+    void setSlowStarAcc() {
+        star_acc = SLOW_STAR_ACC;
     }
 
      void moveStarsBack() {
@@ -199,6 +208,40 @@ class Star {
 
 }
 
+class randomBox {
+    
+    int x, y, z, size;
+    float rotX, rotY, rotZ;
+
+    randomBox(int x, int y, int z, int size) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.size = size;
+        setRandomRotation();
+    }
+
+    void drawBox() {
+        pushMatrix();
+        rotateX(radians(rotX));
+        rotateY(radians(rotY));
+        rotateZ(radians(rotZ));
+        box(size);
+        popMatrix();
+    }
+
+
+
+    void setRandomRotation() {
+        rotX = random(0,360);
+        rotY = random(0,360);
+        rotZ = random(0,360);
+    }
+
+    
+
+
+}
 
 void drawProceduralStars(Star[] stars, int star_acc) {
   

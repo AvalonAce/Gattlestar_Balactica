@@ -194,13 +194,17 @@ class gameLevel1 extends Level {
 
     void display() {
       background(0);
-            
+      
+      levelEngine.setCurrentLevel(1);
       levelEngine.update();
       levelEngine.displayLevelBar();
 
+      introFlag = false;
       if (introFlag) intro();
       else if (exitFlag) outro();
       else {
+        // Graphics
+        graphicsHandler.setFastStarAcc();
 
         // Level Start
         levelEngine.resume();
@@ -232,8 +236,8 @@ class gameLevel1 extends Level {
       player.reset();
       levelEngine.reset();
 
-      // 3 Seconds in
-      if (currentSecond() > startTime + 3) {
+      // Several Seconds in
+      if (currentSecond() > startTime + 5) {
         // Player 
         player.display();
         player.update();
@@ -258,6 +262,7 @@ class gameLevel1 extends Level {
       else if (currentSecond() > startTime) {
         player.display();
         player.update();
+        player.drawTutorialMovement();
         levelEngine.pause();
       }
       

@@ -17,6 +17,7 @@ class Player {
         currentLazer = 0;
         hidden = true;
         damaged = false;
+        dead = false;
         disabledFire = false;
     }
 
@@ -113,23 +114,26 @@ class Player {
     void reset() {
         health.reset();
     }
+
+    void drawTutorialMovement() {
+        ship.drawTutorialMovement();
+    }
     
 
 }
 
 class Ship {
 
+    int x, y;
 
 
-    Ship() {
-
-
-
-    }
+    Ship() {}
 
     void display(int x, int y, boolean damaged) {
         if (damaged) stroke(255,0,0);
         else stroke(255);
+
+        setShipPosition(x, y);
 
         // Draw ship 
         strokeWeight(2); rectMode(CENTER); 
@@ -146,7 +150,12 @@ class Ship {
         cam.flyingFlag(true);
     }
 
-    void drawBody(int x, int y) {
+    private void setShipPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    private void drawBody(int x, int y) {
         noFill();
         beginShape();
         vertex(x-35, y+12, 0); // Back
@@ -168,7 +177,7 @@ class Ship {
         endShape();
     }
 
-    void drawEngines(int x, int y) {
+    private void drawEngines(int x, int y) {
         fill(1, 206, 178); 
         pushMatrix();
         translate(x,y,5);
@@ -182,7 +191,7 @@ class Ship {
         stroke(255);
     }
 
-    void drawWings(int x, int y) {
+    private void drawWings(int x, int y) {
         fill(1, 206, 178);
         beginShape(); // Left Wing
         vertex(x-27, y, -30);
@@ -200,6 +209,29 @@ class Ship {
         vertex(x, y-12, -30);
         endShape();
     }
+
+    void drawTutorialMovement() {
+        pushMatrix();
+        translate(0,0,-50);
+        // Draw W above ship, A left of ship, S below ship, D right of ship with triangles pointing in direction of movement
+        // 100 px offset
+        fill(255); stroke(255); strokeWeight(1);
+        triangle(x, y-125, x-10, y-110, x+10, y-110); // W
+        triangle(x-125, y+5, x-110, y-5, x-110, y+15); // A
+        triangle(x, y+125, x-10, y+110, x+10, y+110); // S
+        triangle(x+125, y+5, x+110, y-5, x+110, y+15); // D
+
+
+        // WASD text
+        textAlign(CENTER, CENTER); textFont(mainFont); textSize(20);
+        text("W", x, y-90);
+        text("A", x-90, y);
+        text("S", x, y+90);
+        text("D", x+90, y);
+
+        popMatrix();
+    }
+
 }
 
 class Lazer {

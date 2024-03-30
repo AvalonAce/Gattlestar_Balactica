@@ -26,7 +26,7 @@ class soundHandler {
     }
 
     void update() {
-        s.volume(1);
+
         
     }
 
@@ -35,11 +35,11 @@ class soundHandler {
         if (soundOn) {
             switch (currentSound) {
                 case "dialogueClick":
-                    s.volume(1);
+                    s.volume(0.6);
                     dialogueClick.play();
                     break;
                 case "shoot":
-                    s.volume(0.25); // Lower volume for shooting
+                    s.volume(0.05);
                     shoot.play();
                     break;
                 case "enemyDeath":
@@ -49,10 +49,12 @@ class soundHandler {
                     playerDeath.play();
                     break;
                 case "menuClick":
+                    s.volume(0.8);
                     menuClick.play();
                     break;
                 case "continueClick":
-                continueClick.play();
+                    s.volume(0.6);
+                    continueClick.play();
                 break;
             }
         }

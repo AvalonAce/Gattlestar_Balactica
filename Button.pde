@@ -116,7 +116,9 @@ class menuButton extends rButton {
                 tanim = true;
                 graphicsHandler.setStarFlag(false);
                 graphicsHandler.setTitleFlag(true);
-                
+
+                // Auto difficulty if not set
+                if (difficulty == 0) levelHandler.changeDifficulty();
 
             } else if (text.equals("Quit")) {
                 levelHandler.quit();

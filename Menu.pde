@@ -204,11 +204,14 @@ class Health {
         translate(0,0,-200);
         image(healthcase, healthcaseX, healthcaseY);
         translate(0,0,5);
-        image(healthbar, healthbarX, healthbarY, healthbar.width * health/maxHealth, healthbar.height);
+        PImage temp = healthbar.get(0,0,healthbar.width * health/maxHealth, healthbar.height);
+        image(temp, healthbarX, healthbarY);
 
         // health in percentage
         textSize(13); textFont(mainFont); textAlign(CENTER, CENTER);
-        if (health < 10) fill(255,0,0); else fill(255);
+        if (health < 10) fill(255,0,0); 
+        else if (health < 50) fill(255,255,0);
+        else fill(255);
         int percent = (int) ((float) health/maxHealth * 100);
         text(percent + "%", healthcaseX + 79, healthbarY - 15);
 
@@ -365,9 +368,9 @@ class levelBar { // level bar stored in level engine in Enemy file -- Graphics h
         if (hide) return;
     }
 
-    void setProgress(int progress) {
+    void setProgress(int progress, int maxProgress) {
         // Set levelbar by cropping the levelbar image to progress
-        levelBar = fullLevelBar.get(0,0,fullLevelBar.width * progress/100, fullLevelBar.height);
+        levelBar = fullLevelBar.get(0,0,fullLevelBar.width * progress/maxProgress, fullLevelBar.height);
     }
 
     void hide() {

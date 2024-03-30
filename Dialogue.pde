@@ -253,7 +253,7 @@ class dialogueMenu {
     String choice1L1, choice1L2, choice2L1, choice2L2, choice3L1, choice3L2;
     int x, y, choice = 0;
     int IN_FRAME_Y = height/2+60, OUT_FRAME_Y = height+500;
-    int fadeSpeed = 15;
+    int fadeSpeed = 20;
     boolean chosen = false;
 
     dialogueMenu(int x, int y) {
@@ -268,7 +268,7 @@ class dialogueMenu {
     }
 
     void display() {
-        if (chosen) return;
+        if (chosen) fadeOut();
         pushMatrix();
         rotateX(-cam.getRotX());
         rotateY(-cam.getRotY());
@@ -323,10 +323,12 @@ class dialogueMenu {
 
     void fadeIn() {
         y -= fadeSpeed;
+        if (y <= IN_FRAME_Y) y = IN_FRAME_Y;
     }
     
     void fadeOut() {
         y += fadeSpeed;
+        if (y >= OUT_FRAME_Y) y = OUT_FRAME_Y;
     }
 
     boolean inFrame() {

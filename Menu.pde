@@ -12,7 +12,7 @@ class Menu {
         unknown = new portraitBox(width+500,0,"unknown");
         dialogueBoxL = new dialogueBox(width/2-140,-500,false);
         dialogueBoxR = new dialogueBox(width/2-350,-500,true);
-        dialogueMenu = new dialogueMenu(width/2-310,height/2+60); // SET TO OUT OF FRAME
+        dialogueMenu = new dialogueMenu(width/2-310,height+500);
     }
 
     void display() {
@@ -141,6 +141,18 @@ class Menu {
     void fadeDialogueBoxROut() {
         if (!dialogueBoxR.outFrame()) {
             dialogueBoxR.fadeOut();
+        }
+    }
+
+    void fadeDialogueMenuIn() {
+        if (!dialogueMenu.inFrame()) {
+            dialogueMenu.fadeIn();
+        }
+    }
+
+    void fadeDialogueMenuOut() {
+        if (!dialogueMenu.outFrame()) {
+            dialogueMenu.fadeOut();
         }
     }
 

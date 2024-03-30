@@ -195,7 +195,6 @@ class gameLevel1 extends Level {
     void display() {
       background(0);
             
-      
       levelEngine.update();
       levelEngine.displayLevelBar();
 
@@ -203,15 +202,19 @@ class gameLevel1 extends Level {
       else if (exitFlag) outro();
       else {
 
+        // Level Start
+        levelEngine.resume();
+
         // Fade out Menu
         dialogueHandler.display();
         dialogueHandler.update();
         dialogueHandler.menu().fadeGastorOut();
         dialogueHandler.menu().fadeDialogueBoxLOut();
 
+        // Player
         player.display();
         player.update();
-        player.enableFire();
+        
         
       }
       
@@ -229,11 +232,8 @@ class gameLevel1 extends Level {
       player.reset();
       levelEngine.reset();
 
-      
-
-      
-      // 2 Seconds in
-      if (currentSecond() > startTime + 2) {
+      // 3 Seconds in
+      if (currentSecond() > startTime + 3) {
         // Player 
         player.display();
         player.update();
@@ -245,10 +245,14 @@ class gameLevel1 extends Level {
         dialogueHandler.update();
         dialogueHandler.menu().fadeGastorIn();
         dialogueHandler.menu().fadeDialogueBoxLIn();
+        if (dialogueHandler.isInChoice()) dialogueHandler.menu().fadeDialogueMenuIn();
+
         if (dialogueHandler.isInCutscene()) return;
         else {
+          player.enableFire();
           introFlag = false;
-        }
+          }
+        
       }
       // Start
       else if (currentSecond() > startTime) {

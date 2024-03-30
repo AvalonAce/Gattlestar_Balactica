@@ -1,7 +1,97 @@
 // Nathan Dejesus -- Dialogue Options and Choices
 
-class dialogueHandler {
+class dialogueHandler { // Handles the dialogue, Menu updates the dialogue boxes
 
+    dialogueTrack currentTrack;
+    Menu menu;
+    int sceneIndex = 0;
+    boolean inCutscene = false, isChoice = false;
+
+    dialogueHandler() {
+        menu = new Menu();
+        currentTrack = DIALOGUE[sceneIndex];
+    }
+
+    void update() {
+        // Move to next scene
+        if (currentTrack.getCurrentStatement().equals("END")) {
+            sceneIndex++;
+            inCutscene = false;
+            System.out.println("End of Dialogue");
+
+
+            if (sceneIndex >= DIALOGUE.length) {
+                inCutscene = false;
+                sceneIndex = 0;
+                currentTrack = DIALOGUE[sceneIndex];
+                return;
+            }
+            
+        }
+
+        // Set Dialogue Box -----------------------------------
+        String speaker = currentTrack.getSpeaker();
+        String statement = currentTrack.getCurrentStatement();
+        menu.setContentOfSpeakerBox(speaker, statement);
+
+        // Check if dialogue options are available
+        if (currentTrack.optionAtStatement()) {
+            isChoice = true;
+            menu.setContentOfDialogueMenu(currentTrack.getOptions());
+
+            // Check if a choice has been made, if not return
+            if (menu.optionChosen()) {
+
+                // Get choice and set the next statement
+                int choice = menu.getChoice(); // Also resets the choice
+                String response = currentTrack.getResponse(choice); // Get response
+                currentTrack.setStatementPlaceholder(choice); // Set response as next statement
+                currentTrack.nextStatement(); // Move to next statement
+                isChoice = false;
+            } else {
+                return;
+            }
+
+        }
+
+
+        // Update dialogue box
+        menu.update();
+    }
+
+    void display() {
+        menu.display();
+    }
+
+
+    void reset() {
+        sceneIndex = 0;
+        currentTrack = DIALOGUE[sceneIndex];
+    }
+
+    Menu menu() {
+        return menu;
+    }
+
+    void nextStatement() {
+        currentTrack.nextStatement();
+    }
+
+    void setCutscene(boolean cutscene) {
+        inCutscene = cutscene;
+    }
+
+    void setChoice(boolean choice) {
+        isChoice = choice;
+    }
+
+    boolean isInCutscene() {
+        return inCutscene;
+    }
+
+    boolean isInChoice() {
+        return isChoice;
+    }
 
 }
 
@@ -12,53 +102,66 @@ class dialogueBox {
     int x, y;
     int IN_FRAME_Y = height/2-178, OUT_FRAME_Y = -500;
     int fadeSpeed = 15;
+    boolean reversed = false, hidden = false;
 
-    dialogueBox(int x, int y) {
+    dialogueBox(int x, int y, boolean reverse) {
         this.x = x;
         this.y = y;
-        box = loadImage("img/statement_case.png");
+        this.reversed = reverse;
+        box = reverse ? loadImage("img/statement_case_reverse.png") : loadImage("img/statement_case.png");
         this.box.resize(this.box.width/2, this.box.height/2);
-        name = "Test"; 
-        line1 = "Lorem impsum some cum laude.";
-        line2 = "Lorem impsum some cum laude.";
-        line3 = "Lorem impsum some cum laude.";
+        name = "";
+        line1 = ""; line2 = ""; line3 = ""; 
     }
 
     void display() {
-        pushMatrix();
-        rotateX(-cam.getRotX());
-        rotateY(-cam.getRotY());
-        rotateZ(-cam.getRotZ());
-        translate(0,0,-100);
-        image(box, x, y);
-        // Text
-        translate(0,0,5);
-        textFont(mainFont); textSize(24); fill(255); textAlign(LEFT,CENTER);
-        text(name,x+40,y+50);
-        text(line1,x+40,y+115); text(line2,x+40,y+145); text(line3,x+40,y+175);
-        // Continue Triangle
-        drawTriangle();
-        popMatrix();
+        if (hidden) return;
+
+        if (reversed) drawRightDialogueBox();
+        else drawLeftDialogueBox();
+        
     }
 
-    void update() {}
+    void update() {
+        if (hidden) return;
+    }
 
-    void setName(String name) {
+    void setSpeaker(String name) {
         this.name = name;
     }
 
-    void setContent(String l1, String l2, String l3) {
-        this.line1 = l1;
-        this.line2 = l2;
-        this.line3 = l3;
+    void setContent(String l1) {
+        // if the line exceeds 29 characters, set the second line to the rest of the string.
+        // If the line exceeds 58 characters, set second line to 35 characters and third line to the rest of the string.
+        // Get last word and start from there
+        if (l1.length() > 58) {
+            int lastSpace = l1.lastIndexOf(" ", 29);
+            line1 = l1.substring(0,lastSpace);
+            int secondSpace = l1.lastIndexOf(" ", 59);
+            line2 = l1.substring(lastSpace+1,secondSpace);
+            line3 = l1.substring(secondSpace+1);
+        }
+        else if (l1.length() > 29) {
+            int lastSpace = l1.lastIndexOf(" ", 29);
+            line1 = l1.substring(0,lastSpace);
+            line2 = l1.substring(lastSpace+1);
+            line3 = "";
+        } else {
+            line1 = l1;
+            line2 = "";
+            line3 = "";
+        }
+
     }
 
     void fadeIn() {
         y += fadeSpeed;
+        if (y >= IN_FRAME_Y) y = IN_FRAME_Y;
     }
     
     void fadeOut() {
         y -= fadeSpeed;
+        if (y <= OUT_FRAME_Y) y = OUT_FRAME_Y;
     }
 
     boolean inFrame() {
@@ -77,7 +180,41 @@ class dialogueBox {
         }
     }
 
-    void drawTriangle() {
+    void drawLeftDialogueBox() {
+        pushMatrix();
+        rotateX(-cam.getRotX());
+        rotateY(-cam.getRotY());
+        rotateZ(-cam.getRotZ());
+        translate(0,0,-120);
+        image(box, x, y);
+        // Text
+        translate(0,0,5);
+        textFont(mainFont); textSize(24); fill(255); textAlign(LEFT,CENTER);
+        text(name,x+36,y+50);
+        text(line1,x+25,y+115); text(line2,x+25,y+145); text(line3,x+25,y+175);
+        // Continue Triangle
+        drawTriangleL();
+        popMatrix();
+    }
+
+    void drawRightDialogueBox() {
+        pushMatrix();
+        rotateX(-cam.getRotX());
+        rotateY(-cam.getRotY());
+        rotateZ(-cam.getRotZ());
+        translate(0,0,-120);
+        image(box, x, y);
+        // Text
+        translate(0,0,5);
+        textFont(mainFont); textSize(24); fill(255); textAlign(LEFT,CENTER);
+        text(name,x+box.width-125,y+50);
+        text(line1,x+40,y+115); text(line2,x+40,y+145); text(line3,x+40,y+175);
+        // Continue Triangle
+        drawTriangleR();
+        popMatrix();
+    }
+
+    void drawTriangleL() {
         if (!inFrame()) return;
         fill(255); stroke(255);
         beginShape();
@@ -87,6 +224,25 @@ class dialogueBox {
         vertex(x+box.width,y+box.height-25);
         endShape();
     }
+
+    void drawTriangleR() {
+        if (!inFrame()) return;
+        fill(255); stroke(255);
+        beginShape();
+        vertex(x,y+box.height-25);
+        vertex(x-15,y+box.height+7-25);
+        vertex(x,y+box.height+15-25);
+        vertex(x,y+box.height-25);
+        endShape();
+    }
+
+    void hide() {
+        hidden = true;
+    }
+
+    void unhide() {
+        hidden = false;
+    }
     
 
 }
@@ -94,9 +250,9 @@ class dialogueBox {
 class dialogueMenu {
 
     PImage box;
-    String choice1, choice2, choice3;
+    String choice1L1, choice1L2, choice2L1, choice2L2, choice3L1, choice3L2;
     int x, y, choice = 0;
-    int IN_FRAME_Y = height/2, OUT_FRAME_Y = height+500;
+    int IN_FRAME_Y = height/2+60, OUT_FRAME_Y = height+500;
     int fadeSpeed = 15;
     boolean chosen = false;
 
@@ -105,9 +261,10 @@ class dialogueMenu {
         this.y = y;
         box = loadImage("img/dialogue_box.png");
         this.box.resize(this.box.width/2, this.box.height/2);
-        choice1 = "Lorem impsum some cum laude."; // Replace with dialogue optoins and responses
-        choice2 = "Lorem impsum some cum laude.";
-        choice3 = "Lorem impsum some cum laude.";
+        // Initialize strings
+        choice1L1 = "OPTION 1"; choice1L2 = "";
+        choice2L1 = "OPTION 2"; choice2L2 = "";
+        choice3L1 = "OPTION 3"; choice3L2 = "";
     }
 
     void display() {
@@ -120,20 +277,48 @@ class dialogueMenu {
         image(box, x, y);
         // Text
         translate(0,0,5);
-        textFont(mainFont); textSize(24); fill(255); textAlign(LEFT,CENTER);
-        text(choice1,x+40,y+115); text(choice2,x+40,y+145); text(choice3,x+40,y+175);
+        textFont(mainFont); textSize(28); fill(255); textAlign(LEFT,CENTER);
+        text(choice1L1,x+44,y+65); text(choice1L2,x+44,y+105);
+        text(choice2L1,x+44,y+175); text(choice2L2,x+44,y+215);
+        text(choice3L1,x+44,y+285); text(choice3L2,x+44,y+325);
+        // Highlight
+        highlightChoice();
+
         popMatrix();
     }
 
     void update() {
         if (chosen) return;
-        highlightChoice();
+
     }
 
-    void setContent(String l1, String l2, String l3, String l4) {
-        this.choice1 = l1;
-        this.choice2 = l2;
-        this.choice3 = l3;
+    void setContent(String l1, String l2, String l3) {
+        // If the line exceeds 35 characters, set the second line to the rest of the string
+        // Get last word and start from there
+        if (l1.length() > 35) {
+            int lastSpace = l1.lastIndexOf(" ", 35);
+            choice1L1 = l1.substring(0,lastSpace);
+            choice1L2 = l1.substring(lastSpace+1);
+        } else {
+            choice1L1 = l1;
+            choice1L2 = "";
+        }
+        if (l2.length() > 35) {
+            int lastSpace = l2.lastIndexOf(" ", 35);
+            choice2L1 = l2.substring(0,lastSpace);
+            choice2L2 = l2.substring(lastSpace+1);
+        } else {
+            choice2L1 = l2;
+            choice2L2 = "";
+        }
+        if (l3.length() > 35) {
+            int lastSpace = l3.lastIndexOf(" ", 35);
+            choice3L1 = l3.substring(0,lastSpace);
+            choice3L2 = l3.substring(lastSpace+1);
+        } else {
+            choice3L1 = l3;
+            choice3L2 = "";
+        }
     }
 
     void fadeIn() {
@@ -160,35 +345,63 @@ class dialogueMenu {
         }
     }
 
-    void highlightChoice() {}
+    void highlightChoice() {
+        if (chosen) return;
+        // Highlight portion of the menu based on mouse position by adding white rectangle, also sets choice variable
+        pushMatrix();
+        translate(0,0,5);
+        if (mouseX > x+70 && mouseX < x+box.width-70) {
+            if (mouseY > y+10 && mouseY < y+box.height/3-20) {
+                fill(255,100); 
+                rect(width/2-10,y+87,box.width-90,box.height/3-40);
+                if (mousePressed) {
+                    soundHandler.playSound("dialogueClick");
+                    choice = 1;
+                    chosen = true;
+                    // System.out.println("Choice 1");
+                }
+            } else if (mouseY > y+box.height/3-21 && mouseY < y+box.height/3*2-60) {
+                fill(255,100); 
+                rect(width/2-10,y+197,box.width-90,box.height/3-40);
+                if (mousePressed) {
+                    soundHandler.playSound("dialogueClick");
+                    choice = 2;
+                    chosen = true;
+                    // System.out.println("Choice 2");
+                }
+            } else if (mouseY > y+box.height/3*2-61 && mouseY < y+box.height-100) {
+                fill(255,100); 
+                rect(width/2-10,y+307,box.width-90,box.height/3-40);
+                if (mousePressed) {
+                    soundHandler.playSound("dialogueClick");
+                    choice = 3;
+                    chosen = true;
+                    // System.out.println("Choice 3");
+                }
+            }
+
+        }
+        popMatrix();
+    }
 
     int getChoice() {
-        return choice;
+        int temp = choice;
+        choice = 0;
+        chosen = false;
+        return temp;
+    }
+
+    boolean isChosen() {
+        return chosen;
     }
 
 }
 
-
-class Statement {
-    
-    String content;
-    Statement(String content) {
-        this.content = content;
-    }
-
-    String getContent() {
-        return content;
-    }
-
-}
-
-class DialogueOption extends Statement {
+class DialogueOption {
 
     String[] choices;
-    SoundFile menuClick;
 
-    DialogueOption(String content, String[] choices) {
-        super(content);
+    DialogueOption(String[] choices) {
         this.choices = choices;
     }
 
@@ -199,3 +412,102 @@ class DialogueOption extends Statement {
 
 
 }
+
+class dialogueTrack {
+    
+    String[] statements;
+    String[] responses;
+    String[] speaker;
+    DialogueOption options;
+    int currentStatement = 0, optionsAppearAt = 0;
+
+    dialogueTrack(String[] statements, String[] speaker) {
+        this.statements = statements;
+        this.speaker = speaker;
+        options = null;
+    }
+
+    dialogueTrack(String[] statements, String[] speaker, DialogueOption options, String[] responses, int optionsAppearAt) {
+        this.statements = statements;
+        this.responses = responses;
+        this.speaker = speaker;
+        this.options = options;
+        this.optionsAppearAt = optionsAppearAt;
+    }
+
+    String getCurrentStatement() {
+        if (currentStatement >= statements.length) return "END";
+        return statements[currentStatement];
+    }
+    
+    String[] getOptions() {
+        return options.getChoices();
+    }
+
+    String getSpeaker() {
+        if (currentStatement >= speaker.length) return "END";
+        return speaker[currentStatement];
+    }
+
+    boolean optionAtStatement() {
+        if (currentStatement == optionsAppearAt) return true;
+        return false;
+    }
+
+    boolean optionIsFinalStatement() {
+        if (optionsAppearAt == statements.length-1) return true;
+        return false;
+    }
+
+    String getResponse(int choice) {
+        return responses[choice-1];
+    }
+
+    void nextStatement() {
+        currentStatement++;
+    }
+
+    void setStatementPlaceholder(int choice) {
+        statements[currentStatement+1] = responses[choice-1];
+    }
+
+    void resetTrack() {
+        currentStatement = 0;
+    }
+
+
+}
+
+
+
+// ALL DIALOGUE OPTIONS -- 1 Array, 9 dialogueTracks, Scenes 1,3,5,7, and 9 have dialogue options
+// 9 SCENES, 3 PER LEVEL
+
+dialogueTrack[] DIALOGUE = {
+
+    // Scene 1
+    new dialogueTrack(
+        new String[] { // Statements
+        "Hello, my name is Gastor. I am the head of the research team here at the facility.",
+        "We are currently studying the effects of the virus on the human body.",
+        "We need your help to gather samples from the infected.",
+        "Please be careful, the infected can be very dangerous.",
+        "RESPONSE PLACEHOLDER"
+    }, new String[] { // Speakers
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor"
+    },
+    new DialogueOption(new String[] { // Dialogue Options
+        "I'll do my best.",
+        "I'm not sure about this.",
+        "I'm not going to help."
+    }), new String[] { // Responses
+        "Thank you.",
+        "I understand.",
+        "I see."
+    }, 3)
+
+};

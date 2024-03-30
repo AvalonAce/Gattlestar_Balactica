@@ -3,22 +3,24 @@
 class Menu {
 
     portraitBox Gastor, Solara, unknown;
-    dialogueBox dialogueBox;
+    dialogueBox dialogueBoxL, dialogueBoxR;
     dialogueMenu dialogueMenu;
 
     Menu() {
         Gastor = new portraitBox(-500,0,"Gastor");
         Solara = new portraitBox(width+500,0,"Solara");
         unknown = new portraitBox(width+500,0,"unknown");
-        dialogueBox = new dialogueBox(width/2-140,-500);
-        dialogueMenu = new dialogueMenu(width/2-350,height/2+60);
+        dialogueBoxL = new dialogueBox(width/2-140,-500,false);
+        dialogueBoxR = new dialogueBox(width/2-350,-500,true);
+        dialogueMenu = new dialogueMenu(width/2-310,height/2+60); // SET TO OUT OF FRAME
     }
 
     void display() {
         Gastor.display();
         Solara.display();
         unknown.display();
-        dialogueBox.display();
+        dialogueBoxL.display();
+        dialogueBoxR.display();
         dialogueMenu.display();
     }
 
@@ -26,8 +28,36 @@ class Menu {
         Gastor.update();
         Solara.update();
         unknown.update();
-        dialogueBox.update();
+        dialogueBoxL.update();
+        dialogueBoxR.update();
         dialogueMenu.update();
+    }
+
+    void setContentOfSpeakerBox(String speaker, String statement) {
+        if (speaker.equals("Gastor")) {
+            dialogueBoxL.setSpeaker(speaker);
+           dialogueBoxL.setContent(statement);
+        }
+        else if (speaker.equals("Solara")) {
+            dialogueBoxR.setSpeaker(speaker);
+            dialogueBoxR.setContent(statement);
+        }
+        else {
+            dialogueBoxL.setSpeaker("Unknown");
+            dialogueBoxL.setContent(statement);
+        }
+    }
+
+    void setContentOfDialogueMenu(String[] options) {
+        dialogueMenu.setContent(options[0], options[1], options[2]);
+    }
+
+    boolean optionChosen() {
+        return dialogueMenu.isChosen();
+    }
+
+    int getChoice() {
+        return dialogueMenu.getChoice();
     }
 
     void fadeGastorIn() {
@@ -42,6 +72,14 @@ class Menu {
         }
     }
 
+    void hideGastor() {
+        Gastor.hide();
+    }
+
+    void revealGastor() {
+        Gastor.unhide();
+    }
+
     void fadeSolaraIn() {
         if (!Solara.inFrameRight()) {
             Solara.fadeLeft();
@@ -52,6 +90,14 @@ class Menu {
         if (!Solara.outFrameRight()) {
             Solara.fadeRight();
         }
+    }
+
+    void hideSolara() {
+        Solara.hide();
+    }
+
+    void revealSolara() {
+        Solara.unhide();
     }
 
     void fadeUnknownIn() {
@@ -66,16 +112,52 @@ class Menu {
         }
     }
 
-    void fadeDialogueBoxIn() {
-        if (!dialogueBox.inFrame()) {
-            dialogueBox.fadeIn();
+    void hideUnknown() {
+        unknown.hide();
+    }
+
+    void revealUnknown() {
+        unknown.unhide();
+    }
+
+    void fadeDialogueBoxLIn() {
+        if (!dialogueBoxL.inFrame()) {
+            dialogueBoxL.fadeIn();
         }
     }
 
-    void fadeDialogueBoxOut() {
-        if (!dialogueBox.outFrame()) {
-            dialogueBox.fadeOut();
+    void fadeDialogueBoxLOut() {
+        if (!dialogueBoxL.outFrame()) {
+            dialogueBoxL.fadeOut();
         }
+    }
+
+    void fadeDialogueBoxRIn() {
+        if (!dialogueBoxR.inFrame()) {
+            dialogueBoxR.fadeIn();
+        }
+    }
+
+    void fadeDialogueBoxROut() {
+        if (!dialogueBoxR.outFrame()) {
+            dialogueBoxR.fadeOut();
+        }
+    }
+
+    void hideDialogueBoxL() {
+        dialogueBoxL.hide();
+    }
+
+    void revealDialogueBoxL() {
+        dialogueBoxL.unhide();
+    }
+
+    void hideDialogueBoxR() {
+        dialogueBoxR.hide();
+    }
+
+    void revealDialogueBoxR() {
+        dialogueBoxR.unhide();
     }
      
 
@@ -157,6 +239,7 @@ class portraitBox {
     int x, y;
     int IN_FRAME_XL = 0, IN_FRAME_XR = width-300, OUT_FRAME_XL = -500, OUT_FRAME_XR = width+500;
     int fadeSpeed = 15;
+    boolean hide = false;
 
     portraitBox(int x, int y, String portrait) {
         this.x = x;
@@ -166,16 +249,18 @@ class portraitBox {
     }
 
     void display() {
+        if (hide) return;
         pushMatrix();
         rotateX(-cam.getRotX());
         rotateY(-cam.getRotY());
         rotateZ(-cam.getRotZ());
-        translate(0,0,-100);
+        translate(0,0,-180);
         image(portrait, x, y);
         popMatrix();
     }
 
     void update() {
+        if (hide) return;
     }
 
     void set(int x, int y) {
@@ -222,6 +307,63 @@ class portraitBox {
         } else {
             return false;
         }
+    }
+
+    void hide() {
+        hide = true;
+    }
+
+    void unhide() {
+        hide = false;
+    }
+
+}
+
+class levelBar { // level bar stored in level engine in Enemy file -- Graphics handled here
+
+    PImage levelCase, fullLevelBar, levelBar;
+    int x, y;
+    boolean hide = false;
+
+    levelBar(int x, int y) {
+        this.x = x;
+        this.y = y;
+        levelCase = loadImage("img/level_case.png");
+        fullLevelBar = loadImage("img/levelbar.png");
+        levelBar = fullLevelBar.get(0,0,0, fullLevelBar.height);
+        levelCase.resize(levelCase.width/3, levelCase.height/3);
+        fullLevelBar.resize(fullLevelBar.width/3, fullLevelBar.height/3);
+    }
+
+    void display() {
+        if (hide) return;
+        
+        pushMatrix();
+        rotateX(-cam.getRotX());
+        rotateY(-cam.getRotY());
+        rotateZ(-cam.getRotZ());
+        translate(0,0,-100);
+        image(levelCase, x, y);
+        translate(0,0,5);
+        image(levelBar, x + 5, y + 8);
+        popMatrix();
+    }
+
+    void update() {
+        if (hide) return;
+    }
+
+    void setProgress(int progress) {
+        // Set levelbar by cropping the levelbar image to progress
+        levelBar = fullLevelBar.get(0,0,fullLevelBar.width * progress/100, fullLevelBar.height);
+    }
+
+    void hide() {
+        hide = true;
+    }
+
+    void unhide() {
+        hide = false;
     }
 
 }

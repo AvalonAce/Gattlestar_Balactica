@@ -5,6 +5,7 @@ Input input;
 Camera cam;
 levelHandler levelHandler;
 graphicsHandler graphicsHandler;
+dialogueHandler dialogueHandler;
 soundHandler soundHandler;
 
 int difficulty = 0;
@@ -28,6 +29,7 @@ void setup() {
   input = new Input();
   soundHandler = new soundHandler(this);
   graphicsHandler = new graphicsHandler();
+  dialogueHandler = new dialogueHandler();
   levelHandler = new levelHandler(player, soundHandler, graphicsHandler);
 
   // Camera
@@ -78,4 +80,8 @@ void keyPressed() {
 
 void keyReleased() {
   input.kReleased(key);
+}
+
+int currentSecond() {
+  return (int) (millis() / 1000.0);
 }

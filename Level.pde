@@ -183,17 +183,37 @@ class mapLevel extends Level {}
 
 class gameLevel1 extends Level {
 
-    Menu menu;
-    boolean introFlag = true;
+    // Menu menu;
+    levelEngine levelEngine;
+    boolean introFlag = true, exitFlag = false;
 
     gameLevel1() {
-      menu = new Menu();
-    
+      // menu = new Menu();
+      levelEngine = new levelEngine();
     }
 
     void display() {
       background(0);
+            
+      
+      levelEngine.update();
+      levelEngine.displayLevelBar();
+
       if (introFlag) intro();
+      else if (exitFlag) outro();
+      else {
+
+        // Fade out Menu
+        dialogueHandler.display();
+        dialogueHandler.update();
+        dialogueHandler.menu().fadeGastorOut();
+        dialogueHandler.menu().fadeDialogueBoxLOut();
+
+        player.display();
+        player.update();
+        player.enableFire();
+        
+      }
       
     
     }
@@ -204,34 +224,42 @@ class gameLevel1 extends Level {
     }
 
     void intro() {
+      graphicsHandler.setStarFlag(true);
+      startTime = 0;
       player.reset();
-      
-      
-    
-      // Display Title
-      if (startTime + 2000 < millis()) {
-        graphicsHandler.setStarFlag(true);
+      levelEngine.reset();
 
+      
+
+      
+      // 2 Seconds in
+      if (currentSecond() > startTime + 2) {
+        // Player 
         player.display();
         player.update();
+        player.disableFire();
 
-        menu.display();
-        menu.update();
-
-        menu.fadeGastorIn();
-        menu.fadeSolaraOut();
-        menu.fadeDialogueBoxIn();
-
- 
-        
-
+        // Menu
+        dialogueHandler.setCutscene(true);
+        dialogueHandler.display();
+        dialogueHandler.update();
+        dialogueHandler.menu().fadeGastorIn();
+        dialogueHandler.menu().fadeDialogueBoxLIn();
+        if (dialogueHandler.isInCutscene()) return;
+        else {
+          introFlag = false;
+        }
       }
-
-
-
-
-
+      // Start
+      else if (currentSecond() > startTime) {
+        player.display();
+        player.update();
+        levelEngine.pause();
+      }
       
+    }
+
+    void outro() {
       
     }
 

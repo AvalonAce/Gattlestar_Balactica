@@ -14,7 +14,7 @@ class graphicsHandler {
           stars[i] = new Star((int)random(-1000,width+1000),(int)random(-1000,height+1000),(int)random(-1000,500), (int)random(2,11));
       }
       // Init crosshair
-        crosshair.resize(50,50);
+      crosshair.resize(50,50);
       cursor(crosshair);
 
 

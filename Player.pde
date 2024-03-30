@@ -6,7 +6,7 @@ class Player {
     Health health;
     int currentLazer;
     Ship ship;
-    boolean hidden, damaged;
+    boolean hidden, damaged, dead, disabledFire;
     Lazer[] lazers = new Lazer[8];
 
     public Player() {
@@ -17,6 +17,7 @@ class Player {
         currentLazer = 0;
         hidden = true;
         damaged = false;
+        disabledFire = false;
     }
 
     void display() {
@@ -49,6 +50,7 @@ class Player {
     }
     
     void checkfire() {
+        if (disabledFire) return;
         // Fire lazer on mouse click
         // Delay fire rate using frameCount
         if (input.fire) {
@@ -60,6 +62,14 @@ class Player {
         }
 
 
+    }
+    
+    void disableFire() {
+        disabledFire = true;
+    }
+
+    void enableFire() {
+        disabledFire = false;
     }
 
     void moveShip() {
@@ -255,6 +265,11 @@ class Input {
     }
 
     void kPressed(char key) {
+        if (dialogueHandler.isInCutscene() && !dialogueHandler.isInChoice() && key == ' ' ) {
+            System.out.println("Next statement");
+            soundHandler.playSound("continueClick");
+            dialogueHandler.nextStatement();
+        }
         moving = true;
         if (key == 'w') {
             up = true;
@@ -293,6 +308,11 @@ class Input {
     }
 
     void mPressed() {
+        if (dialogueHandler.isInCutscene() && !dialogueHandler.isInChoice()) {
+            // System.out.println("Next statement");
+            soundHandler.playSound("continueClick");
+            dialogueHandler.nextStatement();
+        }
         fire = true;
     }
 

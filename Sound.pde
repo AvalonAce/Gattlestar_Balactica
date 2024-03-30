@@ -3,26 +3,31 @@ import processing.sound.*;
 
 class soundHandler {
 
-    SoundFile dialogueClick;
+
     SoundFile shoot;
     SoundFile enemyDeath;
     SoundFile playerDeath;
     SoundFile menuClick;
+    SoundFile dialogueClick;
+    SoundFile continueClick;
     Sound s;
 
     boolean soundOn = true;
 
     soundHandler(PApplet p) {
-        dialogueClick = new SoundFile(p, "snd/dialogue_click.mp3");
+
         shoot = new SoundFile(p, "snd/shoot.mp3");
         enemyDeath = null;
-        playerDeath = new SoundFile(p, "snd/player_death.mp3");
+        playerDeath = new SoundFile(p, "snd/player_death.wav");
         menuClick = new SoundFile(p, "snd/menu_click.mp3");
+        dialogueClick = new SoundFile(p, "snd/dialogue_click.mp3");
+        continueClick = new SoundFile(p, "snd/continue_click.wav");
         s = new Sound(p);
     }
 
     void update() {
         s.volume(1);
+        
     }
 
 
@@ -30,6 +35,7 @@ class soundHandler {
         if (soundOn) {
             switch (currentSound) {
                 case "dialogueClick":
+                    s.volume(1);
                     dialogueClick.play();
                     break;
                 case "shoot":
@@ -45,8 +51,15 @@ class soundHandler {
                 case "menuClick":
                     menuClick.play();
                     break;
+                case "continueClick":
+                continueClick.play();
+                break;
             }
         }
+    }
+
+    void setVolume(float volume) {
+        s.volume(volume);
     }
 
 

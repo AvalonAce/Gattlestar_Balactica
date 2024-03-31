@@ -47,6 +47,9 @@ class Player {
         if (dead) {
             // Game over
             disableFire();
+            levelHandler.getLevelEngine().gameOver();
+            System.out.println("Player dead");
+
             return;
         }
         // Health update
@@ -138,7 +141,6 @@ class Player {
     boolean isTouching(Enemy enemy) {
         return ship.isTouching(enemy);
     }
-
 
 
     void reset() {

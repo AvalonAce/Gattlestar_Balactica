@@ -4,8 +4,8 @@ class levelEngine {
 
     levelBar progressBar;
     int progress = 0, difficultyTime = 18, currentLevel = 1;
-    int MAX_PROGRESS = 10;
-    boolean isPaused = false;
+    int MAX_PROGRESS = 100;
+    boolean isPaused = false, isLevelOver = false;
     Enemy[] enemies;
 
     levelEngine() {
@@ -20,7 +20,7 @@ class levelEngine {
      }
 
     void update() {
-        
+        if (isLevelOver) return;
         if (isPaused) {
             if (!enemiesAllDead()) {
                 updateEnemies();
@@ -47,7 +47,9 @@ class levelEngine {
     }
 
     void reset() {
+        isLevelOver = false;
         progress = 0;
+        player.reset();
         decideDifficulty();
     }
 
@@ -61,6 +63,10 @@ class levelEngine {
 
     void unhideLevelBar() {
         progressBar.unhide();
+    }
+
+    void resetLevelBar() {
+        progressBar.reset();
     }
 
     void pause() {
@@ -185,6 +191,21 @@ class levelEngine {
     boolean isPaused() {
         return isPaused;
     }
+
+    void gameOver() {
+        
+        isLevelOver = true;
+        pause();
+        for (int i = 0; i < enemies.length; i++) {
+            if (enemies[i] != null) {
+                enemies[i] = null;
+            }
+        }
+        progress = 0;
+        levelHandler.gameOver();
+        
+
+    }
     
 
 
@@ -288,7 +309,7 @@ class Asteroid extends Enemy {
                 health = (int)random(20, 70);
                 damage = 15;
                 acc = 12;
-                ellipseSize = (int)random(30, 80);
+                ellipseSize = (int)random(30, 100);
                 break;
             default:
                 health = (int)random(30, 50);

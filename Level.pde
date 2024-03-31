@@ -4,7 +4,9 @@ class levelHandler {
   
   Player player;
   Level currentLevel;
-  Level[] levels = new Level[6];
+  levelEngine levelEngine;
+  Level[] levels = new Level[9];
+  int previousLevel = 0;
   
   levelHandler(Player player, soundHandler soundHandler, graphicsHandler graphicsHandler) {
     this.player = player;
@@ -12,9 +14,12 @@ class levelHandler {
     levels[0] = new mainMenu(this, soundHandler);
     levels[1] = new transition();
     levels[2] = new gameLevel1();
-    levels[3] = new gameLevel2();
-    levels[4] = new gameLevel3();
-    levels[5] = new gameLevel4();
+    levels[3] = new transition();
+    levels[4] = new gameLevel2();
+    levels[5] = new transition();
+    levels[6] = new gameLevel3();
+    levels[7] = new transition();
+    levels[8] = new deathScreen(this);
     currentLevel = levels[0];
   }
 
@@ -61,8 +66,24 @@ class levelHandler {
     return levels;
   }
 
+  int getPreviousLevel() {
+    return previousLevel;
+  }
+
+  void setPreviousLevel(int newPreviousLevel) {
+    previousLevel = newPreviousLevel;
+  }
+
   void quit() {
     currentLevel.quit();
+  }
+
+  levelEngine getLevelEngine() {
+    return currentLevel.getLevelEngine();
+  }
+
+  void gameOver() {
+    setLevel(8);
   }
 
 }
@@ -82,6 +103,10 @@ class Level {
   }
 
   void reset() {}
+
+  levelEngine getLevelEngine() {
+    return null;
+  }
 
 }
 
@@ -113,6 +138,7 @@ class mainMenu extends Level {
   }
 
   void update() {
+    levelHandler.setPreviousLevel(0);
     startButton.update();
     quitButton.update();
     difficultyButton.update();
@@ -189,22 +215,19 @@ class mainMenu extends Level {
 
 }
 
-class transition extends Level {}
-
 class gameLevel1 extends Level {
 
-    // Menu menu;
     levelEngine levelEngine;
     boolean introFlag = true, exitFlag = false;
 
     gameLevel1() {
-      // menu = new Menu();
       levelEngine = new levelEngine();
     }
 
     void display() {
       background(0);
       levelEngine.setCurrentLevel(1);
+      levelEngine.unhideLevelBar();
       levelEngine.displayLevelBar();
 
 
@@ -243,8 +266,7 @@ class gameLevel1 extends Level {
     }
 
     void update() {
-
-      
+      levelHandler.setPreviousLevel(2);
     }
 
     void intro() {
@@ -311,33 +333,35 @@ class gameLevel1 extends Level {
         dialogueHandler.display();
         dialogueHandler.update();
 
-        if (dialogueHandler.getCurrentSpeaker().equals("Gastor")){
-          dialogueHandler.menu().fadeGastorIn();
-          dialogueHandler.menu().fadeDialogueBoxLIn();
-        }
-        else {
-          dialogueHandler.menu().hideGastor();
-          dialogueHandler.menu().hideDialogueBoxL();
-          dialogueHandler.menu().fadeUnknownIn();
-          dialogueHandler.menu().fadeDialogueBoxRIn();
-        }
-        
-
-        if (dialogueHandler.isInChoice()) dialogueHandler.menu().fadeDialogueMenuIn();
-
-        // Leave Cutscene to level 2
+        // Cutscene
         if (dialogueHandler.isInCutscene()) {
-          dialogueHandler.menu().fadeDialogueBoxROut();
-          dialogueHandler.menu().fadeUnknownOut();
-          dialogueHandler.menu().fadeGastorOut();
-          dialogueHandler.menu().fadeDialogueBoxLOut();
+
+          if (dialogueHandler.getCurrentSpeaker().equals("Gastor")){
+            dialogueHandler.menu().fadeGastorIn();
+            dialogueHandler.menu().fadeDialogueBoxLIn();
+          }
+          else {
+            dialogueHandler.menu().fadeGastorOut();
+            dialogueHandler.menu().fadeDialogueBoxLOut();
+            // dialogueHandler.menu().hideGastor();
+            // dialogueHandler.menu().hideDialogueBoxL();
+            dialogueHandler.menu().fadeUnknownIn();
+            dialogueHandler.menu().fadeDialogueBoxRIn();
+          }
+          if (dialogueHandler.isInChoice()) dialogueHandler.menu().fadeDialogueMenuIn();
+
         }
         else {
           levelEngine.reset();
           // levelEngine.resume();
 
           // Menu
-
+          dialogueHandler.menu().fadeDialogueBoxROut();
+          dialogueHandler.menu().fadeUnknownOut();
+          dialogueHandler.menu().fadeGastorOut();
+          dialogueHandler.menu().fadeDialogueBoxLOut();
+          // dialogueHandler.menu().revealGastor();
+          // dialogueHandler.menu().revealDialogueBoxL();
 
           // startTime = currentSecond();
           // exitFlag = false;
@@ -354,6 +378,17 @@ class gameLevel1 extends Level {
     }
 
 
+    levelEngine getLevelEngine() {
+      return levelEngine;
+    }
+
+    void reset() {
+      introFlag = true;
+      exitFlag = false;
+      levelEngine.reset();
+    }
+
+
 }
 
 class gameLevel2 extends Level {}
@@ -361,3 +396,78 @@ class gameLevel2 extends Level {}
 class gameLevel3 extends Level {}
 
 class gameLevel4 extends Level {}
+
+
+class transition extends Level {
+
+
+    transition() {}
+
+    void display() {
+      background(0);
+    }
+
+    void update() {}
+
+}
+
+class deathScreen extends Level {
+
+    rButton restartButton, quitButton;
+    levelHandler levelHandler;
+    
+    deathScreen(levelHandler levelHandler) {
+      restartButton = new deathScreenButton("Restart", width/2 - 300, height/2 + 50, levelHandler, "", "menu_button_UH.png");
+      quitButton = new deathScreenButton("Quit",width/2 + 100, height/2 + 50, levelHandler, "", "menu_button_UH.png");
+    }
+
+    void display() {
+      background(0);
+      titleDisplay();
+      restartButton.display();
+      quitButton.display();
+    }
+
+    void update() {
+      // Graphics
+      graphicsHandler.setStarFlag(false);
+      restartButton.update();
+      quitButton.update();
+    }
+
+    private void titleDisplay() {
+      pushMatrix();
+      fill(255);
+      textFont(titleFont,148);
+      textAlign(CENTER, CENTER);
+
+
+      // Based on difficulty, change animation
+      switch (difficulty) {
+        case 1:
+          fill(255);
+          text("YOU DIED", width/2, height/2 - 150);
+          break;
+        case 2:
+          fill(255);
+          text("YOU", width/2 - 100, height/2 - 150);
+          fill(1, 206, 178);
+          text("DIED", width/2 + 75 + (random(-2,2)), height/2 + (random(-2,2)) - 150); 
+          break;
+        case 3:
+          fill(1, 206, 178);
+          text("YOU DIED", width/2 + (random(-5,5)), height/2 + (random(-5,5)) - 150);
+          break;
+        default:
+          fill(255);
+          text("YOU DIED", width/2, height/2 - 50);
+          break;
+
+      }
+
+      popMatrix();
+    }
+
+
+
+}

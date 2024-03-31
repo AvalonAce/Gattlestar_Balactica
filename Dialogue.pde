@@ -66,8 +66,23 @@ class dialogueHandler { // Handles the dialogue, Menu updates the dialogue boxes
 
 
     void reset() {
+        // Restart the dialogue
+        inCutscene = false;
+        isChoice = false;
+        resetAllTracks();
         sceneIndex = 0;
         currentTrack = DIALOGUE[sceneIndex];
+    }
+
+    void resetAllTracks() {
+        for (int i = 0; i < DIALOGUE.length; i++) {
+            DIALOGUE[i].resetTrack();
+        }
+    }
+
+    void resetToTrack(int index) {
+        resetAllTracks();
+        currentTrack = DIALOGUE[index];
     }
 
     Menu menu() {
@@ -537,15 +552,17 @@ dialogueTrack[] DIALOGUE = {
         new String[] { // Statements
         "You've made it through the asteroid fields, ACE. Good job!",
         "But the Sopren-Veil aren't going anywhere. You still have a mission to complete!",
-        "I've sent coordinates to your ship. Make a lightspeed jump. I'll contact you after.",
+        "I've sent coordinates to your ship. Make a lightspeed jump there. I'll contact you after.",
+        "...",
         "*Static*",
         "RESPONSE PLACEHOLDER"
     }, new String[] { // Speakers
         "Gastor",
         "Gastor",
         "Gastor",
-        "Unknown",
-        "Unknown"
+        "???",
+        "???",
+        "???"
     },
     new DialogueOption(new String[] { // Dialogue Options
         "*Ignore the failed communication and jump*",
@@ -555,6 +572,6 @@ dialogueTrack[] DIALOGUE = {
         "...",
         "...",
         "S- ... He- ... *static* ... *static* ... Don't- "
-    }, 3),
+    }, 4),
 
 };

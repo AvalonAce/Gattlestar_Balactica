@@ -43,7 +43,7 @@ class Menu {
             dialogueBoxR.setContent(statement);
         }
         else {
-            dialogueBoxR.setSpeaker("Unknown");
+            dialogueBoxR.setSpeaker("???");
             dialogueBoxR.setContent(statement);
         }
     }
@@ -230,6 +230,7 @@ class Health {
 
     void reset() {
         health = maxHealth;
+        isDead = false;
     }
 
     boolean isDead() {
@@ -382,6 +383,10 @@ class levelBar { // level bar stored in level engine in Enemy file -- Graphics h
 
     void unhide() {
         hide = false;
+    }
+
+    void reset() {
+        levelBar = fullLevelBar.get(0,0,0, fullLevelBar.height);
     }
 
 }

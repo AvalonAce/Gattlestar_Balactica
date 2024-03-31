@@ -92,15 +92,19 @@ class menuButton extends rButton {
         strokeWeight(2);
 
         // Hover effect
+        pushMatrix();
         if (mouseWithin()) {
             textFont(mainFont, 38);
-            image(uh_img, x-5, y-5, w+10, h+10);
+            image(uh_img, x, y, w+10, h+10);
+            translate(0, 0, 5);
             text(text, x, y-5, w, h);
         } else {
             textFont(mainFont, 36);
             image(uh_img, x, y, w, h);
+            translate(0, 0, 5);
             text(text, x, y-5, w, h);
         }
+        popMatrix();
 
         if (animating) popMatrix();
 
@@ -127,31 +131,88 @@ class menuButton extends rButton {
                 if (difficulty == 0) levelHandler.changeDifficulty();
 
             } else if (text.equals("Quit")) {
-                levelHandler.quit();
+                exit();
             } else if (text.equals("Difficulty") || text.equals("Easy") || text.equals("Medium") || text.equals("Hard")){
                 soundHandler.playSound("menuClick");
                 levelHandler.changeDifficulty();
             }
+
+
+
             mouseClicked = false;
         } 
     }
-
-   
-
-    
-  
-
-
 }
 
-class dialogueButton extends rButton {
+class deathScreenButton extends rButton {
 
-    dialogueButton(String text, int x, int y, levelHandler levelHandler, String img, String uh_img) {
+    deathScreenButton(String text, int x, int y, levelHandler levelHandler, String img, String uh_img) {
         super(text, x, y, 200, 100, levelHandler, img, uh_img);
     }
 
     void display() {
-        System.out.println(text);
+        
+        stroke(255);
+        fill(255);
+        textAlign(CENTER, CENTER);
+        strokeWeight(2);
+
+        // Hover effect
+        pushMatrix();
+        if (mouseWithin()) {
+            textFont(mainFont, 38);
+            image(uh_img, x, y, w+10, h+10);
+            translate(0, 0, 5);
+            text(text, x+100, y+50, w, h);
+        } else {
+            textFont(mainFont, 36);
+            image(uh_img, x, y, w, h);
+            translate(0, 0, 5);
+            text(text, x+100, y+45, w, h);
+        }
+        popMatrix();
+
+
+    }
+
+     void update() {
+        if (!disabled && mouseWithin() && mouseClicked) {
+            System.out.println(text);
+            
+            if (text.equals("Quit")) {
+                exit();
+            } else if (text.equals("Restart")) {
+                soundHandler.playSound("menuClick");
+
+                // Reset to level
+                int level = levelHandler.getPreviousLevel();
+                levelHandler.getLevels()[level].reset();
+                levelHandler.setLevel(level);
+                levelHandler.getLevels()[level].getLevelEngine().resetLevelBar();
+                levelHandler.getLevels()[level].getLevelEngine().displayLevelBar();
+
+                // Reset Dialogue
+                switch (level) {
+                    case 2:
+                        dialogueHandler.resetToTrack(0);
+                        break;
+                    case 4:
+                        dialogueHandler.resetToTrack(2);
+                        break;
+                    case 6:
+                        dialogueHandler.resetToTrack(4);
+                        break;
+                    default:
+                        dialogueHandler.reset();
+                        break;
+                }
+
+                
+            }
+
+
+            mouseClicked = false;
+        } 
     }
 
 }

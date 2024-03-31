@@ -4,7 +4,7 @@ class levelEngine {
 
     levelBar progressBar;
     int progress = 0, difficultyTime = 18, currentLevel = 1;
-    int MAX_PROGRESS = 1000;
+    int MAX_PROGRESS = 100;
     boolean isPaused = false;
     Enemy[] enemies;
 
@@ -20,7 +20,14 @@ class levelEngine {
      }
 
     void update() {
-        if (isPaused) return;
+        if (isPaused) {
+            if (!enemiesAllDead()) {
+                updateEnemies();
+                removeDeadEnemies();
+                displayEnemies();
+            }
+            return;
+        }
 
         // Progress bar
         if (frameCount % difficultyTime == 0) {
@@ -40,7 +47,6 @@ class levelEngine {
 
     void reset() {
         progress = 0;
-        enemies = null;
     }
 
     void displayLevelBar() {
@@ -60,9 +66,7 @@ class levelEngine {
     }
 
     void resume() {
-        if (isPaused && !levelOver()) {
-            isPaused = false;
-        }
+        isPaused = false;
     }
 
 
@@ -110,8 +114,40 @@ class levelEngine {
         for (int i = 0; i < enemies.length; i++) {
             if (enemies[i] != null) {
                 enemies[i].update();
+                
+                // Check if player is touching enemy
+                boolean isDead = player.isTouching(enemies[i]); 
+                if (isDead) {
+                    soundHandler.playSound("hit");
+                    player.takeDamage(enemies[i].damage);
+                    enemies[i].isDead = true;
+                }
+
+                // Check if lazer hits enemy
+                for (int j = 0; j < player.getLazers().length; j++) {
+                    if (player.getLazers()[j] != null && player.getLazers()[j].isTouching(enemies[i])) {
+                        enemies[i].takeDamage(10);
+                        player.getLazers()[j] = null;
+                    }
+                }
+
             }
         }
+    }
+
+    void removeDeadEnemies() {
+        for (int i = 0; i < enemies.length; i++) {
+            if (enemies[i] != null && enemies[i].isDead()) {
+                enemies[i] = null;
+            }
+        }
+    }
+
+    boolean enemiesAllDead() {
+        for (int i = 0; i < enemies.length; i++) {
+            if (enemies[i] != null) return false;
+        }
+        return true;
     }
 
 
@@ -144,7 +180,10 @@ class levelEngine {
     void setCurrentLevel(int level) {
         currentLevel = level;
     }
-    
+
+    boolean isPaused() {
+        return isPaused;
+    }
     
 
 
@@ -178,7 +217,10 @@ class Enemy {
 
     void takeDamage(int damage) {
         health -= damage;
-        if (health <= 0) isDead = true;
+        if (health <= 0) {
+            isDead = true;
+            soundHandler.playSound("enemyDeath");
+        }
     }
 
     int getX() {
@@ -191,6 +233,10 @@ class Enemy {
 
     int getZ() {
         return cZ;
+    }
+
+    int getRadius() {
+        return 0;
     }
 
 }
@@ -332,6 +378,10 @@ class Asteroid extends Enemy {
         for (int i = 0; i < boxes.length; i++) boxes[i].drawBox();
 
         popMatrix();
+    }
+
+    int getRadius() {
+        return ellipseSize+5;
     }
 
     

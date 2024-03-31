@@ -221,7 +221,6 @@ class Health {
     void update() {
         if (health <= 0) {
             isDead = true;
-            soundHandler.playSound("playerDeath");
         }
     }
 
@@ -243,6 +242,10 @@ class Health {
 
     void unhide() {
         hide = false;
+    }
+
+    int getHealth() {
+        return health;
     }
 
 }

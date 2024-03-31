@@ -17,7 +17,8 @@ class dialogueHandler { // Handles the dialogue, Menu updates the dialogue boxes
         if (currentTrack.getCurrentStatement().equals("END")) {
             sceneIndex++;
             inCutscene = false;
-            System.out.println("End of Dialogue");
+            if (sceneIndex < DIALOGUE.length) currentTrack = DIALOGUE[sceneIndex];
+            // System.out.println("End of Dialogue");
 
 
             if (sceneIndex >= DIALOGUE.length) {
@@ -116,7 +117,6 @@ class dialogueBox {
 
     void display() {
         if (hidden) return;
-
         if (reversed) drawRightDialogueBox();
         else drawLeftDialogueBox();
         
@@ -328,7 +328,10 @@ class dialogueMenu {
     
     void fadeOut() {
         y += fadeSpeed;
-        if (y >= OUT_FRAME_Y) y = OUT_FRAME_Y;
+        if (y >= OUT_FRAME_Y) {
+            y = OUT_FRAME_Y;
+            chosen = false;
+        }
     }
 
     boolean inFrame() {
@@ -420,6 +423,9 @@ class dialogueTrack {
     String[] statements;
     String[] responses;
     String[] speaker;
+    SoundFile[] statementSounds;
+    SoundFile[] responseSounds;
+    SoundFile currentSound;
     DialogueOption options;
     int currentStatement = 0, optionsAppearAt = 0;
 
@@ -477,6 +483,11 @@ class dialogueTrack {
         currentStatement = 0;
     }
 
+    void playSpeaker(int index) {
+        currentSound = statementSounds[index];
+        currentSound.play();
+    }
+
 
 }
 
@@ -490,12 +501,16 @@ dialogueTrack[] DIALOGUE = {
     // Scene 1
     new dialogueTrack(
         new String[] { // Statements
-        "Hello, my name is Gastor. I am the head of the research team here at the facility.",
-        "We are currently studying the effects of the virus on the human body.",
-        "We need your help to gather samples from the infected.",
-        "Please be careful, the infected can be very dangerous.",
+        "Attention ACE! It's General Gastor! The commander in chief of the humanita space force!",
+        "I see that you're adjusting to the new ship well. It's what's going to win us this war!",
+        "The Sopren-Veil need to be wiped off our star maps!",
+        "You're our best pilot, ACE. That's why you're going on the mission no one else can.",
+        "Up ahead is your first challenge. The asteroid fields. They're pretty, but dangerous.",
+        "Don't get distracted. I'll contact you when you're through.",
         "RESPONSE PLACEHOLDER"
     }, new String[] { // Speakers
+        "Gastor",
+        "Gastor",
         "Gastor",
         "Gastor",
         "Gastor",
@@ -503,13 +518,37 @@ dialogueTrack[] DIALOGUE = {
         "Gastor"
     },
     new DialogueOption(new String[] { // Dialogue Options
-        "I'll do my best.",
-        "I'm not sure about this.",
-        "I'm not going to help."
+        "Of course general! Long live humanita!",
+        "I'm ready for the challenge.",
+        "Wait, I forgot to read the briefing packet. What mission? What war?"
     }), new String[] { // Responses
-        "Thank you.",
-        "I understand.",
-        "I see."
-    }, 3)
+        "Long live humanita!",
+        "Good. You'll need to be ready for anything.",
+        "Don't ask meaningless questions! Focus on the mission ahead!"
+    }, 5),
+
+
+    // Scene 2
+    new dialogueTrack(
+        new String[] { // Statements
+        "You've made it through the asteroid fields, ACE. Good job.",
+        "But the Sopren-Veil are still out there. They're not going to make it easy for you.",
+        "You're going to have to fight your way through. I'll be in contact.",
+        "RESPONSE PLACEHOLDER"
+    }, new String[] { // Speakers
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor"
+    },
+    new DialogueOption(new String[] { // Dialogue Options
+        "I'm ready for anything.",
+        "I'll do my best.",
+        "I'm not sure I can do this."
+    }), new String[] { // Responses
+        "Good. You'll need to be ready for anything.",
+        "I know you will.",
+        "You have to. The fate of humanita depends on it."
+    }, 2),
 
 };

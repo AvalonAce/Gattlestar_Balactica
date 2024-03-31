@@ -22,17 +22,13 @@ class Player {
     }
 
     void display() {
-        if (false) return;
+        if (dead) return;
+
+
 
         // Lazer display
         checkfire();
-        for (int i = 0; i < lazers.length; i++) { // Reset lazers
-            if (lazers[i] != null && !lazers[i].isActive()) lazers[i] = null;
-        }
-        for (int i = 0; i < lazers.length; i++) { // Display lazers
-            if (lazers[i] != null && lazers[i].isActive()) lazers[i].update();
-            if (lazers[i] != null && lazers[i].isActive()) lazers[i].display();
-        }
+        lazerUpdate();
 
          // Ship display
         ship.activatePlayerCamera();
@@ -41,20 +37,36 @@ class Player {
         
         // Health display
         health.display();
+
+        
+        if (frameCount % 30 == 0) damaged = false;
         
     }
 
     void update() {
+        if (dead) {
+            // Game over
+            disableFire();
+            return;
+        }
         // Health update
         health.update();
         
     }
+
+    void takeDamage(int damage) {
+        health.takeDamage(damage);
+        damaged = true;
+        if (health.getHealth() <= 0) {
+            dead = true;
+        }
+    }
     
-    void checkfire() {
+    private void checkfire() {
         if (disabledFire) return;
         // Fire lazer on mouse click
         // Delay fire rate using frameCount
-        if (input.fire) {
+        if (input.fire && !damaged) {
             if (frameCount % 10 != 0) return; 
             lazers[currentLazer] = new Lazer(x, y, mouseX+(int)map(mouseX, 0, width, -20, 20), mouseY+(int)map(mouseY, 0, height, -20, 20));
             soundHandler.playSound("shoot");
@@ -71,6 +83,18 @@ class Player {
 
     void enableFire() {
         disabledFire = false;
+    }
+
+    private void lazerUpdate() {
+
+        for (int i = 0; i < lazers.length; i++) { // Reset lazers
+            if (lazers[i] != null && !lazers[i].isActive()) lazers[i] = null;
+        }
+        for (int i = 0; i < lazers.length; i++) { // Display lazers
+            if (lazers[i] != null && lazers[i].isActive()) lazers[i].update();
+            if (lazers[i] != null && lazers[i].isActive()) lazers[i].display();
+        }
+
     }
 
     void moveShip() {
@@ -111,12 +135,30 @@ class Player {
         return y;
     }
 
+    boolean isTouching(Enemy enemy) {
+        return ship.isTouching(enemy);
+    }
+
+
+
     void reset() {
         health.reset();
+        currentLazer = 0;
+        hidden = true;
+        damaged = false;
+        dead = false;
     }
 
     void drawTutorialMovement() {
         ship.drawTutorialMovement();
+    }
+
+    boolean isDamaged() {
+        return damaged;
+    }
+
+    Lazer[] getLazers() {
+        return lazers;
     }
     
 
@@ -125,6 +167,8 @@ class Player {
 class Ship {
 
     int x, y;
+    int hitBoxTop, hitBoxBottom, hitBoxLeft, hitBoxRight;
+    int hitBoxBack, hitBoxFront;
 
 
     Ship() {}
@@ -134,6 +178,7 @@ class Ship {
         else stroke(255);
 
         setShipPosition(x, y);
+        setHitBox();
 
         // Draw ship 
         strokeWeight(2); rectMode(CENTER); 
@@ -153,6 +198,29 @@ class Ship {
     private void setShipPosition(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    private void setHitBox() {
+        hitBoxTop = y - 25;
+        hitBoxBottom = y + 15;
+        hitBoxLeft = x - 45;
+        hitBoxRight = x + 45;
+        hitBoxBack = 0;
+        hitBoxFront = -100;
+        // Debug 
+        // stroke(255,0,0); noFill();
+        // line(hitBoxLeft, hitBoxTop, hitBoxRight, hitBoxTop);
+        // line(hitBoxRight, hitBoxTop, hitBoxRight, hitBoxBottom);
+        // line(hitBoxRight, hitBoxBottom, hitBoxLeft, hitBoxBottom);
+        // line(hitBoxLeft, hitBoxBottom, hitBoxLeft, hitBoxTop);
+
+        // pushMatrix();
+        // translate(0,0,hitBoxFront);
+        // line(hitBoxLeft, hitBoxTop, hitBoxRight, hitBoxTop);
+        // line(hitBoxRight, hitBoxTop, hitBoxRight, hitBoxBottom);
+        // line(hitBoxRight, hitBoxBottom, hitBoxLeft, hitBoxBottom);
+        // line(hitBoxLeft, hitBoxBottom, hitBoxLeft, hitBoxTop);
+        // popMatrix();
     }
 
     private void drawBody(int x, int y) {
@@ -232,6 +300,22 @@ class Ship {
         popMatrix();
     }
 
+    boolean isTouching(Enemy enemy) {
+        // Check if player is touching enemy
+
+        // X and Y hitbox check
+        if (enemy.getX() + enemy.getRadius() > hitBoxLeft && enemy.getX() - enemy.getRadius() < hitBoxRight) {
+            if (enemy.getY() + enemy.getRadius() > hitBoxTop && enemy.getY() - enemy.getRadius() < hitBoxBottom) {
+                // Z hitbox check
+                if (enemy.getZ() + enemy.getRadius() > hitBoxFront && enemy.getZ() - enemy.getRadius() < hitBoxBack) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 }
 
 class Lazer {
@@ -272,6 +356,13 @@ class Lazer {
 
     boolean isActive() {
         return active;
+    }
+
+    boolean isTouching(Enemy enemy) {
+        if (dist(x, y, enemy.getX(), enemy.getY()) < enemy.getRadius()) {
+            return true;
+        }
+        return false;
     }
 
 

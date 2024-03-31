@@ -391,7 +391,44 @@ class gameLevel1 extends Level {
 
 }
 
-class gameLevel2 extends Level {}
+class gameLevel2 extends Level {
+
+  levelEngine levelEngine;
+  boolean introFlag = true, exitFlag = false;
+
+  gameLevel1() {
+      levelEngine = new levelEngine();
+  }
+
+  void display() {
+
+    
+  }
+
+  void update() {
+    levelHandler.setPreviousLevel(4);
+  }
+
+  void intro() {
+
+  }
+
+  void outro() {
+
+  }
+
+
+  levelEngine getLevelEngine() {
+      return levelEngine;
+    }
+
+    void reset() {
+      introFlag = true;
+      exitFlag = false;
+      levelEngine.reset();
+    }
+
+}
 
 class gameLevel3 extends Level {}
 

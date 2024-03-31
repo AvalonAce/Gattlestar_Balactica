@@ -190,6 +190,7 @@ class deathScreenButton extends rButton {
                 levelHandler.setLevel(level);
                 levelHandler.getLevels()[level].getLevelEngine().resetLevelBar();
                 levelHandler.getLevels()[level].getLevelEngine().displayLevelBar();
+                startTime = currentSecond();
 
                 // Reset Dialogue
                 switch (level) {

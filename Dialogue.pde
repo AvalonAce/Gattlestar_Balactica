@@ -542,7 +542,7 @@ dialogueTrack[] DIALOGUE = {
         "Wait, I forgot to read the briefing packet. What mission? What war?"
     }), new String[] { // Responses
         "Long live humanita!",
-        "Good. You'll need to be ready for anything.",
+        "Good! You'll need to be ready for anything.",
         "Don't ask meaningless questions! Focus on the mission ahead!"
     }, 5),
 
@@ -553,7 +553,7 @@ dialogueTrack[] DIALOGUE = {
         "You've made it through the asteroid fields, ACE. Good job!",
         "But the Sopren-Veil aren't going anywhere. You still have a mission to complete!",
         "I've sent coordinates to your ship. Make a lightspeed jump there. I'll contact you after.",
-        "...",
+        "(incoming transmission)",
         "*Static*",
         "RESPONSE PLACEHOLDER"
     }, new String[] { // Speakers
@@ -566,7 +566,7 @@ dialogueTrack[] DIALOGUE = {
     },
     new DialogueOption(new String[] { // Dialogue Options
         "*Ignore the failed communication and jump*",
-        "What? An unknown signal? Something's not right.",
+        "What? An unknown signal? It's nothing but static.",
         "*Attempt to contact the unknown signal*"
     }), new String[] { // Responses
         "...",

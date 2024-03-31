@@ -263,6 +263,7 @@ class Enemy {
 
 }
 
+// Asteroid class
 class Asteroid extends Enemy {
 
     int ellipseSize = 1;
@@ -410,8 +411,23 @@ class Asteroid extends Enemy {
 
 }
 
-class Monster extends Enemy {}
 
+// Monster classes
+class Monster extends Enemy {
+
+    
+
+
+}
+
+class Leviathan extends Monster {}
+
+class StarEater extends Monster {}
+
+class BotFly extends Monster {}
+
+
+// Ship classes
 class enemyShip extends Enemy {}
 
 class bossShip extends Enemy {}

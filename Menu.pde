@@ -43,8 +43,8 @@ class Menu {
             dialogueBoxR.setContent(statement);
         }
         else {
-            dialogueBoxL.setSpeaker("Unknown");
-            dialogueBoxL.setContent(statement);
+            dialogueBoxR.setSpeaker("Unknown");
+            dialogueBoxR.setContent(statement);
         }
     }
 

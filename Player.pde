@@ -68,7 +68,7 @@ class Player {
         // Delay fire rate using frameCount
         if (input.fire && !damaged) {
             if (frameCount % 10 != 0) return; 
-            lazers[currentLazer] = new Lazer(x, y, mouseX+(int)map(mouseX, 0, width, -20, 20), mouseY+(int)map(mouseY, 0, height, -20, 20));
+            lazers[currentLazer] = new Lazer(x, y, 0, mouseX, mouseY, -700);
             soundHandler.playSound("shoot");
             currentLazer++;
             if (currentLazer > 7) currentLazer = 0;
@@ -320,16 +320,18 @@ class Ship {
 
 class Lazer {
 
-    int x, y;
-    int xTarget, yTarget;
+    int x, y, z;
+    int xTarget, yTarget, zTarget;
     int speed, length;
     boolean active = false;
 
-    Lazer(int x, int y, int xTarget, int yTarget) {
+    Lazer(int x, int y, int z, int xTarget, int yTarget, int zTarget) {
         this.x = x;
         this.y = y;
+        this.z = z;
         this.xTarget = xTarget;
         this.yTarget = yTarget;
+        this.zTarget = zTarget;
         speed = 10;
         length = 10;
         active = true;
@@ -344,14 +346,18 @@ class Lazer {
         stroke(255,0,0);
         strokeWeight(2);
         // Draw line in direction of mouse of length 10
-        line(x, y, x + (xTarget - x) / speed, y + (yTarget - y) / speed);
+        line(x, y, z, x + (xTarget - x) / speed, y + (yTarget - y) / speed, z + (zTarget - z) / speed);
     }
 
     void update() {
         if (!active) return;
-        if (dist(x, y, xTarget, yTarget) < length+10) active = false;
+        if (dist(x, y, z, xTarget, yTarget, zTarget) < 10) {
+            active = false;
+            return;
+        }
         x += (xTarget - x) / speed;
         y += (yTarget - y) / speed;
+        z += (zTarget - z) / speed;
     }
 
     boolean isActive() {

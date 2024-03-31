@@ -4,7 +4,7 @@ class levelEngine {
 
     levelBar progressBar;
     int progress = 0, difficultyTime = 18, currentLevel = 1;
-    int MAX_PROGRESS = 100;
+    int MAX_PROGRESS = 10;
     boolean isPaused = false;
     Enemy[] enemies;
 
@@ -20,6 +20,7 @@ class levelEngine {
      }
 
     void update() {
+        
         if (isPaused) {
             if (!enemiesAllDead()) {
                 updateEnemies();
@@ -47,6 +48,7 @@ class levelEngine {
 
     void reset() {
         progress = 0;
+        decideDifficulty();
     }
 
     void displayLevelBar() {
@@ -150,7 +152,6 @@ class levelEngine {
         return true;
     }
 
-
     private void decideDifficulty() {
         switch (difficulty) {
             case 1:
@@ -159,11 +160,11 @@ class levelEngine {
                 break;
             case 2:
                 difficultyTime = 36; // 1 Minute
-                enemies = new Enemy[50];
+                enemies = new Enemy[40];
                 break;
             case 3:
-                difficultyTime = 72; // 2 Minutes
-                enemies = new Enemy[100];
+                difficultyTime = 42; // 1 Minute 15 Seconds
+                enemies = new Enemy[45];
                 break;
             default :
                 difficultyTime = 18; // 30 Seconds
@@ -272,22 +273,22 @@ class Asteroid extends Enemy {
         // Set stats based on global difficulty
         switch (difficulty) {
             case 1:
-                health = (int)random(30, 50);
+                health = (int)random(20, 50);
                 damage = 5;
-                acc = 3;
+                acc = 5;
                 ellipseSize = (int)random(10, 50);
                 break;
             case 2:
-                health = (int)random(50, 100);
-                damage = 15;
-                acc = 5;
-                ellipseSize = (int)random(20, 75);
+                health = (int)random(20, 60);
+                damage = 10;
+                acc = 10;
+                ellipseSize = (int)random(20, 90);
                 break;
             case 3:
-                health = (int)random(100, 150);
-                damage = 30;
-                acc = 10;
-                ellipseSize = (int)random(30, 110);
+                health = (int)random(20, 70);
+                damage = 15;
+                acc = 12;
+                ellipseSize = (int)random(30, 80);
                 break;
             default:
                 health = (int)random(30, 50);
@@ -301,9 +302,9 @@ class Asteroid extends Enemy {
     private void setPos() {
         // Set position of asteroid
         // Random x,y,z within bounds, z from -1000 to 500
-        cX = (int)random(-100, width-100);
-        cY = (int)random(-100, height-100);
-        cZ = (int)random(-1500, -500);
+        cX = (int)random(-100, width+100);
+        cY = (int)random(-100, height+100);
+        cZ = (int)random(-1500, -600);
     }
 
     void setBoxes() {
@@ -385,26 +386,6 @@ class Asteroid extends Enemy {
     }
 
     
-
-}
-
-class bigAsteroid extends Asteroid {
-
-    bigAsteroid() {
-        r = 255; g = 0; b = 100;
-        ellipseSize = 500;
-        setBoxes();
-        cX = width/2;
-        cY = height/2;
-        cZ = -500;
-    }
-
-    void display() {
-        if (isDead()) return;
-
-        // Display asteroid
-        drawAsteroid();
-    }
 
 }
 

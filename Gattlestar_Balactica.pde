@@ -35,13 +35,11 @@ void setup() {
   // Camera
   cameraX = width/2.0; cameraY = height/2.0; cameraZ = (height/2.0) / tan(PI*30.0 / 180.0);
   centerX = width/2.0; centerY = height/2.0; centerZ = 0;
-  System.out.println("Camera: " +(height/2.0) / tan(PI*30.0 / 180.0));
 
 }
 
 
 void draw() {
-  
   cam.update();
   input.update();
 
@@ -50,15 +48,6 @@ void draw() {
 
   graphicsHandler.display();
   graphicsHandler.update();
-
-
-  // // Display camera axis
-  // stroke(255,0,0);
-  // line(width/2, height/2, 0, width/2 + 100, height/2, 0);d
-  // stroke(0,255,0);
-  // line(width/2, height/2, 0, width/2, height/2 + 100, 0);
-  // stroke(0,0,255);
-  // line(width/2, height/2, 0, width/2, height/2, 100);
 
 }
 

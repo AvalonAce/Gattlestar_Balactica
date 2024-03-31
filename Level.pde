@@ -81,6 +81,8 @@ class Level {
     exit();
   }
 
+  void reset() {}
+
 }
 
 boolean tanim = false;
@@ -175,6 +177,14 @@ class mainMenu extends Level {
     return null;
   }
 
+  void reset() {
+    tHeight = height/4.0;
+    getButton("Start").reset();
+    getButton("Quit").reset();
+    getButton("Difficulty").reset();
+    tanim = false;
+  }
+
  
 
 }
@@ -261,10 +271,12 @@ class gameLevel1 extends Level {
         dialogueHandler.menu().fadeDialogueBoxLIn();
         if (dialogueHandler.isInChoice()) dialogueHandler.menu().fadeDialogueMenuIn();
 
+        // Leave Cutscene
         if (dialogueHandler.isInCutscene()) return;
         else {
           player.enableFire();
           startTime = currentSecond();
+          levelEngine.reset();
           levelEngine.resume();
           introFlag = false;
           }
@@ -293,13 +305,49 @@ class gameLevel1 extends Level {
       // Cutscene
       if (currentSecond() > startTime + 5) {
         player.disableFire();
+
         // Menu
         dialogueHandler.setCutscene(true);
         dialogueHandler.display();
         dialogueHandler.update();
-        dialogueHandler.menu().fadeGastorIn();
-        dialogueHandler.menu().fadeDialogueBoxLIn();
+
+        if (dialogueHandler.getCurrentSpeaker().equals("Gastor")){
+          dialogueHandler.menu().fadeGastorIn();
+          dialogueHandler.menu().fadeDialogueBoxLIn();
+        }
+        else {
+          dialogueHandler.menu().hideGastor();
+          dialogueHandler.menu().hideDialogueBoxL();
+          dialogueHandler.menu().fadeUnknownIn();
+          dialogueHandler.menu().fadeDialogueBoxRIn();
+        }
+        
+
         if (dialogueHandler.isInChoice()) dialogueHandler.menu().fadeDialogueMenuIn();
+
+        // Leave Cutscene to level 2
+        if (dialogueHandler.isInCutscene()) {
+          dialogueHandler.menu().fadeDialogueBoxROut();
+          dialogueHandler.menu().fadeUnknownOut();
+          dialogueHandler.menu().fadeGastorOut();
+          dialogueHandler.menu().fadeDialogueBoxLOut();
+        }
+        else {
+          levelEngine.reset();
+          // levelEngine.resume();
+
+          // Menu
+
+
+          // startTime = currentSecond();
+          // exitFlag = false;
+          // introFlag = true;
+
+          // levelHandler.getLevels()[0].reset();
+          // levelHandler.setLevel(0);
+        }
+
+
         
       }
       

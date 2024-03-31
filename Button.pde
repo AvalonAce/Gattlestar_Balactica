@@ -60,6 +60,12 @@ class rButton {
         disabled = false;
     }
 
+    void reset() {
+        disabled = false;
+        animating = false;
+        z = (int)cameraZ;
+    }
+
 
 }
 

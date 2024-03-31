@@ -94,6 +94,10 @@ class dialogueHandler { // Handles the dialogue, Menu updates the dialogue boxes
         return isChoice;
     }
 
+    String getCurrentSpeaker() {
+        return currentTrack.getSpeaker();
+    }
+
 }
 
 class dialogueBox {
@@ -493,7 +497,7 @@ class dialogueTrack {
 
 
 
-// ALL DIALOGUE OPTIONS -- 1 Array, 9 dialogueTracks, Scenes 1,3,5,7, and 9 have dialogue options
+// ALL DIALOGUE OPTIONS -- 1 Array, 7 dialogueTracks, All scenes have dialogue options
 // 9 SCENES, 3 PER LEVEL
 
 dialogueTrack[] DIALOGUE = {
@@ -531,24 +535,26 @@ dialogueTrack[] DIALOGUE = {
     // Scene 2
     new dialogueTrack(
         new String[] { // Statements
-        "You've made it through the asteroid fields, ACE. Good job.",
-        "But the Sopren-Veil are still out there. They're not going to make it easy for you.",
-        "You're going to have to fight your way through. I'll be in contact.",
+        "You've made it through the asteroid fields, ACE. Good job!",
+        "But the Sopren-Veil aren't going anywhere. You still have a mission to complete!",
+        "I've sent coordinates to your ship. Make a lightspeed jump. I'll contact you after.",
+        "*Static*",
         "RESPONSE PLACEHOLDER"
     }, new String[] { // Speakers
         "Gastor",
         "Gastor",
         "Gastor",
-        "Gastor"
+        "Unknown",
+        "Unknown"
     },
     new DialogueOption(new String[] { // Dialogue Options
-        "I'm ready for anything.",
-        "I'll do my best.",
-        "I'm not sure I can do this."
+        "*Ignore the failed communication and jump*",
+        "What? An unknown signal? Something's not right.",
+        "*Attempt to contact the unknown signal*"
     }), new String[] { // Responses
-        "Good. You'll need to be ready for anything.",
-        "I know you will.",
-        "You have to. The fate of humanita depends on it."
-    }, 2),
+        "...",
+        "...",
+        "S- ... He- ... *static* ... *static* ... Don't- "
+    }, 3),
 
 };

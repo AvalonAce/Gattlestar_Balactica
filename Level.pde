@@ -271,24 +271,24 @@ class gameLevel1 extends Level {
 
     void intro() {
       graphicsHandler.setStarFlag(true);
+      graphicsHandler.setSlowStarAcc();
       player.reset();
       levelEngine.reset();
       levelEngine.pause();
-      
-      // System.out.println("Start Time: " + startTime);
-      // System.out.println("Current Time: " + currentSecond());
+      player.display();
+      player.update();
 
       // Several Seconds in
       if (currentSecond() > startTime + 5) {
         // Player 
-        player.display();
-        player.update();
         player.disableFire();
 
         // Menu
         dialogueHandler.setCutscene(true);
         dialogueHandler.display();
         dialogueHandler.update();
+        dialogueHandler.menu().revealGastor();
+        dialogueHandler.menu().revealDialogueBoxL();
         dialogueHandler.menu().fadeGastorIn();
         dialogueHandler.menu().fadeDialogueBoxLIn();
         if (dialogueHandler.isInChoice()) dialogueHandler.menu().fadeDialogueMenuIn();
@@ -306,8 +306,6 @@ class gameLevel1 extends Level {
       }
       // Start
       else if (currentSecond() > startTime) {
-        player.display();
-        player.update();
         player.drawTutorialMovement();
         
       }
@@ -343,8 +341,6 @@ class gameLevel1 extends Level {
           else {
             dialogueHandler.menu().fadeGastorOut();
             dialogueHandler.menu().fadeDialogueBoxLOut();
-            // dialogueHandler.menu().hideGastor();
-            // dialogueHandler.menu().hideDialogueBoxL();
             dialogueHandler.menu().fadeUnknownIn();
             dialogueHandler.menu().fadeDialogueBoxRIn();
           }
@@ -352,7 +348,7 @@ class gameLevel1 extends Level {
 
         }
         else {
-          levelEngine.reset();
+          // levelEngine.reset();
           // levelEngine.resume();
 
           // Menu
@@ -360,8 +356,6 @@ class gameLevel1 extends Level {
           dialogueHandler.menu().fadeUnknownOut();
           dialogueHandler.menu().fadeGastorOut();
           dialogueHandler.menu().fadeDialogueBoxLOut();
-          // dialogueHandler.menu().revealGastor();
-          // dialogueHandler.menu().revealDialogueBoxL();
 
           // startTime = currentSecond();
           // exitFlag = false;
@@ -396,11 +390,24 @@ class gameLevel2 extends Level {
   levelEngine levelEngine;
   boolean introFlag = true, exitFlag = false;
 
-  gameLevel1() {
+  gameLevel2() {
       levelEngine = new levelEngine();
   }
 
   void display() {
+    background(0);
+    levelEngine.setCurrentLevel(2);
+    levelEngine.unhideLevelBar();
+    levelEngine.displayLevelBar();
+
+    if (introFlag) intro();
+    else if (exitFlag) outro();
+    else { // Level 2
+      // Graphics
+      graphicsHandler.setFastStarAcc();
+
+
+    }
 
     
   }
@@ -410,6 +417,17 @@ class gameLevel2 extends Level {
   }
 
   void intro() {
+      graphicsHandler.setStarFlag(true);
+      graphicsHandler.setSlowStarAcc();
+      player.reset();
+      player.display();
+      player.update();
+      levelEngine.reset();
+      levelEngine.pause();
+
+
+
+      
 
   }
 
@@ -420,13 +438,13 @@ class gameLevel2 extends Level {
 
   levelEngine getLevelEngine() {
       return levelEngine;
-    }
+  }
 
-    void reset() {
-      introFlag = true;
-      exitFlag = false;
-      levelEngine.reset();
-    }
+  void reset() {
+    introFlag = true;
+    exitFlag = false;
+    levelEngine.reset();
+  }
 
 }
 

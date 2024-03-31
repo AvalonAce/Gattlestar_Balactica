@@ -48,6 +48,7 @@ class levelEngine {
 
     void reset() {
         isLevelOver = false;
+        isPaused = false;
         progress = 0;
         player.reset();
         decideDifficulty();
@@ -96,7 +97,7 @@ class levelEngine {
                         enemies[i] = new Asteroid();
                         break;
                     case 2:
-                        enemies[i] = new Asteroid();
+                        enemies[i] = new Asteroid(); // Change
                         break;
                     case 3:
                         enemies[i] = new Asteroid();

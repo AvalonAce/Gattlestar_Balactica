@@ -11,6 +11,7 @@ class soundHandler {
     SoundFile dialogueClick;
     SoundFile continueClick;
     SoundFile hit;
+    SoundFile gameOver;
     Sound s;
 
     boolean soundOn = true;
@@ -24,6 +25,7 @@ class soundHandler {
         dialogueClick = new SoundFile(p, "snd/dialogue_click.mp3");
         continueClick = new SoundFile(p, "snd/continue_click.wav");
         hit = new SoundFile(p, "snd/hit.wav");
+        gameOver = new SoundFile(p, "snd/game_over.wav");
         s = new Sound(p);
     }
 
@@ -64,6 +66,10 @@ class soundHandler {
                     if (shoot.isPlaying()) return;
                     s.volume(0.5);
                     hit.play();
+                break;
+                case "gameOver":
+                    s.volume(0.5);
+                    gameOver.play();
                 break;
             }
         }

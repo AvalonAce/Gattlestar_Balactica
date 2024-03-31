@@ -6,6 +6,7 @@ class levelHandler {
   Level currentLevel;
   levelEngine levelEngine;
   Level[] levels = new Level[9];
+  boolean restarted = false;
   int previousLevel = 0;
   
   levelHandler(Player player, soundHandler soundHandler, graphicsHandler graphicsHandler) {
@@ -62,6 +63,10 @@ class levelHandler {
     currentLevel = levels[newLevel];
   }
 
+  void restartSound() {
+    restarted = false;
+  }
+
   Level[] getLevels() {
     return levels;
   }
@@ -83,6 +88,10 @@ class levelHandler {
   }
 
   void gameOver() {
+    if (!restarted) {
+      soundHandler.playSound("gameOver");
+      restarted = true;
+    }
     setLevel(8);
   }
 
@@ -425,7 +434,16 @@ class gameLevel2 extends Level {
       levelEngine.reset();
       levelEngine.pause();
 
+    if (currentSecond() > startTime + 5) {
+      
 
+      // Leave Cutscene
+      if (dialogueHandler.isInCutscene()) return;
+      else {
+        
+        }
+      
+    }
 
       
 

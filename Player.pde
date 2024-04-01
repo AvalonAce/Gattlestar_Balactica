@@ -142,6 +142,10 @@ class Player {
         return y;
     }
 
+    int getZ() {
+        return ship.getZ();
+    } 
+
     boolean isTouching(Enemy enemy) {
         return ship.isTouching(enemy);
     }
@@ -323,15 +327,35 @@ class Ship {
     boolean isTouching(Enemy enemy) {
         // Check if player is touching enemy
 
-        // X and Y hitbox check
-        if (enemy.getX() + enemy.getRadius() > hitBoxLeft && enemy.getX() - enemy.getRadius() < hitBoxRight) {
-            if (enemy.getY() + enemy.getRadius() > hitBoxTop && enemy.getY() - enemy.getRadius() < hitBoxBottom) {
-                // Z hitbox check
-                if (enemy.getZ() + enemy.getRadius() > hitBoxFront && enemy.getZ() - enemy.getRadius() < hitBoxBack) {
-                    return true;
+        // X and Y hitbox check based on enemy type // ADD STAR EATER
+        if (enemy instanceof Asteroid) {
+            if (enemy.getX() + enemy.getRadius() > hitBoxLeft && enemy.getX() - enemy.getRadius() < hitBoxRight) {
+                if (enemy.getY() + enemy.getRadius() > hitBoxTop && enemy.getY() - enemy.getRadius() < hitBoxBottom) {
+                    // Z hitbox check
+                    if (enemy.getZ() + enemy.getRadius() > hitBoxFront && enemy.getZ() - enemy.getRadius() < hitBoxBack) {
+                        return true;
+                    }
                 }
             }
         }
+        
+        else if (enemy instanceof Leviathan) {
+
+
+        }
+
+        else if (enemy instanceof BotFly) {
+
+
+
+        }
+
+        else if (enemy instanceof enemyShip) {
+
+
+            
+        }
+
 
         return false;
     }
@@ -346,6 +370,10 @@ class Ship {
 
     void resetZ() {
         z = 0;
+    }
+
+    int getZ() {
+        return z;
     }
 
 }
@@ -397,9 +425,27 @@ class Lazer {
     }
 
     boolean isTouching(Enemy enemy) {
-        if (dist(x, y, enemy.getX(), enemy.getY()) < enemy.getRadius()) {
-            return true;
+        
+        if (enemy instanceof Asteroid || enemy instanceof StarEater) {
+            if (dist(x, y, enemy.getX(), enemy.getY()) < enemy.getRadius()) return true;
         }
+
+        else if (enemy instanceof Leviathan) {
+
+
+        }
+        else if (enemy instanceof BotFly) {
+
+
+                
+        }
+
+        else if (enemy instanceof enemyShip) {
+
+
+
+        }
+
         return false;
     }
 

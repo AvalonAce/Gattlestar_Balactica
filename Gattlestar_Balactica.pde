@@ -8,7 +8,7 @@ graphicsHandler graphicsHandler;
 dialogueHandler dialogueHandler;
 soundHandler soundHandler;
 
-int difficulty = 0;
+int difficulty = 3;
 int startTime = 0;
 float cameraX, cameraY, cameraZ, centerX, centerY, centerZ;
 PFont mainFont, titleFont;

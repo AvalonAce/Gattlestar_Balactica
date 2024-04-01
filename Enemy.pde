@@ -4,7 +4,7 @@ class levelEngine {
 
     levelBar progressBar;
     int progress = 0, difficultyTime = 18, currentLevel = 1;
-    int MAX_PROGRESS = 5;
+    int MAX_PROGRESS = 100;
     boolean isPaused = false, isLevelOver = false;
     Enemy[] enemies;
 
@@ -20,7 +20,7 @@ class levelEngine {
      }
 
     void update() {
-        if (isLevelOver) return;
+        if (isLevelOver) {}
         if (isPaused) {
             if (!enemiesAllDead()) {
                 updateEnemies();
@@ -97,7 +97,7 @@ class levelEngine {
                         enemies[i] = new Asteroid();
                         break;
                     case 2:
-                        enemies[i] = new Asteroid(); // Change
+                        enemies[i] = new StarEater();
                         break;
                     case 3:
                         enemies[i] = new Asteroid();
@@ -142,6 +142,7 @@ class levelEngine {
 
             }
         }
+
     }
 
     void removeDeadEnemies() {
@@ -426,18 +427,136 @@ class Asteroid extends Enemy {
 
 
 // Monster classes
-class Monster extends Enemy {
 
+class Leviathan extends Enemy {
     
+    Leviathan() {
+
+    }
+
+}
+
+class StarEater extends Enemy {
+
+    int ellipseSize = 1;
+
+    StarEater() {
+        setStats();
+        setPos();
+    }
+
+    void display() {
+        if (isDead()) return;
+
+        // Display Leviathan
+        drawStarEater();
+    }
+
+    void update() {
+        if (isDead()) return;
+        super.update();
+        // Update Monster
+        cZ += acc;
+    }
+
+    void setStats() {
+        // Set stats based on global difficulty
+        switch (difficulty) {
+            case 1:
+                health = 20;
+                damage = 5;
+                acc = 5;
+                ellipseSize = 40;
+                break;
+            case 2:
+                health = (int)random(20, 30);
+                damage = 10;
+                acc = 10;
+                ellipseSize = 50;
+                break;
+            case 3:
+                health = (int)random(20, 40);
+                damage = 20;
+                acc = 15;
+                ellipseSize = 60;
+                break;
+            default:
+                health = 20;
+                damage = 5;
+                acc = 5;
+                ellipseSize = 50;
+                break;
+        }
+    }
+
+    void setPos() {
+        cX = (int)random(-100, width+100);
+        cY = (int)random(-100, height+100);
+        cZ = (int)random(-1500, -1000);
+    }
+
+
+
+    void drawStarEater() {
+        pushMatrix();
+
+        // StarEater consists of a sphere with custom starfish shaped tentacles, and a mouth
+        translate(cX, cY, cZ);
+        strokeWeight(1); 
+        noStroke(); fill(255,0,255,20);
+        ellipse(0, 0, ellipseSize/1.5, ellipseSize/1.5);
+        stroke(255); noFill();
+        ellipse(0, 0, ellipseSize, ellipseSize);
+
+        // Rotate towards player
+        float angle = atan2(player.getY() - cY, abs(player.getX() - cX));
+        rotateX(-angle);
+        // Base rotation Y on cZ
+        angle = atan2(player.getZ() - cZ - 300, abs(player.getX() - cX));
+        // If player is to the right of monster, rotate right
+        if (player.getX() > cX) angle = -angle;
+        rotateY(angle);
+
+        // Draw Mouth and Tentacles
+        translate(0, 0, ellipseSize/2);
+        fill(255, 0, 0, 50); stroke(0);
+        circle(0, 0, ellipseSize/2);
+        translate(0, 0, 1);
+        fill(0,99); stroke(0);
+        circle(0, 0, ellipseSize/3);
+        // Tentacles
+        translate(0, 0, 10);
+        fill(255,0,0,40); stroke(255, 0, 0, 50); strokeWeight(2);
+        beginShape();
+        for (int i = 0; i < 360; i+= 60) {
+            float x = cos(radians(i)) * ellipseSize/2;
+            float y = sin(radians(i)) * ellipseSize/2;
+            vertex(x, y);
+            x = cos(radians(i+30)) * ellipseSize/1.5;
+            y = sin(radians(i+30)) * ellipseSize/1.5;
+            vertex(x, y);
+        }
+        endShape();
+
+        popMatrix();
+    }
+
+    int getRadius() {
+        return ellipseSize+20;
+    }
+
 
 
 }
 
-class Leviathan extends Monster {}
+class BotFly extends Enemy {
 
-class StarEater extends Monster {}
+    BotFly() {
+        super();
 
-class BotFly extends Monster {}
+    }
+
+}
 
 
 // Ship classes

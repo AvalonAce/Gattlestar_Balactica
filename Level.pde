@@ -21,7 +21,7 @@ class levelHandler {
     levels[6] = new gameLevel3();
     levels[7] = new transition("End");
     levels[8] = new deathScreen(this);
-    currentLevel = levels[0];
+    currentLevel = levels[4];
   }
 
   void display() {
@@ -386,6 +386,7 @@ class gameLevel1 extends Level {
             levelHandler.getLevels()[2].reset();
             levelHandler.setLevel(3);
             player.resetShipToCenter();
+            player.enableFire();
           }
         }
 
@@ -417,7 +418,7 @@ class gameLevel1 extends Level {
 class gameLevel2 extends Level {
 
   levelEngine levelEngine;
-  boolean introFlag = true, exitFlag = false;
+  boolean introFlag = false, exitFlag = false, trueExitFlag = false;
 
   gameLevel2() {
       levelEngine = new levelEngine();
@@ -434,6 +435,28 @@ class gameLevel2 extends Level {
     else { // Level 2
       // Graphics
       graphicsHandler.setFastStarAcc();
+
+      // Level Start
+      levelEngine.resume();
+      levelEngine.update();
+
+      // Fade out Menu
+      // dialogueHandler.display();
+      // dialogueHandler.update();
+      // dialogueHandler.menu().fadeGastorOut();
+      // dialogueHandler.menu().fadeDialogueBoxLOut();
+
+      // Player Update
+      player.display();
+      player.update();
+
+      // Level End
+      // if (levelEngine.levelOver()) {
+      //   System.out.println("Level Over");
+      //   levelEngine.pause();
+      //   startTime = currentSecond();
+      //   exitFlag = true;
+      // }
 
 
     }

@@ -13,13 +13,13 @@ class levelHandler {
     this.player = player;
     // Level Setup
     levels[0] = new mainMenu(this, soundHandler);
-    levels[1] = new transition();
+    levels[1] = new transition("Asteroid");
     levels[2] = new gameLevel1();
-    levels[3] = new transition();
+    levels[3] = new transition("Monster");
     levels[4] = new gameLevel2();
-    levels[5] = new transition();
+    levels[5] = new transition("Ship");
     levels[6] = new gameLevel3();
-    levels[7] = new transition();
+    levels[7] = new transition("End");
     levels[8] = new deathScreen(this);
     currentLevel = levels[0];
   }
@@ -171,10 +171,9 @@ class mainMenu extends Level {
       
     } else if (tanim && startTime + 4000 < millis()) {
       tanim = false;
-      startTime = 0;
       graphicsHandler.setStarFlag(false);
       graphicsHandler.setTitleFlag(false);
-      levelHandler.setLevel(2);
+      levelHandler.setLevel(1);
       startTime = currentSecond();
       graphicsHandler.moveStarsBack();
     }
@@ -370,8 +369,8 @@ class gameLevel1 extends Level {
           // exitFlag = false;
           // introFlag = true;
 
-          // levelHandler.getLevels()[0].reset();
-          // levelHandler.setLevel(0);
+          // levelHandler.getLevels()[2].reset();
+          // levelHandler.setLevel(2);
         }
 
 
@@ -434,7 +433,7 @@ class gameLevel2 extends Level {
       levelEngine.reset();
       levelEngine.pause();
 
-    if (currentSecond() > startTime + 5) {
+    if (currentSecond() > startTime + 2) {
       
 
       // Leave Cutscene
@@ -473,14 +472,93 @@ class gameLevel4 extends Level {}
 
 class transition extends Level {
 
+    String type, title, level;
 
-    transition() {}
+    transition(String type) {
+      this.type = type;
+      title = ""; level = "";
+    }
+
+
 
     void display() {
       background(0);
+
+      if (startTime + 7 < currentSecond()) {
+        levelDecide();
+      }
+      else if (startTime + 5 < currentSecond()) {}
+      else if (startTime + 2 < currentSecond()) {
+        // Transition Word Display
+        transitionTitle();
+        switch (difficulty) {
+          case 1:
+            fill(255);
+            text(level, width/2, height/2 - 100);
+            text(title, width/2, height/2 + 50);
+            break;
+          case 2:
+            fill(255);
+            text(level, width/2, height/2 - 100);
+            fill(1, 206, 178);
+            text(title, width/2 + (random(-2,2)), height/2 + (random(-2,2)) + 50); 
+            break;
+          case 3:
+            fill(1, 206, 178);
+            text(level, width/2 + (random(-5,5)), height/2 + (random(-5,5)) - 100);
+            text(title, width/2 + (random(-5,5)), height/2 + (random(-5,5)) + 50);
+            break;
+          default:
+            fill(255);
+            text(level, width/2, height/2 - 100);
+            text(title, width/2, height/2 + 50);
+            break;
+
+        }
+      }
+      else if (startTime < currentSecond()) {}
+      
     }
 
     void update() {}
+
+    private void transitionTitle() {
+      textFont(titleFont); textAlign(CENTER, CENTER);
+      switch (type) {
+        case "Asteroid":
+          level = "ASTEROID";
+          title = "FIELDS";
+          break;
+        case "Monster":
+          level = "BOÖTES";
+          title = "MONSTRA";
+          break;
+        case "Ship":
+          level = "THE VEIL";
+          title = "FLEET";
+          break;
+        case "End":
+          level = "GATTLESTAR";
+          title = "BALACTICA";
+          break;
+        default:
+          level = "ASTEROID";
+          title = "FIELDS";
+          break;
+      }
+
+    }
+
+    private void levelDecide() {
+      if (type == "Asteroid") levelHandler.setLevel(2);
+      else if (type == "Monster") levelHandler.setLevel(4);
+      else if (type == "Ship") levelHandler.setLevel(6);
+      else if (type == "End") {
+        levelHandler.setLevel(0);
+        dialogueHandler.reset();
+      }
+      startTime = currentSecond();
+    }
 
 }
 

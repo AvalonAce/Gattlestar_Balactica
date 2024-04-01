@@ -278,6 +278,18 @@ class Asteroid extends Enemy {
         setBoxes(); 
     }
 
+    Asteroid(int x, int y, int z,int size)  {
+        this.cX = x;
+        this.cY = y; 
+        this.cZ = z;
+        ellipseSize = size;
+        health = (int)random(20, 50);
+        damage = 5;
+        acc = 5;
+        setColor();
+        setBoxes();
+    }
+
     void display() {
         if (isDead()) return;
 

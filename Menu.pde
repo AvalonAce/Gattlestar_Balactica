@@ -171,6 +171,10 @@ class Menu {
     void revealDialogueBoxR() {
         dialogueBoxR.unhide();
     }
+
+    boolean allBoxesHidden() {
+        return Gastor.outFrameLeft() && Solara.outFrameRight() && unknown.outFrameRight() && dialogueBoxL.outFrame() && dialogueBoxR.outFrame();
+    }
      
 
 }

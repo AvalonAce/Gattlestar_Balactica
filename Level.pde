@@ -117,6 +117,8 @@ class Level {
     return null;
   }
 
+  void trueExit() {}
+
 }
 
 boolean tanim = false;
@@ -226,7 +228,7 @@ class mainMenu extends Level {
 class gameLevel1 extends Level {
 
     levelEngine levelEngine;
-    boolean introFlag = true, exitFlag = false;
+    boolean introFlag = true, exitFlag = false, trueExitFlag = false;
 
     gameLevel1() {
       levelEngine = new levelEngine();
@@ -279,6 +281,7 @@ class gameLevel1 extends Level {
 
     void intro() {
       graphicsHandler.setStarFlag(true);
+      graphicsHandler.setTitleFlag(false);
       graphicsHandler.setSlowStarAcc();
       player.reset();
       levelEngine.reset();
@@ -356,8 +359,6 @@ class gameLevel1 extends Level {
 
         }
         else {
-          // levelEngine.reset();
-          // levelEngine.resume();
 
           // Menu
           dialogueHandler.menu().fadeDialogueBoxROut();
@@ -365,12 +366,27 @@ class gameLevel1 extends Level {
           dialogueHandler.menu().fadeGastorOut();
           dialogueHandler.menu().fadeDialogueBoxLOut();
 
-          startTime = currentSecond();
-          exitFlag = false;
-          introFlag = true;
 
-          // levelHandler.getLevels()[2].reset();
-          levelHandler.setLevel(3);
+          // After all dialogue hidden, transition
+          if (dialogueHandler.menu().allBoxesHidden()) {
+            graphicsHandler.setStarFlag(false);
+            graphicsHandler.setTitleFlag(true);
+            graphicsHandler.setSuperFastStarAcc();
+            // Speed up transition
+            player.animateForwardDrive(2);
+            cameraZ -= 20;
+            
+          }
+
+          if (trueExitFlag) {
+            cameraZ = (height/2.0) / tan(PI*30.0 / 180.0); // Reset Camera
+            exitFlag = false;
+            introFlag = true;
+            startTime = currentSecond();
+            levelHandler.getLevels()[2].reset();
+            levelHandler.setLevel(3);
+            player.resetShipToCenter();
+          }
         }
 
 
@@ -387,7 +403,12 @@ class gameLevel1 extends Level {
     void reset() {
       introFlag = true;
       exitFlag = false;
+      trueExitFlag = false;
       levelEngine.reset();
+    }
+
+    void trueExit() {
+      trueExitFlag = true;
     }
 
 

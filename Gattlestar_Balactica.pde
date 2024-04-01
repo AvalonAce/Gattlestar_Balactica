@@ -15,6 +15,7 @@ PFont mainFont, titleFont;
 
 
 void setup() {
+
   size(1000,1000,P3D);
   background(0);
   // Font

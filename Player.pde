@@ -149,10 +149,16 @@ class Player {
 
     void reset() {
         health.reset();
+        ship.resetZ();
         currentLazer = 0;
         hidden = true;
         damaged = false;
         dead = false;
+    }
+
+    void resetShipToCenter() {
+        x = width / 2;
+        y = height / 2;
     }
 
     void drawTutorialMovement() {
@@ -166,13 +172,17 @@ class Player {
     Lazer[] getLazers() {
         return lazers;
     }
+
+    void animateForwardDrive(int level) {
+        ship.animateForwardDrive(level);
+    }
     
 
 }
 
 class Ship {
 
-    int x, y;
+    int x, y, z = 0;
     int hitBoxTop, hitBoxBottom, hitBoxLeft, hitBoxRight;
     int hitBoxBack, hitBoxFront;
 
@@ -236,34 +246,34 @@ class Ship {
     private void drawBody(int x, int y) {
         noFill();
         beginShape();
-        vertex(x-35, y+12, 0); // Back
-        vertex(x+35, y+12, 0);
-        vertex(x+15, y-12, 0);
-        vertex(x-15, y-12, 0);
-        vertex(x-35, y+12, 0); // Back
-        vertex(x-35, y+12, -100); // Bottom
-        vertex(x+35, y+12, -100);
-        vertex(x+35, y+12, 0); // Bottom
-        vertex(x+15, y-12, 0); // Right
-        vertex(x+15, y-12, -40); 
-        vertex(x+35, y+12, -100); // Right
-        vertex(x-35, y+12, -100); // Left
-        vertex(x-15, y-12, -40);
-        vertex(x-15, y-12, 0); // Left
-        vertex(x-15, y-12, -40); // Top
-        vertex(x+15, y-12, -40);
+        vertex(x-35, y+12, z); // Back
+        vertex(x+35, y+12, z);
+        vertex(x+15, y-12, z);
+        vertex(x-15, y-12, z);
+        vertex(x-35, y+12, z); // Back
+        vertex(x-35, y+12, z-100); // Bottom
+        vertex(x+35, y+12, z-100);
+        vertex(x+35, y+12, z); // Bottom
+        vertex(x+15, y-12, z); // Right
+        vertex(x+15, y-12, z-40); 
+        vertex(x+35, y+12, z-100); // Right
+        vertex(x-35, y+12, z-100); // Left
+        vertex(x-15, y-12, z-40);
+        vertex(x-15, y-12, z); // Left
+        vertex(x-15, y-12, z-40); // Top
+        vertex(x+15, y-12, z-40);
         endShape();
     }
 
     private void drawEngines(int x, int y) {
         fill(1, 206, 178); 
         pushMatrix();
-        translate(x,y,5);
+        translate(x,y,z+5);
         box(20,10,10);
-        translate(-35, 0, -15);
+        translate(-35, 0, z-15);
         stroke(1, 206, 178);
         sphere(8);
-        translate(70,0, 0);
+        translate(70,0, z);
         sphere(8);
         popMatrix();
         stroke(255);
@@ -272,19 +282,19 @@ class Ship {
     private void drawWings(int x, int y) {
         fill(1, 206, 178);
         beginShape(); // Left Wing
-        vertex(x-27, y, -30);
-        vertex(x-65, y, -30);
-        vertex(x-27, y, -50);
+        vertex(x-27, y, z-30);
+        vertex(x-65, y, z-30);
+        vertex(x-27, y, z-50);
         endShape();
         beginShape(); // Right Wing
-        vertex(x+27, y, -30);
-        vertex(x+65, y, -30);
-        vertex(x+27, y, -50);
+        vertex(x+27, y, z-30);
+        vertex(x+65, y, z-30);
+        vertex(x+27, y, z-50);
         endShape();
         beginShape(); // Vertical Wing
-        vertex(x, y-12, -10);
-        vertex(x, y-35, -10);
-        vertex(x, y-12, -30);
+        vertex(x, y-12, z-10);
+        vertex(x, y-35, z-10);
+        vertex(x, y-12, z-30);
         endShape();
     }
 
@@ -324,6 +334,18 @@ class Ship {
         }
 
         return false;
+    }
+
+    void animateForwardDrive(int level) {
+        if (z < -6000) {
+            levelHandler.getLevels()[level].trueExit();
+            return;
+        }
+        z -= 100;
+    }
+
+    void resetZ() {
+        z = 0;
     }
 
 }

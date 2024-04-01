@@ -4,7 +4,7 @@ class graphicsHandler {
 
     Star[] stars = new Star[200];
     boolean star_flag = true, title_anim = false;
-    int SLOW_STAR_ACC = 1, FAST_STAR_ACC = 5;
+    int SLOW_STAR_ACC = 1, FAST_STAR_ACC = 5, SUPER_FAST_STAR_ACC = 20;
     int star_acc = 1;
     PImage crosshair = loadImage("./img/crosshair.png");
 
@@ -47,6 +47,10 @@ class graphicsHandler {
 
     void setFastStarAcc() {
         star_acc = FAST_STAR_ACC;
+    }
+
+    void setSuperFastStarAcc() {
+        star_acc = SUPER_FAST_STAR_ACC;
     }
 
     void setSlowStarAcc() {

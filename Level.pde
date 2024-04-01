@@ -365,12 +365,12 @@ class gameLevel1 extends Level {
           dialogueHandler.menu().fadeGastorOut();
           dialogueHandler.menu().fadeDialogueBoxLOut();
 
-          // startTime = currentSecond();
-          // exitFlag = false;
-          // introFlag = true;
+          startTime = currentSecond();
+          exitFlag = false;
+          introFlag = true;
 
           // levelHandler.getLevels()[2].reset();
-          // levelHandler.setLevel(2);
+          levelHandler.setLevel(3);
         }
 
 
@@ -483,6 +483,7 @@ class transition extends Level {
 
     void display() {
       background(0);
+      graphicsHandler.setStarFlag(false);
 
       if (startTime + 7 < currentSecond()) {
         levelDecide();
@@ -520,7 +521,9 @@ class transition extends Level {
       
     }
 
-    void update() {}
+    void update() {
+      player.deactivatePlayerCamera();
+    }
 
     private void transitionTitle() {
       textFont(titleFont); textAlign(CENTER, CENTER);
@@ -530,7 +533,7 @@ class transition extends Level {
           title = "FIELDS";
           break;
         case "Monster":
-          level = "BOÖTES";
+          level = "BOOTES";
           title = "MONSTRA";
           break;
         case "Ship":
@@ -582,6 +585,7 @@ class deathScreen extends Level {
     void update() {
       // Graphics
       graphicsHandler.setStarFlag(false);
+      player.deactivatePlayerCamera();
       restartButton.update();
       quitButton.update();
     }

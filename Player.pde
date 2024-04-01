@@ -124,6 +124,10 @@ class Player {
         health.unhide();
     }
 
+    void deactivatePlayerCamera() {
+        ship.deactivatePlayerCamera();
+    }
+
     void show() {
         x = width / 2;
         y = height / 2;
@@ -195,6 +199,10 @@ class Ship {
 
     void activatePlayerCamera() {
         cam.flyingFlag(true);
+    }
+
+    void deactivatePlayerCamera() {
+        cam.flyingFlag(false);
     }
 
     private void setShipPosition(int x, int y) {

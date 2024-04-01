@@ -209,7 +209,7 @@ class Health {
 
         // health in percentage
         textSize(13); textFont(mainFont); textAlign(CENTER, CENTER);
-        if (health < 10) fill(255,0,0); 
+        if (health < 30) fill(255,0,0); 
         else if (health < 50) fill(255,255,0);
         else fill(255);
         int percent = (int) ((float) health/maxHealth * 100);

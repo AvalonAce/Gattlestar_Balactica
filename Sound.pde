@@ -12,6 +12,7 @@ class soundHandler {
     SoundFile continueClick;
     SoundFile hit;
     SoundFile gameOver;
+    SoundFile transition;
     Sound s;
 
     boolean soundOn = true;
@@ -26,6 +27,7 @@ class soundHandler {
         continueClick = new SoundFile(p, "snd/continue_click.wav");
         hit = new SoundFile(p, "snd/hit.wav");
         gameOver = new SoundFile(p, "snd/game_over.wav");
+        transition = new SoundFile(p, "snd/transition.wav");
         s = new Sound(p);
     }
 
@@ -95,6 +97,10 @@ class soundHandler {
                 return continueClick;
             case "hit":
                 return hit;
+            case "gameOver":
+                return gameOver;
+            case "transition":
+                return transition;
         }
         return null;
     }

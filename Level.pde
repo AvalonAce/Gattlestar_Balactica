@@ -375,9 +375,9 @@ class gameLevel1 extends Level {
             // Speed up transition
             player.animateForwardDrive(2);
             cameraZ -= 20;
-            
           }
 
+          // Final Exit
           if (trueExitFlag) {
             cameraZ = (height/2.0) / tan(PI*30.0 / 180.0); // Reset Camera
             exitFlag = false;
@@ -494,10 +494,13 @@ class gameLevel4 extends Level {}
 class transition extends Level {
 
     String type, title, level;
+    SoundFile transitionSound;
+    boolean played = false;
 
     transition(String type) {
       this.type = type;
       title = ""; level = "";
+      transitionSound = soundHandler.getFile("transition");
     }
 
 
@@ -506,11 +509,11 @@ class transition extends Level {
       background(0);
       graphicsHandler.setStarFlag(false);
 
-      if (startTime + 7 < currentSecond()) {
+      if (startTime + 8 < currentSecond()) {
         levelDecide();
       }
-      else if (startTime + 5 < currentSecond()) {}
-      else if (startTime + 2 < currentSecond()) {
+      else if (startTime + 6 < currentSecond()) {}
+      else if (startTime + 3 < currentSecond()) {
         // Transition Word Display
         transitionTitle();
         switch (difficulty) {
@@ -535,10 +538,19 @@ class transition extends Level {
             text(level, width/2, height/2 - 100);
             text(title, width/2, height/2 + 50);
             break;
+        }
 
+      }
+      else if (startTime + 1 < currentSecond()) {
+        // Play Transition Sound
+        if (!played) {
+          transitionSound.play();
+          played = true;
         }
       }
-      else if (startTime < currentSecond()) {}
+      else if (startTime < currentSecond()) {
+        
+      }
       
     }
 
@@ -578,6 +590,7 @@ class transition extends Level {
       else if (type == "Monster") levelHandler.setLevel(4);
       else if (type == "Ship") levelHandler.setLevel(6);
       else if (type == "End") {
+        played = false;
         levelHandler.setLevel(0);
         dialogueHandler.reset();
       }

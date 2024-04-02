@@ -4,7 +4,7 @@ class dialogueHandler { // Handles the dialogue, Menu updates the dialogue boxes
 
     dialogueTrack currentTrack;
     Menu menu;
-    int sceneIndex = 0;
+    int sceneIndex = 2;
     boolean inCutscene = false, isChoice = false;
 
     dialogueHandler() {
@@ -18,7 +18,7 @@ class dialogueHandler { // Handles the dialogue, Menu updates the dialogue boxes
             sceneIndex++;
             inCutscene = false;
             if (sceneIndex < DIALOGUE.length) currentTrack = DIALOGUE[sceneIndex];
-            // System.out.println("End of Dialogue");
+            System.out.println("End of Dialogue");
 
 
             if (sceneIndex >= DIALOGUE.length) {
@@ -573,5 +573,100 @@ dialogueTrack[] DIALOGUE = {
         "...",
         "S- ... He- ... *static* ... *static* ... Don't- "
     }, 4),
+
+
+    // Scene 3
+    new dialogueTrack(
+        new String[] { // Statements
+        "ACE, ACE! Attention! Hailing ACE!",
+        "*He audibly sighs*",
+        "I was worried I lost contact with you. But no matter! You're at the coordinates.",
+        "You're not at the Sopren-Veil's home planet yet, but  you're closer.",
+        "Right now, you need to make it through this dense pocket of space alive.",
+        "I know you've heard of it.",
+        "Bootes Monstra",
+        "This is how we're going to get you through undetected, by going through this void space.",
+        "RESPONSE PLACEHOLDER",
+        "Let me remind you of why we call it Bootes Monstra.",
+        "It's because it's full of space-breathing monsters. There are three types of them here.",
+        "The first are the STAR EATERS. They're massive, but       can barely move.",
+        "The second are known as LEVIATHANS. Like dragons but they can't change direction.",
+        "The last are the BOT FLIES. They won't hurt you, but don't let them get into the engines.",
+        "If you can make it through, you'll be able to make a jump straight to their home planet.",
+        "I believe in you ACE. Humanita needs you.",
+        "Good luck.",
+        "(incoming transmission)",
+        "(you hear more static, but this time, you can hear a voice through it)",
+        "Hel- ... *static* You can't trust!- *static* ... -isten to me!- We're not- ",
+        "(the transmission cuts off)",
+        "...",
+        "(you continue forward with your mission)"
+    }, new String[] { // Speakers
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "???",
+        "???",
+        "???",
+        "???",
+        "???"
+    },
+    new DialogueOption(new String[] { // Dialogue Options
+        "I see... Good thinking. They won't see us coming!",
+        "You sent me to Bootes Monstra?!  Are you insane?!",
+        "General, someone was trying to contact me before. I think it- "
+    }), new String[] { // Responses
+        "Exactly! You're the only one skilled enough to make it through.",
+        "I do what I will to win this war! You'll make it through!",
+        "You're imagining things! It was probably just interference! Focus ACE, focus!"
+    }, 7),
+
+
+    // Scene 4
+    new dialogueTrack(
+        new String[] { // Statements
+        "YES! You made it through Bootes Monstra! That's our best pilot for you!",
+        "But don't get too excited. You're not at the Sopren-Veil's home planet yet.",
+        "I've sent you the coordinates to the planet, a few space-knots away.",
+        "Once you jump, I send my final transmission detailing on what to do next.",
+        "(incoming transmission)",
+        "(You hear more static, but this time, you can hear a voice)",
+    }, new String[] { // Speakers
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "???",
+        "???",
+        "???",
+        "Gastor",
+        "Gastor"
+    },
+    new DialogueOption(new String[] { // Dialogue Options
+        "I'm ready for anything, general.",
+        "I'll make sure to be careful.",
+        "I'm not sure about this, general. What's the plan?"
+    }), new String[] { // Responses
+        "Good! You'll need to be ready for anything.",
+        "You'll need to be careful. The Sopren-Veil are dangerous.",
+        "Don't ask meaningless questions! Focus on the mission ahead!"
+    }, 3),
+
+
+    // Scene 5
 
 };

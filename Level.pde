@@ -21,7 +21,7 @@ class levelHandler {
     levels[6] = new gameLevel3();
     levels[7] = new transition("End");
     levels[8] = new deathScreen(this);
-    currentLevel = levels[4];
+    currentLevel = levels[3];
   }
 
   void display() {
@@ -284,10 +284,11 @@ class gameLevel1 extends Level {
       graphicsHandler.setTitleFlag(false);
       graphicsHandler.setSlowStarAcc();
       player.reset();
-      levelEngine.reset();
-      levelEngine.pause();
       player.display();
       player.update();
+      levelEngine.reset();
+      levelEngine.pause();
+
 
       // Several Seconds in
       if (currentSecond() > startTime + 5) {
@@ -418,7 +419,7 @@ class gameLevel1 extends Level {
 class gameLevel2 extends Level {
 
   levelEngine levelEngine;
-  boolean introFlag = false, exitFlag = false, trueExitFlag = false;
+  boolean introFlag = true, exitFlag = false, trueExitFlag = false;
 
   gameLevel2() {
       levelEngine = new levelEngine();
@@ -441,22 +442,24 @@ class gameLevel2 extends Level {
       levelEngine.update();
 
       // Fade out Menu
-      // dialogueHandler.display();
-      // dialogueHandler.update();
-      // dialogueHandler.menu().fadeGastorOut();
-      // dialogueHandler.menu().fadeDialogueBoxLOut();
+      dialogueHandler.display();
+      dialogueHandler.update();
+      dialogueHandler.menu().fadeGastorOut();
+      dialogueHandler.menu().fadeDialogueBoxLOut();
+      dialogueHandler.menu().fadeUnknownOut();
+      dialogueHandler.menu().fadeDialogueBoxROut();
 
       // Player Update
       player.display();
       player.update();
 
       // Level End
-      // if (levelEngine.levelOver()) {
-      //   System.out.println("Level Over");
-      //   levelEngine.pause();
-      //   startTime = currentSecond();
-      //   exitFlag = true;
-      // }
+      if (levelEngine.levelOver()) {
+        System.out.println("Level Over");
+        levelEngine.pause();
+        startTime = currentSecond();
+        exitFlag = true;
+      }
 
 
     }
@@ -470,6 +473,7 @@ class gameLevel2 extends Level {
 
   void intro() {
       graphicsHandler.setStarFlag(true);
+      graphicsHandler.setTitleFlag(false);
       graphicsHandler.setSlowStarAcc();
       player.reset();
       player.display();
@@ -478,22 +482,117 @@ class gameLevel2 extends Level {
       levelEngine.pause();
 
     if (currentSecond() > startTime + 2) {
-      
+      player.disableFire();
 
-      // Leave Cutscene
-      if (dialogueHandler.isInCutscene()) return;
-      else {
+      // Menu
+      dialogueHandler.setCutscene(true);
+      dialogueHandler.display();
+      dialogueHandler.update();
+      dialogueHandler.menu().revealGastor();
+      dialogueHandler.menu().revealUnknown();
+      dialogueHandler.menu().revealDialogueBoxL();
+      dialogueHandler.menu().revealDialogueBoxR();
+
+        if (dialogueHandler.isInCutscene()) {
+
+          if (dialogueHandler.getCurrentSpeaker().equals("Gastor")){
+            dialogueHandler.menu().fadeGastorIn();
+            dialogueHandler.menu().fadeDialogueBoxLIn();
+          }
+          else {
+            dialogueHandler.menu().fadeGastorOut();
+            dialogueHandler.menu().fadeDialogueBoxLOut();
+            dialogueHandler.menu().fadeUnknownIn();
+            dialogueHandler.menu().fadeDialogueBoxRIn();
+          }
+          if (dialogueHandler.isInChoice()) dialogueHandler.menu().fadeDialogueMenuIn();
+
+        } else  {
+          player.enableFire();
+          startTime = currentSecond();
+          levelEngine.reset();
+          levelEngine.resume();
+          introFlag = false;
         
         }
+
+
+      }
+      
       
     }
 
       
 
-  }
+  
 
   void outro() {
+    // Player
+      player.display();
+      player.update();
+      
+      // LevelEngine
+      levelEngine.update();
+      // Graphics
+      graphicsHandler.setSlowStarAcc();
 
+      // Cutscene
+      if (currentSecond() > startTime + 5) {
+        player.disableFire();
+
+        // Menu
+        dialogueHandler.setCutscene(true);
+        dialogueHandler.display();
+        dialogueHandler.update();
+
+        // Cutscene
+        if (dialogueHandler.isInCutscene()) {
+
+          if (dialogueHandler.getCurrentSpeaker().equals("Gastor")){
+            dialogueHandler.menu().fadeGastorIn();
+            dialogueHandler.menu().fadeDialogueBoxLIn();
+          }
+          else {
+            dialogueHandler.menu().fadeGastorOut();
+            dialogueHandler.menu().fadeDialogueBoxLOut();
+            dialogueHandler.menu().fadeUnknownIn();
+            dialogueHandler.menu().fadeDialogueBoxRIn();
+          }
+          if (dialogueHandler.isInChoice()) dialogueHandler.menu().fadeDialogueMenuIn();
+
+        }
+        else {
+
+          // Menu
+          dialogueHandler.menu().fadeDialogueBoxROut();
+          dialogueHandler.menu().fadeUnknownOut();
+          dialogueHandler.menu().fadeGastorOut();
+          dialogueHandler.menu().fadeDialogueBoxLOut();
+
+
+          // After all dialogue hidden, transition
+          if (dialogueHandler.menu().allBoxesHidden()) {
+            graphicsHandler.setStarFlag(false);
+            graphicsHandler.setTitleFlag(true);
+            graphicsHandler.setSuperFastStarAcc();
+            // Speed up transition
+            player.animateForwardDrive(2);
+            cameraZ -= 20;
+          }
+
+          // Final Exit
+          if (trueExitFlag) {
+            cameraZ = (height/2.0) / tan(PI*30.0 / 180.0); // Reset Camera
+            exitFlag = false;
+            introFlag = true;
+            startTime = currentSecond();
+            levelHandler.getLevels()[4].reset();
+            levelHandler.setLevel(5);
+            player.resetShipToCenter();
+            player.enableFire();
+          }
+        }
+      }
   }
 
 

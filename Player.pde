@@ -328,13 +328,15 @@ class Ship {
         triangle(x, y+125, x-10, y+110, x+10, y+110); // S
         triangle(x+125, y+5, x+110, y-5, x+110, y+15); // D
 
-
         // WASD text
         textAlign(CENTER, CENTER); textFont(mainFont); textSize(20);
         text("W", x, y-90);
         text("A", x-90, y);
         text("S", x, y+90);
         text("D", x+90, y);
+
+        // Mouse text
+        text("Mouse - Shoot", x, y+45);
 
         popMatrix();
     }

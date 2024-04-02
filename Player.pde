@@ -6,7 +6,7 @@ class Player {
     Health health;
     int currentLazer;
     Ship ship;
-    boolean hidden, damaged, dead, disabledFire;
+    boolean hidden, damaged, dead, disabledFire, invertedControls;
     Lazer[] lazers = new Lazer[8];
 
     public Player() {
@@ -19,12 +19,11 @@ class Player {
         damaged = false;
         dead = false;
         disabledFire = false;
+        invertedControls = false;
     }
 
     void display() {
         if (dead) return;
-
-
 
         // Lazer display
         checkfire();
@@ -101,10 +100,21 @@ class Player {
     }
 
     void moveShip() {
-        if (input.isGoingUp()) y -= 15;
-        if (input.isGoingDown()) y += 15;
-        if (input.isGoingLeft()) x -= 15;
-        if (input.isGoingRight()) x += 15;
+        if (!invertedControls) {
+            if (input.isGoingUp()) y -= 15;
+            if (input.isGoingDown()) y += 15;
+            if (input.isGoingLeft()) x -= 15;
+            if (input.isGoingRight()) x += 15;
+        }
+        // Inverted controls check
+        else  {
+            if (input.isGoingUp()) y += 15;
+            if (input.isGoingDown()) y -= 15;
+            if (input.isGoingLeft()) x += 15;
+            if (input.isGoingRight()) x -= 15;
+        }
+        if (frameCount % 30 == 0) invertedControls = false;
+
         // Boundary check
         if (x < 25) x = 25;
         if (x > width - 25) x = width - 25;
@@ -158,6 +168,7 @@ class Player {
         hidden = true;
         damaged = false;
         dead = false;
+        invertedControls = false;
     }
 
     void resetShipToCenter() {
@@ -179,6 +190,10 @@ class Player {
 
     void animateForwardDrive(int level) {
         ship.animateForwardDrive(level);
+    }
+
+    void invertControls() {
+        invertedControls = true;
     }
     
 
@@ -327,12 +342,13 @@ class Ship {
     boolean isTouching(Enemy enemy) {
         // Check if player is touching enemy
 
-        // X and Y hitbox check based on enemy type // ADD STAR EATER
-        if (enemy instanceof Asteroid) {
+        // X and Y hitbox check based on enemy type
+        if (enemy instanceof Asteroid || enemy instanceof StarEater || enemy instanceof BotFly) {
             if (enemy.getX() + enemy.getRadius() > hitBoxLeft && enemy.getX() - enemy.getRadius() < hitBoxRight) {
                 if (enemy.getY() + enemy.getRadius() > hitBoxTop && enemy.getY() - enemy.getRadius() < hitBoxBottom) {
                     // Z hitbox check
                     if (enemy.getZ() + enemy.getRadius() > hitBoxFront && enemy.getZ() - enemy.getRadius() < hitBoxBack) {
+                        if (enemy instanceof BotFly) enemy.invertControls(); // Invert botfly controls
                         return true;
                     }
                 }
@@ -340,6 +356,14 @@ class Ship {
         }
         
         else if (enemy instanceof Leviathan) {
+            if (enemy.getLeftHitBox() < hitBoxRight && enemy.getRightHitBox() > hitBoxLeft) {
+                if (enemy.getTopHitBox() > hitBoxBottom && enemy.getBottomHitBox() < hitBoxTop) {
+                    if (enemy.getFrontHitBox() < hitBoxBack && enemy.getBackHitBox() > hitBoxFront) {
+                        return true;
+                    }
+                }
+            }
+
 
 
         }
@@ -426,7 +450,7 @@ class Lazer {
 
     boolean isTouching(Enemy enemy) {
         
-        if (enemy instanceof Asteroid || enemy instanceof StarEater) {
+        if (enemy instanceof Asteroid || enemy instanceof StarEater || enemy instanceof BotFly) {
             if (dist(x, y, enemy.getX(), enemy.getY()) < enemy.getRadius()) return true;
         }
 
@@ -442,11 +466,6 @@ class Lazer {
             }
 
 
-        }
-        else if (enemy instanceof BotFly) {
-
-
-                
         }
 
         else if (enemy instanceof enemyShip) {

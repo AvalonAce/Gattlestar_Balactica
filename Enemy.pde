@@ -97,7 +97,7 @@ class levelEngine {
                         enemies[i] = new Asteroid();
                         break;
                     case 2:
-                        enemies[i] = new Leviathan();
+                        enemies[i] = decideMonster();
                         break;
                     case 3:
                         enemies[i] = new Asteroid();
@@ -179,6 +179,19 @@ class levelEngine {
                 enemies = new Enemy[25];
             break;	
             
+        }
+    }
+
+    private Enemy decideMonster() {
+        // Randomly decide which monster to spawn for level 2
+        // StarEaters and leviathans are twice as likely to spawn as botflies
+        int monsterChoice = (int)random(1, 100);
+        if (monsterChoice <= 40) {
+            return new StarEater();
+        } else if (monsterChoice > 40 && monsterChoice <= 80) {
+            return new Leviathan();
+        } else {
+            return new BotFly();
         }
     }
 
@@ -286,6 +299,8 @@ class Enemy {
     int getBackHitBox() {
         return 0;
     }
+
+    void invertControls() {}
 
 }
 
@@ -504,7 +519,7 @@ class Leviathan extends Enemy {
                 acc = 10;
                 break;
             case 3:
-                health = (int)random(20,50);
+                health = (int)random(20,40);
                 damage = 10;
                 acc = 15;
                 break;
@@ -563,30 +578,55 @@ class Leviathan extends Enemy {
 
     void setPos() {
         // Based on type (left->right, right->left, up->down, down->up), set position of leviathan to the other side of the screen
+        int gap = 150;
         switch (shiftType) {
             case 1:
                 cX = width/2 + leviathanWidthSize*2;
                 cY = (int)random(-100, height+100);
-                if (cX > width/2 - 100 && cX < width/2 + 100) cX += 200;
-                if (cY > height/2 - 100 && cY < height/2 + 100) cY += 200;
+                if (cX > width/2 - gap && cX < width/2 + gap) {
+                    if (cX < width/2) cX -= 200;
+                    else cX += 200;
+                }
+                if (cY > height/2 - gap && cY < height/2 + gap) {
+                    if (cY < height/2) cY -= gap;
+                    else cY += gap;
+                }
                 break;
             case 2:
                 cX = -leviathanWidthSize*2;
                 cY = (int)random(-100, height+100);
-                if (cX > width/2 - 100 && cX < width/2 + 100) cX += 200;
-                if (cY > height/2 - 100 && cY < height/2 + 100) cY += 200;
+                if (cX > width/2 - gap && cX < width/2 + gap) {
+                    if (cX < width/2) cX -= gap;
+                    else cX += gap;
+                }
+                if (cY > height/2 - gap && cY < height/2 + gap) {
+                    if (cY < height/2) cY -= gap;
+                    else cY += gap;
+                }
                 break;
             case 3:
                 cX = (int)random(-100, width+100);
                 cY = height/2 + leviathanHeightSize*2;
-                if (cX > width/2 - 100 && cX < width/2 + 100) cX += 200;
-                if (cY > height/2 - 100 && cY < height/2 + 100) cY += 200;
+                if (cX > width/2 - gap && cX < width/2 + gap) {
+                    if (cX < width/2) cX -= gap;
+                    else cX += gap;
+                }
+                if (cY > height/2 - gap && cY < height/2 + gap) {
+                    if (cY < height/2) cY -= gap;
+                    else cY += gap;
+                }
                 break;
             case 4:
                 cX = (int)random(-100, width+100);
                 cY = -leviathanHeightSize*2;
-                if (cX > width/2 - 100 && cX < width/2 + 100) cX += 200;
-                if (cY > height/2 - 100 && cY < height/2 + 100) cY += 200;
+                if (cX > width/2 - gap && cX < width/2 + gap) {
+                    if (cX < width/2) cX -= gap;
+                    else cX += gap;
+                }
+                if (cY > height/2 - gap && cY < height/2 + gap) {
+                    if (cY < height/2) cY -= gap;
+                    else cY += gap;
+                }
                 break;
             default:
                 cX =  width/2 + leviathanWidthSize*2;
@@ -602,10 +642,10 @@ class Leviathan extends Enemy {
                 cZ = (int)random(-4000, -2000);
                 break;
             case 3:
-                cZ = (int)random(-5500, -2500);
+                cZ = (int)random(-6000, -3500);
                 break;
             default:
-                cZ = (int)random(-4500, -2500);
+                cZ = (int)random(-4500, -3000);
                 break;
         }
     }
@@ -804,7 +844,7 @@ class StarEater extends Enemy {
     void display() {
         if (isDead()) return;
 
-        // Display Leviathan
+        // Display Monster
         drawStarEater();
     }
 
@@ -832,7 +872,7 @@ class StarEater extends Enemy {
                 break;
             case 3:
                 health = (int)random(20, 40);
-                damage = 20;
+                damage = 15;
                 acc = 15;
                 ellipseSize = 60;
                 break;
@@ -898,7 +938,7 @@ class StarEater extends Enemy {
     }
 
     int getRadius() {
-        return ellipseSize+20;
+        return ellipseSize;
     }
 
 
@@ -907,10 +947,96 @@ class StarEater extends Enemy {
 
 class BotFly extends Enemy {
 
+    int ellipseSize = 1;
+
     BotFly() {
-        super();
+        setStats();
+        setPos();
+    }
+
+       void display() {
+        if (isDead()) return;
+
+        // Display Monster
+        drawBotFly();
+    }
+
+    void update() {
+        if (isDead()) return;
+        super.update();
+        // Update Monster
+        cZ += acc;
+
 
     }
+
+    
+    void setStats() {
+        // Set stats based on global difficulty
+        switch (difficulty) {
+            case 1:
+                health = 10;
+                damage = 1;
+                acc = 5;
+                ellipseSize = 5;
+                break;
+            case 2:
+                health = 10;
+                damage = 2;
+                acc = 10;
+                ellipseSize = 10;
+                break;
+            case 3:
+                health = 20;
+                damage = 3;
+                acc = 15;
+                ellipseSize = 15;
+                break;
+            default:
+                health = 10;
+                damage = 1;
+                acc = 5;
+                ellipseSize = 5;
+                break;
+        }
+    }
+
+    void setPos() {
+        cX = (int)random(100, width-100);
+        cY = (int)random(100, height-100);
+        cZ = (int)random(-1500, -500);
+    }
+
+
+    void drawBotFly() {
+        pushMatrix();
+
+        // BotFly consists of a sphere with wings made of 2 ellipses
+        translate(cX, cY, cZ);
+        strokeWeight(1); stroke(255,0,0,80); fill(0,255,0,80);
+        ellipse(0, 0, ellipseSize, ellipseSize*2);
+        // Head
+        fill(255,0,0,40); stroke(255,0,0,90);
+        translate(0, -ellipseSize, 0);
+        ellipse(0, 0, ellipseSize, ellipseSize/2);
+        // Wings
+        fill(255,0,0,60); stroke(0);
+        translate(-ellipseSize/2, ellipseSize, 0);
+        ellipse(0, 0, ellipseSize, ellipseSize);
+        translate(ellipseSize, 0, 0);
+        ellipse(0, 0, ellipseSize, ellipseSize);
+
+        popMatrix();
+    }
+
+    int getRadius() {
+        return ellipseSize+10;
+    }
+
+    void invertControls() {
+        player.invertControls();
+    }
+
 
 }
 

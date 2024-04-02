@@ -431,6 +431,15 @@ class Lazer {
         }
 
         else if (enemy instanceof Leviathan) {
+            // If lazer is within leviathan hitbox
+            if (x + 10 > enemy.getLeftHitBox() && x - 10 < enemy.getRightHitBox()) {
+                if (y - 10 < enemy.getTopHitBox() && y + 10 > enemy.getBottomHitBox()) {
+                    if (z + 10 > enemy.getFrontHitBox() && z - 10 < enemy.getBackHitBox()) {
+                        System.out.println("Lazer hit leviathan");
+                        return true;
+                    }
+                }
+            }
 
 
         }

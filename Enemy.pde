@@ -97,7 +97,7 @@ class levelEngine {
                         enemies[i] = new Asteroid();
                         break;
                     case 2:
-                        enemies[i] = new StarEater();
+                        enemies[i] = new Leviathan();
                         break;
                     case 3:
                         enemies[i] = new Asteroid();
@@ -260,6 +260,30 @@ class Enemy {
     }
 
     int getRadius() {
+        return 0;
+    }
+
+    int getLeftHitBox() {
+        return 0;
+    }
+
+    int getRightHitBox() {
+        return 0;
+    }
+
+    int getTopHitBox() {
+        return 0;
+    }
+
+    int getBottomHitBox() {
+        return 0;
+    }
+
+    int getFrontHitBox() {
+        return 0;
+    }
+
+    int getBackHitBox() {
         return 0;
     }
 
@@ -430,8 +454,340 @@ class Asteroid extends Enemy {
 
 class Leviathan extends Enemy {
     
+    int hitBoxLeft, hitBoxRight, hitBoxTop, hitBoxBottom, hitBoxFront, hitBoxBack;
+    int shiftType = 1, flySpeed = 15, leviathanHeightSize = 50, leviathanWidthSize = 50;
+    color[] colors = new color[3];
+    color mainColor;
+    
     Leviathan() {
+        
 
+        // Type - 1: Left to Right, 2: Right to Left, 3: Down to Up, 4: Up to Down
+        shiftType = (int)random(1, 5);
+        // Stats
+        setStats();
+        setSize();
+        setPos();
+        // Three possible colors for Leviathan - Purple, Blue, Dark Green
+        colors[0] = color(128, 0, 128, 20); colors[1] = color(0, 0, 255, 30); colors[2] = color(0, 100, 0, 30);
+        mainColor = colors[(int)random(0, 3)];
+
+    }
+
+    void display() {
+        if (isDead()) return;
+
+        // Display Leviathan
+        drawLeviathan();
+    }
+
+    void update() {
+        if (isDead()) return;
+        super.update();
+        // Update Monster
+        cZ += acc;
+        shiftLeviathan();
+        updateHitBox();
+    }
+
+    void setStats() {
+        // Set stats based on global difficulty
+        switch (difficulty) {
+            case 1:
+                health = 10;
+                damage = 5;
+                acc = 5;
+                break;
+            case 2:
+                health = (int)random(10, 30);
+                damage = 8;
+                acc = 10;
+                break;
+            case 3:
+                health = (int)random(20,50);
+                damage = 10;
+                acc = 15;
+                break;
+            default:
+                health = 15;
+                damage = 5;
+                acc = 5;
+                break;
+        }
+    
+    }
+
+    void setSize() {
+
+        // Based on difficulty, set size of leviathan
+        switch (difficulty) {
+            case 1:
+                if (shiftType == 1 || shiftType == 2) {
+                    leviathanHeightSize = 50;
+                    leviathanWidthSize = 2000 + (int)random(0, 800);
+                } else {
+                    leviathanHeightSize = 2000 + (int)random(0, 800);
+                    leviathanWidthSize = 50;
+                }
+                break;
+            case 2:
+                if (shiftType == 1 || shiftType == 2) {
+                    leviathanHeightSize = 50 + (int)random(0, 25);
+                    leviathanWidthSize = 2000 + (int)random(0, 800);
+                } else {
+                    leviathanHeightSize = 2000 + (int)random(0, 800);
+                    leviathanWidthSize = 50 + (int)random(0, 25);
+                }
+                break;
+            case 3:
+                if (shiftType == 1 || shiftType == 2) {
+                    leviathanHeightSize = 50 + (int)random(0, 75);
+                    leviathanWidthSize = 2000 + (int)random(0, 1000);
+                } else {
+                    leviathanHeightSize = 2000 + (int)random(0, 1000);
+                    leviathanWidthSize = 50 + (int)random(0, 75);
+                }
+                break;
+            default:
+                if (shiftType == 1 || shiftType == 2) {
+                    leviathanHeightSize = 25 + (int)random(0, 75);
+                    leviathanWidthSize = 800 + (int)random(0, 1000);
+                } else {
+                    leviathanHeightSize = 800 + (int)random(0, 1000);
+                    leviathanWidthSize = 25 + (int)random(0, 75);
+                }
+                break;
+        }
+        
+    }
+
+    void setPos() {
+        // Based on type (left->right, right->left, up->down, down->up), set position of leviathan to the other side of the screen
+        switch (shiftType) {
+            case 1:
+                cX = width/2 + leviathanWidthSize*2;
+                cY = (int)random(-100, height+100);
+                if (cX > width/2 - 100 && cX < width/2 + 100) cX += 200;
+                if (cY > height/2 - 100 && cY < height/2 + 100) cY += 200;
+                break;
+            case 2:
+                cX = -leviathanWidthSize*2;
+                cY = (int)random(-100, height+100);
+                if (cX > width/2 - 100 && cX < width/2 + 100) cX += 200;
+                if (cY > height/2 - 100 && cY < height/2 + 100) cY += 200;
+                break;
+            case 3:
+                cX = (int)random(-100, width+100);
+                cY = height/2 + leviathanHeightSize*2;
+                if (cX > width/2 - 100 && cX < width/2 + 100) cX += 200;
+                if (cY > height/2 - 100 && cY < height/2 + 100) cY += 200;
+                break;
+            case 4:
+                cX = (int)random(-100, width+100);
+                cY = -leviathanHeightSize*2;
+                if (cX > width/2 - 100 && cX < width/2 + 100) cX += 200;
+                if (cY > height/2 - 100 && cY < height/2 + 100) cY += 200;
+                break;
+            default:
+                cX =  width/2 + leviathanWidthSize*2;
+                cY = (int)random(-100, height+100);
+                break;
+        }
+
+        switch (difficulty) {
+            case 1:
+                cZ = (int)random(-3000, -1200);
+                break;
+            case 2:
+                cZ = (int)random(-4000, -2000);
+                break;
+            case 3:
+                cZ = (int)random(-5500, -2500);
+                break;
+            default:
+                cZ = (int)random(-4500, -2500);
+                break;
+        }
+    }
+
+    void drawLeviathan() {
+        pushMatrix();
+
+        // Leviathan consists of a box as the main body, a sphere as the head on the side of the shifttype, and two smaller boxes as the eyes
+        translate(cX, cY, cZ);
+        strokeWeight(1); stroke(0); fill(mainColor);
+        box(leviathanWidthSize, leviathanHeightSize, 100);
+        // Head
+        if (shiftType == 1) {
+            translate(-leviathanWidthSize/2, 0, 0);
+
+            pushMatrix();
+            box(150, 150, 150);
+            noStroke();
+            translate(-75,25,0);
+            fill(255, 0, 0, 50); strokeWeight(2); stroke(0);
+            box(50, 50, 140);
+            // Eyes
+            translate(0, -50, -50);
+            noStroke();
+            sphere(25);
+            translate(0, 0, 100);
+            sphere(25);
+            popMatrix();
+
+            // Ears
+            translate(50,-75,25);
+            fill(mainColor); stroke(0);
+            box(50, 100, 50);
+            translate(0, 0, -75);
+            box(50, 100, 50);
+        }
+        else if (shiftType == 2) {
+            translate(leviathanWidthSize/2, 0, 0);
+
+            pushMatrix();
+            box(150, 150, 150);
+            noStroke();
+            translate(75,25,0);
+            fill(255, 0, 0, 50); strokeWeight(2); stroke(0);
+            box(50, 50, 140);
+            // Eyes
+            translate(0, -50, -50);
+            noStroke();
+            sphere(25);
+            translate(0, 0, 100);
+            sphere(25);
+            popMatrix();
+
+            // Ears
+            translate(-50,-75,25);
+            fill(mainColor); stroke(0);
+            box(50, 100, 50);
+            translate(0, 0, -75);
+            box(50, 100, 50);
+        }
+        else if (shiftType == 4) {
+            translate(0, leviathanHeightSize/2, 0);
+
+            pushMatrix();
+            box(150, 150, 150);
+            noStroke();
+            translate(25,75,0);
+            fill(255, 0, 0, 50); strokeWeight(2); stroke(0);
+            box(50, 50, 140);
+            // Eyes
+            translate(-50, 0, -50);
+            noStroke();
+            sphere(25);
+            translate(0, 0, 100);
+            sphere(25);
+            popMatrix();
+
+            // Ears
+            translate(-75,50,25);
+            fill(mainColor); stroke(0);
+            box(100, 50, 50);
+            translate(0, 0, -75);
+            box(100, 50, 50);
+        }
+        else if (shiftType == 3) {
+            translate(0, -leviathanHeightSize/2, 0);
+
+            pushMatrix();
+            box(150, 150, 150);
+            noStroke();
+            translate(25,-75,0);
+            fill(255, 0, 0, 50); strokeWeight(2); stroke(0);
+            box(50, 50, 140);
+            // Eyes
+            translate(-50, 0, -50);
+            noStroke();
+            sphere(25);
+            translate(0, 0, 100);
+            sphere(25);
+            popMatrix();
+
+            // Ears
+            translate(-75,-50,25);
+            fill(mainColor); stroke(0);
+            box(100, 50, 50);
+            translate(0, 0, -75);
+            box(100, 50, 50);
+
+        }
+        
+        popMatrix();
+    }
+
+    private void shiftLeviathan() {
+        // Based on type (left->right, right->left, up->down, down->up), shift leviathan
+        switch (shiftType) {
+            case 1:
+                shiftLeft();
+                break;
+            case 2:
+                shiftRight();
+                break;
+            case 3:
+                shiftUp();
+                break;
+            case 4:
+                shiftDown();
+                break;
+            default:
+                shiftLeft();
+                break;
+        }
+    }
+
+
+    private void shiftLeft() {
+        cX -= flySpeed;
+    }
+
+    private void shiftRight() {
+        cX += flySpeed;
+    }
+
+    private void shiftUp() {
+        cY -= flySpeed;
+    }
+
+    private void shiftDown() {
+        cY += flySpeed;
+    }
+
+    private void updateHitBox() {
+        hitBoxLeft = cX - leviathanWidthSize;
+        hitBoxRight = cX + leviathanWidthSize;
+        hitBoxTop = cY + leviathanHeightSize;
+        hitBoxBottom = cY - leviathanHeightSize;
+        hitBoxFront = cZ - 50;
+        hitBoxBack = cZ + 50;
+    }
+
+    int getLeftHitBox() {
+        return hitBoxLeft;
+    }
+
+    int getRightHitBox() {
+        return hitBoxRight;
+    }
+
+    int getTopHitBox() {
+        return hitBoxTop;
+    }
+
+    int getBottomHitBox() {
+        return hitBoxBottom;
+    }
+
+    int getFrontHitBox() {
+        return hitBoxFront;
+    }
+
+    int getBackHitBox() {
+        return hitBoxBack;
     }
 
 }

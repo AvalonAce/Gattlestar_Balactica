@@ -4,7 +4,7 @@ class dialogueHandler { // Handles the dialogue, Menu updates the dialogue boxes
 
     dialogueTrack currentTrack;
     Menu menu;
-    int sceneIndex = 2;
+    int sceneIndex = 0;
     boolean inCutscene = false, isChoice = false;
 
     dialogueHandler() {
@@ -18,8 +18,6 @@ class dialogueHandler { // Handles the dialogue, Menu updates the dialogue boxes
             sceneIndex++;
             inCutscene = false;
             if (sceneIndex < DIALOGUE.length) currentTrack = DIALOGUE[sceneIndex];
-            System.out.println("End of Dialogue");
-
 
             if (sceneIndex >= DIALOGUE.length) {
                 inCutscene = false;
@@ -590,7 +588,7 @@ dialogueTrack[] DIALOGUE = {
         "Let me remind you of why we call it Bootes Monstra.",
         "It's because it's full of space-breathing monsters. There are three types of them here.",
         "The first are the STAR EATERS. They're massive, but       can barely move.",
-        "The second are known as LEVIATHANS. Like dragons but they can't change direction.",
+        "The second are known as LEVIATHANS. They're massive reptiles. Don't get in their way.",
         "The last are the BOT FLIES. They won't hurt you, but don't let them get into the engines.",
         "If you can make it through, you'll be able to make a jump straight to their home planet.",
         "I believe in you ACE. Humanita needs you.",
@@ -642,31 +640,57 @@ dialogueTrack[] DIALOGUE = {
         "YES! You made it through Bootes Monstra! That's our best pilot for you!",
         "But don't get too excited. You're not at the Sopren-Veil's home planet yet.",
         "I've sent you the coordinates to the planet, a few space-knots away.",
-        "Once you jump, I send my final transmission detailing on what to do next.",
-        "(incoming transmission)",
-        "(You hear more static, but this time, you can hear a voice)",
+        "Once you jump, I'll send my final transmission detailing on what to do next.",
+        "Understand?",
+        "RESPONSE PLACEHOLDER",
+        "God Speed Soldier!"
     }, new String[] { // Speakers
         "Gastor",
         "Gastor",
         "Gastor",
         "Gastor",
-        "???",
-        "???",
-        "???",
+        "Gastor",
         "Gastor",
         "Gastor"
     },
     new DialogueOption(new String[] { // Dialogue Options
-        "I'm ready for anything, general.",
-        "I'll make sure to be careful.",
-        "I'm not sure about this, general. What's the plan?"
+        "YES SIR!",
+        "I understand. I'll be ready on standby.",
+        "General, someone's trying to contact me! It's not interference!"
     }), new String[] { // Responses
-        "Good! You'll need to be ready for anything.",
-        "You'll need to be careful. The Sopren-Veil are dangerous.",
-        "Don't ask meaningless questions! Focus on the mission ahead!"
-    }, 3),
+        "Ata' boy! That's the spirit! See you on the other side!",
+        "Good. The mission is all that matters...",
+        "Does that matter right now? Our mission is to wipe them out! That is the mission!"
+    }, 4),
 
 
     // Scene 5
+    new dialogueTrack(
+        new String[] { // Statements
+        "PROBLEM",
+        "But don't get too excited. You're not at the Sopren-Veil's home planet yet.",
+        "I've sent you the coordinates to the planet, a few space-knots away.",
+        "Once you jump, I'll send my final transmission detailing on what to do next.",
+        "Understand?",
+        "RESPONSE PLACEHOLDER",
+        "God Speed Soldier!"
+    }, new String[] { // Speakers
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor",
+        "Gastor"
+    },
+    new DialogueOption(new String[] { // Dialogue Options
+        "YES SIR!",
+        "I understand. I'll be ready on standby.",
+        "General, someone's trying to contact me! It's not interference!"
+    }), new String[] { // Responses
+        "Ata' boy! That's the spirit! See you on the other side!",
+        "Good. The mission is all that matters...",
+        "Does that matter right now? Our mission is to wipe them out! That is the mission!"
+    }, 4)
 
 };

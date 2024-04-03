@@ -4,7 +4,7 @@ class levelEngine {
 
     levelBar progressBar;
     int progress = 0, difficultyTime = 18, currentLevel = 1;
-    int MAX_PROGRESS = 100;
+    int MAX_PROGRESS = 5;
     boolean isPaused = false, isLevelOver = false;
     Enemy[] enemies;
 

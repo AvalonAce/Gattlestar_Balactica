@@ -388,7 +388,7 @@ class Ship {
 
     void animateForwardDrive(int level) {
         if (z < -6000) {
-            levelHandler.getLevels()[level].trueExit();
+            levelHandler.getCurrentLevel().trueExit();
             return;
         }
         z -= 100;
@@ -461,7 +461,6 @@ class Lazer {
             if (x + 10 > enemy.getLeftHitBox() && x - 10 < enemy.getRightHitBox()) {
                 if (y - 10 < enemy.getTopHitBox() && y + 10 > enemy.getBottomHitBox()) {
                     if (z + 10 > enemy.getFrontHitBox() && z - 10 < enemy.getBackHitBox()) {
-                        System.out.println("Lazer hit leviathan");
                         return true;
                     }
                 }

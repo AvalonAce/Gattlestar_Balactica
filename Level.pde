@@ -21,7 +21,7 @@ class levelHandler {
     levels[6] = new gameLevel3();
     levels[7] = new transition("End");
     levels[8] = new deathScreen(this);
-    currentLevel = levels[3];
+    currentLevel = levels[2];
   }
 
   void display() {
@@ -95,6 +95,10 @@ class levelHandler {
     setLevel(8);
   }
 
+  Level getCurrentLevel() {
+    return currentLevel;
+  }
+
 }
 
 class Level {
@@ -118,6 +122,8 @@ class Level {
   }
 
   void trueExit() {}
+
+
 
 }
 
@@ -228,7 +234,7 @@ class mainMenu extends Level {
 class gameLevel1 extends Level {
 
     levelEngine levelEngine;
-    boolean introFlag = true, exitFlag = false, trueExitFlag = false;
+    boolean introFlag = false, exitFlag = true, trueExitFlag = false;
 
     gameLevel1() {
       levelEngine = new levelEngine();
@@ -241,6 +247,18 @@ class gameLevel1 extends Level {
       levelEngine.displayLevelBar();
 
 
+      // Final Exit
+          if (trueExitFlag) {
+            cameraZ = (height/2.0) / tan(PI*30.0 / 180.0); // Reset Camera
+            exitFlag = false;
+            introFlag = true;
+            startTime = currentSecond();
+            levelHandler.getLevels()[2].reset();
+            levelHandler.setLevel(3);
+            player.resetShipToCenter();
+            player.enableFire();
+          }
+          
       if (introFlag) intro();
       else if (exitFlag) outro();
       else {
@@ -378,17 +396,7 @@ class gameLevel1 extends Level {
             cameraZ -= 20;
           }
 
-          // Final Exit
-          if (trueExitFlag) {
-            cameraZ = (height/2.0) / tan(PI*30.0 / 180.0); // Reset Camera
-            exitFlag = false;
-            introFlag = true;
-            startTime = currentSecond();
-            levelHandler.getLevels()[2].reset();
-            levelHandler.setLevel(3);
-            player.resetShipToCenter();
-            player.enableFire();
-          }
+          
         }
 
 
@@ -513,7 +521,7 @@ class gameLevel2 extends Level {
           levelEngine.reset();
           levelEngine.resume();
           introFlag = false;
-        
+
         }
 
 
@@ -521,10 +529,6 @@ class gameLevel2 extends Level {
       
       
     }
-
-      
-
-  
 
   void outro() {
     // Player
@@ -576,7 +580,7 @@ class gameLevel2 extends Level {
             graphicsHandler.setTitleFlag(true);
             graphicsHandler.setSuperFastStarAcc();
             // Speed up transition
-            player.animateForwardDrive(2);
+            player.animateForwardDrive(4);
             cameraZ -= 20;
           }
 
@@ -605,6 +609,10 @@ class gameLevel2 extends Level {
     exitFlag = false;
     levelEngine.reset();
   }
+
+  void trueExit() {
+      trueExitFlag = true;
+    }
 
 }
 

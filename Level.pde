@@ -644,7 +644,7 @@ class gameLevel3 extends Level {
 
     if (introFlag) intro();
     else if (exitFlag) outro();
-    else { // Level 2
+    else { // Level 3
       // Graphics
       graphicsHandler.setFastStarAcc();
 

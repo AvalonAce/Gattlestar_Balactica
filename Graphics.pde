@@ -25,9 +25,6 @@ class graphicsHandler {
         if (star_flag) drawProceduralStars(stars, star_acc);
         else if (title_anim) drawTitleStars(stars, 10, title_anim);
 
-        // System.out.println("Star Flag: " + star_flag);
-        // System.out.println("Title Flag: " + title_anim);
-
     }
 
     void update() {
@@ -244,6 +241,78 @@ class randomBox {
 
     
 
+
+}
+
+class Planet {
+
+    int x, y, z, size;
+    float rotX, rotY, rotZ;
+    boolean atPlayer = false, hide = false;
+    PImage texture;
+    PShape planet;
+
+    Planet(int x, int y, int z, int size) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.size = size;
+        this.texture = loadImage("./img/planet.png");
+        planet = createShape(SPHERE, size);
+        planet.setTexture(texture);
+        planet.setStroke(color(0,0,0,0));
+        rotX = 0;
+        rotY = 0;
+        rotZ = 0;
+    }
+
+    void drawPlanet() {
+        pushMatrix();
+        translate(x,y,z);
+        rotateX(radians(rotX));
+        rotateY(radians(rotY));
+        rotateZ(radians(rotZ));
+        shape(planet);
+        popMatrix();
+    }
+
+    void update() {
+        rotatePlanetY(0.2);
+    }
+
+    void rotatePlanetX(float inc) {
+        rotX += inc;
+    }
+
+    void rotatePlanetY(float inc) {
+        rotY += inc;
+        if (rotY > 360) rotY = 0;
+    }
+
+    void rotatePlanetZ(float inc) {
+        rotZ += inc;
+    }
+
+    void shiftToPlayer() {
+        if (z < -1200) z += 10;
+        else atPlayer = true;
+    }
+
+    boolean atPlayer() {
+        return atPlayer;
+    }
+
+    void hidePlanet() {
+        hide = true;
+    }
+
+    void showPlanet() {
+        hide = false;
+    }
+
+    boolean isHidden() {
+        return hide;
+    }
 
 }
 

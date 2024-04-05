@@ -14,7 +14,7 @@ class rButton {
         this.text = text;
         this.x = x;
         this.y = y;
-        this.z = (int)cameraZ;
+        this.z = 0;
         this.w = w;
         this.h = h;
         this.levelHandler = levelHandler;
@@ -36,7 +36,6 @@ class rButton {
             animating = false;
             disable();
         }
-        // System.out.println(z);
         
     }
 
@@ -63,7 +62,7 @@ class rButton {
     void reset() {
         disabled = false;
         animating = false;
-        z = (int)cameraZ;
+        z = 0 ;
     }
 
 
@@ -88,21 +87,24 @@ class menuButton extends rButton {
         
         stroke(255);
         fill(255);
-        textAlign(CENTER, CENTER);
         strokeWeight(2);
+        textAlign(CENTER, CENTER);
 
         // Hover effect
+        
         pushMatrix();
         if (mouseWithin()) {
             textFont(mainFont, 38);
-            image(uh_img, x, y, w+10, h+10);
+            translate(x, y, 0);
+            image(uh_img, 0, 0, w+10, h+10);
             translate(0, 0, 5);
-            text(text, x, y-5, w, h);
+            text(text, 0,-5, w, h);
         } else {
             textFont(mainFont, 36);
-            image(uh_img, x, y, w, h);
+            translate(x, y, 0);
+            image(uh_img, 0, 0, w, h);
             translate(0, 0, 5);
-            text(text, x, y-5, w, h);
+            text(text, 0, -5, w, h);
         }
         popMatrix();
 

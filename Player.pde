@@ -47,7 +47,6 @@ class Player {
             // Game over
             disableFire();
             levelHandler.getLevelEngine().gameOver();
-            System.out.println("Player dead");
 
             return;
         }
@@ -194,6 +193,30 @@ class Player {
 
     void invertControls() {
         invertedControls = true;
+    }
+
+    int getHitBoxLeft() {
+        return ship.getLeftHitBox();
+    }
+
+    int getHitBoxRight() {
+        return ship.getRightHitBox();
+    }
+
+    int getHitBoxTop() {
+        return ship.getTopHitBox();
+    }
+
+    int getHitBoxBottom() {
+        return ship.getBottomHitBox();
+    }
+
+    int getHitBoxFront() {
+        return ship.getFrontHitBox();
+    }
+
+    int getHitBoxBack() {
+        return ship.getBackHitBox();
     }
     
 
@@ -345,7 +368,7 @@ class Ship {
         // Check if player is touching enemy
 
         // X and Y hitbox check based on enemy type
-        if (enemy instanceof Asteroid || enemy instanceof StarEater || enemy instanceof BotFly) {
+        if (enemy instanceof Asteroid || enemy instanceof StarEater || enemy instanceof BotFly || enemy instanceof enemyShip) {
             if (enemy.getX() + enemy.getRadius() > hitBoxLeft && enemy.getX() - enemy.getRadius() < hitBoxRight) {
                 if (enemy.getY() + enemy.getRadius() > hitBoxTop && enemy.getY() - enemy.getRadius() < hitBoxBottom) {
                     // Z hitbox check
@@ -370,25 +393,13 @@ class Ship {
 
         }
 
-        else if (enemy instanceof BotFly) {
-
-
-
-        }
-
-        else if (enemy instanceof enemyShip) {
-
-
-            
-        }
-
 
         return false;
     }
 
     void animateForwardDrive(int level) {
         if (z < -6000) {
-            levelHandler.getCurrentLevel().trueExit();
+            levelHandler.getLevels()[level].trueExit();
             return;
         }
         z -= 100;
@@ -400,6 +411,30 @@ class Ship {
 
     int getZ() {
         return z;
+    }
+
+    int getLeftHitBox() {
+        return hitBoxLeft;
+    }
+
+    int getRightHitBox() {
+        return hitBoxRight;
+    }
+
+    int getTopHitBox() {
+        return hitBoxTop;
+    }
+
+    int getBottomHitBox() {
+        return hitBoxBottom;
+    }
+
+    int getFrontHitBox() {
+        return hitBoxFront;
+    }
+
+    int getBackHitBox() {
+        return hitBoxBack;
     }
 
 }
@@ -452,7 +487,7 @@ class Lazer {
 
     boolean isTouching(Enemy enemy) {
         
-        if (enemy instanceof Asteroid || enemy instanceof StarEater || enemy instanceof BotFly) {
+        if (enemy instanceof Asteroid || enemy instanceof StarEater || enemy instanceof BotFly || enemy instanceof enemyShip) {
             if (dist(x, y, enemy.getX(), enemy.getY()) < enemy.getRadius()) return true;
         }
 
@@ -465,12 +500,6 @@ class Lazer {
                     }
                 }
             }
-
-
-        }
-
-        else if (enemy instanceof enemyShip) {
-
 
 
         }
@@ -502,7 +531,6 @@ class Input {
 
     void kPressed(char key) {
         if (dialogueHandler.isInCutscene() && !dialogueHandler.isInChoice() && key == ' ' ) {
-            System.out.println("Next statement");
             soundHandler.playSound("continueClick");
             dialogueHandler.nextStatement();
         }
@@ -545,7 +573,6 @@ class Input {
 
     void mPressed() {
         if (dialogueHandler.isInCutscene() && !dialogueHandler.isInChoice()) {
-            // System.out.println("Next statement");
             soundHandler.playSound("continueClick");
             dialogueHandler.nextStatement();
         }

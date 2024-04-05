@@ -4,7 +4,7 @@ class levelEngine {
 
     levelBar progressBar;
     int progress = 0, difficultyTime = 18, currentLevel = 1;
-    int MAX_PROGRESS = 5;
+    int MAX_PROGRESS = 100;
     boolean isPaused = false, isLevelOver = false;
     Enemy[] enemies;
 
@@ -100,7 +100,7 @@ class levelEngine {
                         enemies[i] = decideMonster();
                         break;
                     case 3:
-                        enemies[i] = new Asteroid();
+                        enemies[i] = new enemyShip();
                         break;
                     default:
                         enemies[i] = new Asteroid();
@@ -945,6 +945,7 @@ class StarEater extends Enemy {
 
 }
 
+
 class BotFly extends Enemy {
 
     int ellipseSize = 1;
@@ -1042,8 +1043,280 @@ class BotFly extends Enemy {
 
 
 // Ship classes
-class enemyShip extends Enemy {}
+class enemyShip extends Enemy {
 
-class bossShip extends Enemy {}
+    int ellipseSize = 1, fireRate = 60;
+    int targetX, targetY, targetZ;
+    enemyLaser[] lazers;
 
-class enemyLaser {}
+    enemyShip() {
+        setStats();
+        setPos();
+        setTarget();
+        lazers = new enemyLaser[5];
+    }
+
+    void display() {
+        if (isDead()) return;
+
+        // Display Monster
+        drawShip();
+    }
+
+    void update() {
+        if (isDead()) return;
+        super.update();
+        // Update Monster
+        cZ += acc;
+        fireLazer();
+        updateLazers();
+    }
+
+    void setStats() {
+        // Set stats based on global difficulty
+        switch (difficulty) {
+            case 1:
+                health = 10;
+                damage = 5;
+                acc = 5;
+                ellipseSize = 30;
+                fireRate = 60 + (int)random(-10, 10);
+                break;
+            case 2:
+                health = 20;
+                damage = 10;
+                acc = 10;
+                ellipseSize = 40;
+                fireRate = 40 + (int)random(-10, 10);
+                break;
+            case 3:
+                health = (int)random(10, 30);
+                damage = 15;
+                acc = 15;
+                ellipseSize = 30;
+                fireRate =  30 + (int)random(-10, 10);
+                break;
+            default:
+                health = 20;
+                damage = 5;
+                acc = 5;
+                ellipseSize = 50;
+                break;
+        }
+    }
+
+    void setPos() {
+        // X and Y points are on a grid, Z is random
+        cX = (int)random(-100, width+100) / ellipseSize * ellipseSize;
+        cY = (int)random(-100, height+100) / ellipseSize * ellipseSize;
+        cZ = (int)random(-2500, -1800) / 100 * 100;
+    }
+
+    void setTarget(){
+        // Randomly set target of nine points within bounds of screen, random margin of 100
+        // 200,200 | width/2, 200 | width-200, 200
+        // 200, height/2 | width/2, height/2 | width-200, height/2
+        // 200, height-200 | width/2, height-200 | width-200, height-200
+        int targetChoice = (int)random(1, 10);
+        switch (targetChoice) {
+            case 1:
+                targetX = 200 + (int)random(-100, 100);
+                targetY = 200 + (int)random(-100, 100);
+                break;
+            case 2:
+                targetX = width/2 + (int)random(-100, 100);
+                targetY = 200 + (int)random(-100, 100);
+                break;
+            case 3:
+                targetX = width-200 + (int)random(-100, 100);
+                targetY = 200 + (int)random(-100, 100);
+                break;
+            case 4:
+                targetX = 200 + (int)random(-100, 100);
+                targetY = height/2 + (int)random(-100, 100);
+                break;
+            case 5:
+                targetX = width/2 + (int)random(-100, 100);
+                targetY = height/2 + (int)random(-100, 100);
+                break;
+            case 6:
+                targetX = width-200 + (int)random(-100, 100);
+                targetY = height/2 + (int)random(-100, 100);
+                break;
+            case 7:
+                targetX = 200 + (int)random(-100, 100);
+                targetY = height-200 + (int)random(-100, 100);
+                break;
+            case 8:
+                targetX = width/2 + (int)random(-100, 100);
+                targetY = height-200 + (int)random(-100, 100);
+                break;
+            case 9:
+                targetX = width-200 + (int)random(-100, 100);
+                targetY = height-200 + (int)random(-100, 100);
+                break;
+            default:
+                targetX = width/2 + (int)random(-100, 100);
+                targetY = height/2 + (int)random(-100, 100);
+                break;
+        }
+        // Determine Z target based of relative position of target and enemyship position
+        targetZ = (int)abs(300 / cos(tan(dist(cX, cY, targetX, targetY) / abs(cZ))));
+
+    
+    }
+
+    void drawShip() {
+        pushMatrix();
+
+        // Ship consists of a diamond shaped body, an small front window, and two wings, purple color
+        translate(cX, cY, cZ);
+        rotateShip();
+        strokeWeight(1); stroke(255,80); fill(128,0,128, 50);
+        // Body
+        beginShape();
+        vertex(-ellipseSize/2, 0, 0); // Left point
+        vertex(0, -ellipseSize/2, 0); // Top point
+        vertex(ellipseSize/2, 0, 0); // Right point
+        vertex(0, ellipseSize/2, 0); // Bottom point
+        vertex(-ellipseSize/2, 0, 0); // Left point
+        vertex(0,0,ellipseSize/2); // Front point
+        vertex(ellipseSize/2, 0, 0); // Right point
+        vertex(0,0,-ellipseSize/2); // Back point
+        vertex(-ellipseSize/2, 0, 0); // Left point
+        vertex(0, ellipseSize/2, 0); // Bottom point
+        endShape();
+        // Window
+        fill(255,0,255, 90); noStroke();
+        translate(0, -ellipseSize/4, 0);
+        sphere(ellipseSize/6);
+        // Wings
+        translate(0, ellipseSize/4, 0);
+        fill(255, 80); stroke(255);
+        beginShape();
+        vertex(-ellipseSize/4, 0, ellipseSize/4);
+        vertex(-ellipseSize, 0, 0); 
+        vertex(-ellipseSize/4, 0, -ellipseSize/4);
+        vertex(-ellipseSize/4, 0, ellipseSize/4);
+        endShape();
+        beginShape();
+        vertex(ellipseSize/4, 0, ellipseSize/4);
+        vertex(ellipseSize, 0, 0);
+        vertex(ellipseSize/4, 0, -ellipseSize/4);
+        vertex(ellipseSize/4, 0, ellipseSize/4);
+        endShape();
+
+        popMatrix();
+    }
+
+    private void rotateShip() {
+        // Rotate ship towards player
+        float angle = atan2(player.getY() - cY, abs(player.getX() - cX));
+        // Adjust by 30 degrees
+        if (player.getX() > cX) angle += PI/6;
+        else angle -= PI/6;
+        rotateX(-angle);
+        // Base rotation Y on cZ
+        angle = atan2(player.getZ() - cZ - 300, abs(player.getX() - cX));
+        // Adjust by 30 degrees
+        if (player.getX() > cX) angle = -angle + PI/6;
+        else angle = -angle - PI/6;
+
+        rotateY(angle);
+    }
+
+    void updateLazers() {
+
+        for (int i = 0; i < lazers.length; i++) { // Reset lazers
+            if (lazers[i] != null && !lazers[i].isActive()) lazers[i] = null;
+        }
+        for (int i = 0; i < lazers.length; i++) { // Display lazers
+            if (lazers[i] != null && lazers[i].isActive()) lazers[i].update();
+            if (lazers[i] != null && lazers[i].isActive()) lazers[i].display();
+        }
+
+    }
+
+    void fireLazer() {
+        // Fire lazer at player based on fireRate
+        if (frameCount % fireRate != 0) return;
+        for (int i = 0; i < lazers.length; i++) {
+            if (lazers[i] == null) {
+                lazers[i] = new enemyLaser(cX, cY, cZ, targetX, targetY, targetZ, player);
+                break;
+            }
+        }
+    }
+
+    int getRadius() {
+        return ellipseSize+5;
+    }
+
+}
+
+class enemyLaser {
+
+    Player player;
+    int x, y, z;
+    int xTarget, yTarget, zTarget;
+    int speed, length;
+    boolean active = false;
+
+    enemyLaser(int x, int y, int z, int xTarget, int yTarget, int zTarget, Player player) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.xTarget = xTarget;
+        this.yTarget = yTarget;
+        this.zTarget = zTarget;
+        this.player = player;
+        speed = 100;
+        length = 10;
+        active = true;
+    }
+
+    enemyLaser() {
+        active = false;
+    }
+
+    void display() {
+        if (!active) return;
+        stroke(255,0,0);
+        strokeWeight(2);
+        // Draw line in direction of determined target of length length
+        beginShape();
+        vertex(x, y, z);
+        vertex(x + (xTarget - x) / speed * length, y + (yTarget - y) / speed * length, z + (zTarget - z) / speed * length);
+        vertex(x,y,z);
+        vertex(x + (xTarget - x) / speed * length, y + (yTarget - y) / speed * length, z + (zTarget - z) / speed * length);
+        endShape();
+    }
+
+    void update() {
+        if (zTarget < z) {
+            active = false;
+            return;
+        }
+        isTouchingPlayer();
+        x += (xTarget - x) / speed * length;
+        y += (yTarget - y) / speed * length;
+        z += abs((zTarget - z) / speed * length);
+    }
+
+    boolean isActive() {
+        return active;
+    }
+
+    boolean isTouchingPlayer() {
+        // Check if laser is touching player
+        if (x > player.getHitBoxLeft() && x < player.getHitBoxRight() && y < player.getHitBoxBottom() && y > player.getHitBoxTop() && z > player.getHitBoxFront() && z < player.getHitBoxBack()) {
+            player.takeDamage(difficulty);
+            soundHandler.playSound("hit");
+            active = false;
+            return true;
+        }
+
+        return false;
+    }
+
+}

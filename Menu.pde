@@ -3,7 +3,7 @@
 class Menu {
 
     portraitBox Gastor, Solara, unknown;
-    dialogueBox dialogueBoxL, dialogueBoxR;
+    dialogueBox dialogueBoxL, dialogueBoxR, dialogueBoxC;
     dialogueMenu dialogueMenu;
 
     Menu() {
@@ -12,6 +12,7 @@ class Menu {
         unknown = new portraitBox(width+500,0,"unknown");
         dialogueBoxL = new dialogueBox(width/2-140,-500,false);
         dialogueBoxR = new dialogueBox(width/2-350,-500,true);
+        dialogueBoxC = new dialogueBox(width/2-240,-500);
         dialogueMenu = new dialogueMenu(width/2-310,height+500);
     }
 
@@ -21,6 +22,7 @@ class Menu {
         unknown.display();
         dialogueBoxL.display();
         dialogueBoxR.display();
+        dialogueBoxC.display();
         dialogueMenu.display();
     }
 
@@ -30,6 +32,7 @@ class Menu {
         unknown.update();
         dialogueBoxL.update();
         dialogueBoxR.update();
+        dialogueBoxC.update();
         dialogueMenu.update();
     }
 
@@ -42,10 +45,19 @@ class Menu {
             dialogueBoxR.setSpeaker(speaker);
             dialogueBoxR.setContent(statement);
         }
+        else if (speaker.equals("You") || speaker.equals("")) {
+            dialogueBoxC.setSpeaker("");
+            dialogueBoxC.setContent(statement);
+        }
         else {
             dialogueBoxR.setSpeaker("???");
             dialogueBoxR.setContent(statement);
         }
+    }
+
+    void setContentOfCenterBox(String statement) {
+        dialogueBoxC.setSpeaker("");
+        dialogueBoxC.setContent(statement);
     }
 
     void setContentOfDialogueMenu(String[] options) {
@@ -144,6 +156,18 @@ class Menu {
         }
     }
 
+    void fadeDialogueBoxCIn() {
+        if (!dialogueBoxC.inFrame()) {
+            dialogueBoxC.fadeIn();
+        }
+    }
+
+    void fadeDialogueBoxCOut() {
+        if (!dialogueBoxC.outFrame()) {
+            dialogueBoxC.fadeOut();
+        }
+    }
+
     void fadeDialogueMenuIn() {
         if (!dialogueMenu.inFrame()) {
             dialogueMenu.fadeIn();
@@ -173,7 +197,7 @@ class Menu {
     }
 
     boolean allBoxesHidden() {
-        return Gastor.outFrameLeft() && Solara.outFrameRight() && unknown.outFrameRight() && dialogueBoxL.outFrame() && dialogueBoxR.outFrame();
+        return Gastor.outFrameLeft() && Solara.outFrameRight() && unknown.outFrameRight() && dialogueBoxL.outFrame() && dialogueBoxR.outFrame() && dialogueBoxC.outFrame() && dialogueMenu.outFrame();
     }
      
 

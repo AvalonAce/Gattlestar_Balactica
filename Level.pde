@@ -87,6 +87,7 @@ class levelHandler {
   void gameOver() {
     if (!restarted) {
       soundHandler.playSound("gameOver");
+      soundHandler.playMusic("pause");
       restarted = true;
     }
     setLevel(8);
@@ -151,10 +152,10 @@ class mainMenu extends Level {
 
   void update() {
     levelHandler.setPreviousLevel(0);
-    resetMatrix();
     startButton.update();
     quitButton.update();
     difficultyButton.update();
+    soundHandler.playMusic("intro");
   }
 
   void displayTitle() {
@@ -739,6 +740,7 @@ class gameLevel3 extends Level {
       // Cutscene
       if (currentSecond() > startTime + 5) {
         player.disableFire();
+        soundHandler.playMusic("outro");
 
         // Menu
         dialogueHandler.setCutscene(true);
@@ -771,7 +773,6 @@ class gameLevel3 extends Level {
             dialogueHandler.menu().fadeDialogueBoxROut();
             dialogueHandler.menu().fadeDialogueBoxCIn();
             dialogueHandler.menu().setContentOfCenterBox(dialogueHandler.getCurrentStatement());
-            
             return;
           }
           
@@ -936,7 +937,7 @@ class transition extends Level {
         }
       }
       else if (startTime < currentSecond()) {
-        
+        soundHandler.playMusic("pause");
       }
       
     }

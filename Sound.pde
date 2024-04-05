@@ -13,6 +13,9 @@ class soundHandler {
     SoundFile hit;
     SoundFile gameOver;
     SoundFile transition;
+    SoundFile introMusic;
+    SoundFile gameMusic;
+    SoundFile outroMusic;
     Sound s;
 
     boolean soundOn = true;
@@ -28,13 +31,35 @@ class soundHandler {
         hit = new SoundFile(p, "snd/hit.wav");
         gameOver = new SoundFile(p, "snd/game_over.wav");
         transition = new SoundFile(p, "snd/transition.wav");
+        introMusic = new SoundFile(p, "snd/intro_music.mp3");
+        outroMusic = new SoundFile(p, "snd/ending_music.mp3");
         s = new Sound(p);
     }
 
-    void update() {
+    void update() { }
 
-        
+    void playMusic(String music) {
+        if (soundOn) {
+            switch (music) {
+                case "intro":
+                    if (outroMusic.isPlaying()) outroMusic.pause();
+                    s.volume(0.5);
+                    if (!introMusic.isPlaying()) introMusic.loop();
+                    break;
+                case "outro":
+                    if (introMusic.isPlaying()) introMusic.pause();
+                    s.volume(0.5);
+                    if (!outroMusic.isPlaying()) outroMusic.loop();
+                    break;
+                case "pause":
+                    if (introMusic.isPlaying()) introMusic.pause();
+                    if (outroMusic.isPlaying()) outroMusic.pause();
+                break;
+            }
+        }
     }
+
+    
 
 
     void playSound(String currentSound) {

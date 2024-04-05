@@ -185,6 +185,7 @@ class deathScreenButton extends rButton {
                 exit();
             } else if (text.equals("Restart")) {
                 soundHandler.playSound("menuClick");
+                player.resetShipToCenter();
 
                 // Reset to level
                 int level = levelHandler.getPreviousLevel();

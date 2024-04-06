@@ -1,4 +1,6 @@
 // Nathan Dejesus - Gattlestar Balactica
+// REQUIRED LIBRARIES: Sound
+// How to Import -> (Sketch -> Import Libraries -> Manage Libraries -> Sound)
 
 Player player;
 Input input;

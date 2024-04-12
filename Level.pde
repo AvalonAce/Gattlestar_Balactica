@@ -975,14 +975,17 @@ class transition extends Level {
 
     private void levelDecide() {
       if (type == "Asteroid") {
+        dialogueHandler.resetToTrack(0);
         levelHandler.setLevel(2);
         played = false;
       }
       else if (type == "Monster") {
+        dialogueHandler.resetToTrack(2);
         levelHandler.setLevel(4);
         played = false;
       }
       else if (type == "Ship") {
+        dialogueHandler.resetToTrack(4);
         levelHandler.setLevel(6);
         played = false;
       }

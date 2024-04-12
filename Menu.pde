@@ -1,12 +1,13 @@
 // Nathan Dejesus - Menu Handling
 
-class Menu {
+class Menu { // Menu Class -- Dialogue Box Handler Essesntially
 
+    // Boxes
     portraitBox Gastor, Solara, unknown;
     dialogueBox dialogueBoxL, dialogueBoxR, dialogueBoxC;
     dialogueMenu dialogueMenu;
 
-    Menu() {
+    Menu() { // Cons
         Gastor = new portraitBox(-500,0,"Gastor");
         Solara = new portraitBox(width+500,0,"Solara");
         unknown = new portraitBox(width+500,0,"unknown");
@@ -16,7 +17,7 @@ class Menu {
         dialogueMenu = new dialogueMenu(width/2-310,height+500);
     }
 
-    void display() {
+    void display() { // Display all 
         Gastor.display();
         Solara.display();
         unknown.display();
@@ -26,7 +27,7 @@ class Menu {
         dialogueMenu.display();
     }
 
-    void update() {
+    void update() { // Update
         Gastor.update();
         Solara.update();
         unknown.update();
@@ -36,7 +37,7 @@ class Menu {
         dialogueMenu.update();
     }
 
-    void setContentOfSpeakerBox(String speaker, String statement) {
+    void setContentOfSpeakerBox(String speaker, String statement) { // Set Speaker Content
         if (speaker.equals("Gastor")) {
             dialogueBoxL.setSpeaker(speaker);
            dialogueBoxL.setContent(statement);
@@ -55,161 +56,164 @@ class Menu {
         }
     }
 
-    void setContentOfCenterBox(String statement) {
+    void setContentOfCenterBox(String statement) { // Set Center Box
         dialogueBoxC.setSpeaker("");
         dialogueBoxC.setContent(statement);
     }
 
-    void setContentOfDialogueMenu(String[] options) {
+    void setContentOfDialogueMenu(String[] options) { // Set Dialogue Menu Content
         dialogueMenu.setContent(options[0], options[1], options[2]);
     }
 
-    boolean optionChosen() {
+    boolean optionChosen() { // Option Chosen?
         return dialogueMenu.isChosen();
     }
 
-    int getChoice() {
+    int getChoice() { // Getter
         return dialogueMenu.getChoice();
     }
 
-    void fadeGastorIn() {
+    void fadeGastorIn() { // Fade 
         if (!Gastor.inFrameLeft()) {
             Gastor.fadeRight();
         }
     }
 
-    void fadeGastorOut() {
+    void fadeGastorOut() {// Fade 
         if (!Gastor.outFrameLeft()) {
             Gastor.fadeLeft();
         }
     }
 
-    void hideGastor() {
+    void hideGastor() {// Fade 
         Gastor.hide();
     }
 
-    void revealGastor() {
+    void revealGastor() {// Fade 
         Gastor.unhide();
     }
 
-    void fadeSolaraIn() {
+    void fadeSolaraIn() {// Fade 
         if (!Solara.inFrameRight()) {
             Solara.fadeLeft();
         }
     }
 
-    void fadeSolaraOut() {
+    void fadeSolaraOut() {// Fade 
         if (!Solara.outFrameRight()) {
             Solara.fadeRight();
         }
     }
 
-    void hideSolara() {
+    void hideSolara() {// Fade 
         Solara.hide();
     }
 
-    void revealSolara() {
+    void revealSolara() {// Fade 
         Solara.unhide();
     }
 
-    void fadeUnknownIn() {
+    void fadeUnknownIn() {// Fade 
         if (!unknown.inFrameRight()) {
             unknown.fadeLeft();
         }
     }
 
-    void fadeUnknownOut() {
+    void fadeUnknownOut() {// Fade 
         if (!unknown.outFrameRight()) {
             unknown.fadeRight();
         }
     }
 
-    void hideUnknown() {
+    void hideUnknown() {// Fade 
         unknown.hide();
     }
 
-    void revealUnknown() {
+    void revealUnknown() {// Fade 
         unknown.unhide();
     }
 
-    void fadeDialogueBoxLIn() {
+    void fadeDialogueBoxLIn() {// Fade 
         if (!dialogueBoxL.inFrame()) {
             dialogueBoxL.fadeIn();
         }
     }
 
-    void fadeDialogueBoxLOut() {
+    void fadeDialogueBoxLOut() {// Fade 
         if (!dialogueBoxL.outFrame()) {
             dialogueBoxL.fadeOut();
         }
     }
 
-    void fadeDialogueBoxRIn() {
+    void fadeDialogueBoxRIn() {// Fade 
         if (!dialogueBoxR.inFrame()) {
             dialogueBoxR.fadeIn();
         }
     }
 
-    void fadeDialogueBoxROut() {
+    void fadeDialogueBoxROut() {// Fade 
         if (!dialogueBoxR.outFrame()) {
             dialogueBoxR.fadeOut();
         }
     }
 
-    void fadeDialogueBoxCIn() {
+    void fadeDialogueBoxCIn() {// Fade 
         if (!dialogueBoxC.inFrame()) {
             dialogueBoxC.fadeIn();
         }
     }
 
-    void fadeDialogueBoxCOut() {
+    void fadeDialogueBoxCOut() {// Fade 
         if (!dialogueBoxC.outFrame()) {
             dialogueBoxC.fadeOut();
         }
     }
 
-    void fadeDialogueMenuIn() {
+    void fadeDialogueMenuIn() {// Fade 
         if (!dialogueMenu.inFrame()) {
             dialogueMenu.fadeIn();
         }
     }
 
-    void fadeDialogueMenuOut() {
+    void fadeDialogueMenuOut() {// Fade 
         if (!dialogueMenu.outFrame()) {
             dialogueMenu.fadeOut();
         }
     }
 
-    void hideDialogueBoxL() {
+    void hideDialogueBoxL() {// Fade 
         dialogueBoxL.hide();
     }
 
-    void revealDialogueBoxL() {
+    void revealDialogueBoxL() {// Fade 
         dialogueBoxL.unhide();
     }
 
-    void hideDialogueBoxR() {
+    void hideDialogueBoxR() {// Fade 
         dialogueBoxR.hide();
     }
 
-    void revealDialogueBoxR() {
+    void revealDialogueBoxR() {// Fade 
         dialogueBoxR.unhide();
     }
 
-    boolean allBoxesHidden() {
+    boolean allBoxesHidden() {// Fade 
         return Gastor.outFrameLeft() && Solara.outFrameRight() && unknown.outFrameRight() && dialogueBoxL.outFrame() && dialogueBoxR.outFrame() && dialogueBoxC.outFrame() && dialogueMenu.outFrame();
     }
      
 
 }
 
+// Health Class -- Includes Bar
 class Health { 
 
+    // Vars
     int health, maxHealth;
     int healthbarX, healthbarY, healthcaseX, healthcaseY;
     boolean isDead = false, hide = false;
     PImage healthcase, healthbar;
 
+    // Cons
     Health(int maxHealth) {
         this.maxHealth = maxHealth;
         health = maxHealth;
@@ -223,7 +227,7 @@ class Health {
         healthbarY = height - healthbar.height + 34;
     }
 
-    void display() {
+    void display() { // Display
         if (hide) return;
         pushMatrix();
 
@@ -246,48 +250,50 @@ class Health {
         popMatrix();
     }
 
-    void update() {
+    void update() { // Update
         if (health <= 0) {
             isDead = true;
         }
     }
 
-    void takeDamage(int amount) {
+    void takeDamage(int amount) { // Take Damage
         health = health - amount < 0 ? 0 : health - amount;
     }
 
-    void reset() {
+    void reset() { // Reset
         health = maxHealth;
         isDead = false;
     }
 
-    boolean isDead() {
+    boolean isDead() { // Is Dead
         return isDead;
     }
 
-    void hide() {
+    void hide() { // Hide
         hide = true;
     }
 
-    void unhide() {
+    void unhide() { // Reveal
         hide = false;
     }
 
-    int getHealth() {
+    int getHealth() { // Get Current Health
         return health;
     }
 
 }
 
-
+// Portrait Box Class -- 3 -> Gastor, Solara, Unknown
 class portraitBox {
 
+    // Vars
     PImage portrait;
     int x, y;
     int IN_FRAME_XL = 0, IN_FRAME_XR = width-300, OUT_FRAME_XL = -500, OUT_FRAME_XR = width+500;
     int fadeSpeed = 15;
     boolean hide = false;
 
+    // Cons
     portraitBox(int x, int y, String portrait) {
         this.x = x;
         this.y = y;
@@ -295,7 +301,7 @@ class portraitBox {
         this.portrait.resize(this.portrait.width/2, this.portrait.height/2);
     }
 
-    void display() {
+    void display() { // Display
         if (hide) return;
         pushMatrix();
         rotateX(-cam.getRotX());
@@ -306,25 +312,25 @@ class portraitBox {
         popMatrix();
     }
 
-    void update() {
+    void update() { // UPdate
         if (hide) return;
     }
 
-    void set(int x, int y) {
+    void set(int x, int y) { // set x and y
         this.x = x;
         this.y = y;
     }
 
-    void fadeRight() {
+    void fadeRight() {// Fade 
         x += fadeSpeed;
 
     }
 
-    void fadeLeft() {
+    void fadeLeft() {// Fade 
         x -= fadeSpeed;
     }
 
-    boolean inFrameLeft() {
+    boolean inFrameLeft() {// Fade 
         if (x >= IN_FRAME_XL) {
             return true;
         } else {
@@ -332,7 +338,7 @@ class portraitBox {
         }
     }
 
-    boolean inFrameRight() {
+    boolean inFrameRight() {// Fade 
         if (x <= IN_FRAME_XR) {
             return true;
         } else {
@@ -340,7 +346,7 @@ class portraitBox {
         }
     }
 
-    boolean outFrameLeft() {
+    boolean outFrameLeft() {// Fade 
         if (x <= OUT_FRAME_XL) {
             return true;
         } else {
@@ -348,7 +354,7 @@ class portraitBox {
         }
     }
 
-    boolean outFrameRight() {
+    boolean outFrameRight() {// Fade 
         if (x >= OUT_FRAME_XR) {
             return true;
         } else {
@@ -356,11 +362,11 @@ class portraitBox {
         }
     }
 
-    void hide() {
+    void hide() { // Hide
         hide = true;
     }
 
-    void unhide() {
+    void unhide() { // hide
         hide = false;
     }
 
@@ -368,10 +374,12 @@ class portraitBox {
 
 class levelBar { // level bar stored in level engine in Enemy file -- Graphics handled here
 
+    // Vars
     PImage levelCase, fullLevelBar, levelBar;
     int x, y;
     boolean hide = false;
 
+    // Const
     levelBar(int x, int y) {
         this.x = x;
         this.y = y;
@@ -382,7 +390,7 @@ class levelBar { // level bar stored in level engine in Enemy file -- Graphics h
         fullLevelBar.resize(fullLevelBar.width/3, fullLevelBar.height/3);
     }
 
-    void display() {
+    void display() { // Display Bar
         if (hide) return;
         
         pushMatrix();
@@ -396,7 +404,7 @@ class levelBar { // level bar stored in level engine in Enemy file -- Graphics h
         popMatrix();
     }
 
-    void update() {
+    void update() { // UPdate
         if (hide) return;
     }
 
@@ -405,15 +413,15 @@ class levelBar { // level bar stored in level engine in Enemy file -- Graphics h
         levelBar = fullLevelBar.get(0,0,fullLevelBar.width * progress/maxProgress, fullLevelBar.height);
     }
 
-    void hide() {
+    void hide() { // hide
         hide = true;
     }
 
-    void unhide() {
+    void unhide() { // reveal
         hide = false;
     }
 
-    void reset() {
+    void reset() { // reset level bar
         levelBar = fullLevelBar.get(0,0,0, fullLevelBar.height);
     }
 

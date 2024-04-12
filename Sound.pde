@@ -1,9 +1,9 @@
 // Nathan Dejesus - Sound Handler for the game
 import processing.sound.*;
 
-class soundHandler {
+class soundHandler { // Sound Handler Class
 
-
+    // SoundFiles
     SoundFile shoot;
     SoundFile enemyDeath;
     SoundFile playerDeath;
@@ -20,7 +20,7 @@ class soundHandler {
 
     boolean soundOn = true;
 
-    soundHandler(PApplet p) {
+    soundHandler(PApplet p) { // Init all sound files
 
         shoot = new SoundFile(p, "snd/shoot.wav");
         enemyDeath = new SoundFile(p, "snd/enemy_explosion.mp3");
@@ -36,9 +36,9 @@ class soundHandler {
         s = new Sound(p);
     }
 
-    void update() { }
+    void update() { } // EMpty Updatre
 
-    void playMusic(String music) {
+    void playMusic(String music) { // Play Music
         if (soundOn) {
             switch (music) {
                 case "intro":
@@ -62,7 +62,7 @@ class soundHandler {
     
 
 
-    void playSound(String currentSound) {
+    void playSound(String currentSound) { // Play Sound
         if (soundOn) {
             switch (currentSound) {
                 case "dialogueClick":
@@ -102,11 +102,11 @@ class soundHandler {
         }
     }
 
-    void setVolume(float volume) {
+    void setVolume(float volume) { // Set volume
         s.volume(volume);
     }
 
-    SoundFile getFile(String sound) {
+    SoundFile getFile(String sound) { // Get Sound File
         switch (sound) {
             case "shoot":
                 return shoot;

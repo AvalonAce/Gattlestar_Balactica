@@ -2,6 +2,7 @@
 
 class Player {
 
+    // Vars
     int x, y;
     Health health;
     int currentLazer;
@@ -9,6 +10,7 @@ class Player {
     boolean hidden, damaged, dead, disabledFire, invertedControls;
     Lazer[] lazers = new Lazer[8];
 
+    // Cons
     public Player() {
         x = width / 2;
         y = height / 2;
@@ -22,7 +24,7 @@ class Player {
         invertedControls = false;
     }
 
-    void display() {
+    void display() { // Display
         if (dead) return;
 
         // Lazer display
@@ -42,7 +44,7 @@ class Player {
         
     }
 
-    void update() {
+    void update() { // Player Update
         if (dead) {
             // Game over
             disableFire();
@@ -55,7 +57,7 @@ class Player {
         
     }
 
-    void takeDamage(int damage) {
+    void takeDamage(int damage) { // Take Damage Function
         health.takeDamage(damage);
         damaged = true;
         if (health.getHealth() <= 0) {
@@ -63,7 +65,7 @@ class Player {
         }
     }
     
-    private void checkfire() {
+    private void checkfire() { // Fire from ship on click
         if (disabledFire) return;
         // Fire lazer on mouse click
         // Delay fire rate using frameCount
@@ -78,15 +80,15 @@ class Player {
 
     }
     
-    void disableFire() {
+    void disableFire() { // disable fire
         disabledFire = true;
     }
 
-    void enableFire() {
+    void enableFire() { // enable fire
         disabledFire = false;
     }
 
-    private void lazerUpdate() {
+    private void lazerUpdate() { // Lazer Update
 
         for (int i = 0; i < lazers.length; i++) { // Reset lazers
             if (lazers[i] != null && !lazers[i].isActive()) lazers[i] = null;
@@ -98,7 +100,7 @@ class Player {
 
     }
 
-    void moveShip() {
+    void moveShip() { // Move ship based on inputs
         if (!invertedControls) {
             if (input.isGoingUp()) y -= 15;
             if (input.isGoingDown()) y += 15;
@@ -121,46 +123,46 @@ class Player {
         if (y > height - 25) y = height - 25;
     }
 
-    void hide() {
+    void hide() { // Hide
         hidden = true;
     }
 
-    void hideHealth() {
+    void hideHealth() { // hide Health
         health.hide();
     }
 
-    void unhideHealth() {
+    void unhideHealth() { // unhide health
         health.unhide();
     }
 
-    void deactivatePlayerCamera() {
+    void deactivatePlayerCamera() { // Player cam deactivate
         ship.deactivatePlayerCamera();
     }
 
-    void show() {
+    void show() { // show ship
         x = width / 2;
         y = height / 2;
         hidden = false;
     }
 
-    int getX() {
+    int getX() { // get x coord
         return x;
     }
 
-    int getY() {
+    int getY() { // get y coord
         return y;
     }
 
-    int getZ() {
+    int getZ() { // get z -> for animation
         return ship.getZ();
     } 
 
-    boolean isTouching(Enemy enemy) {
+    boolean isTouching(Enemy enemy) { // Enemy touching checker
         return ship.isTouching(enemy);
     }
 
 
-    void reset() {
+    void reset() { // Reset Player
         health.reset();
         ship.resetZ();
         currentLazer = 0;
@@ -170,68 +172,70 @@ class Player {
         invertedControls = false;
     }
 
-    void resetShipToCenter() {
+    void resetShipToCenter() { // Reset Ship to center of screen
         x = width / 2;
         y = height / 2;
     }
 
-    void drawTutorialMovement() {
+    void drawTutorialMovement() { // Tutorial Movement
         ship.drawTutorialMovement();
     }
 
-    boolean isDamaged() {
+    boolean isDamaged() { // Is damaged function
         return damaged;
     }
 
-    Lazer[] getLazers() {
+    Lazer[] getLazers() { // Getter of lazers
         return lazers;
     }
 
-    void animateForwardDrive(int level) {
+    void animateForwardDrive(int level) { // Animation out
         ship.animateForwardDrive(level);
     }
 
-    void invertControls() {
+    void invertControls() { // Invert controls
         invertedControls = true;
     }
 
-    int getHitBoxLeft() {
+    int getHitBoxLeft() { // GET HB
         return ship.getLeftHitBox();
     }
 
-    int getHitBoxRight() {
+    int getHitBoxRight() {// GET HB
         return ship.getRightHitBox();
     }
 
-    int getHitBoxTop() {
+    int getHitBoxTop() {// GET HB
         return ship.getTopHitBox();
     }
 
-    int getHitBoxBottom() {
+    int getHitBoxBottom() {// GET HB
         return ship.getBottomHitBox();
     }
 
-    int getHitBoxFront() {
+    int getHitBoxFront() {// GET HB
         return ship.getFrontHitBox();
     }
 
-    int getHitBoxBack() {
+    int getHitBoxBack() {// GET HB
         return ship.getBackHitBox();
     }
     
 
 }
 
+// Ship Class -- Draws Ship
 class Ship {
 
+    // Vars
     int x, y, z = 0;
     int hitBoxTop, hitBoxBottom, hitBoxLeft, hitBoxRight;
     int hitBoxBack, hitBoxFront;
 
 
-    Ship() {}
+    Ship() {} // Cons
 
-    void display(int x, int y, boolean damaged) {
+    void display(int x, int y, boolean damaged) { // Display -- Draw
         if (damaged) stroke(255,0,0);
         else stroke(255);
 
@@ -247,22 +251,22 @@ class Ship {
         
     }
 
-    void update() {}
+    void update() {} // Update - Empty
 
-    void activatePlayerCamera() {
+    void activatePlayerCamera() { // Activate Ship Cam
         cam.flyingFlag(true);
     }
 
-    void deactivatePlayerCamera() {
+    void deactivatePlayerCamera() { // Deact Shjp Cam
         cam.flyingFlag(false);
     }
 
-    private void setShipPosition(int x, int y) {
+    private void setShipPosition(int x, int y) { // Set Ship Pos
         this.x = x;
         this.y = y;
     }
 
-    private void setHitBox() {
+    private void setHitBox() { // Set HB
         hitBoxTop = y - 25;
         hitBoxBottom = y + 15;
         hitBoxLeft = x - 45;
@@ -285,7 +289,7 @@ class Ship {
         // popMatrix();
     }
 
-    private void drawBody(int x, int y) {
+    private void drawBody(int x, int y) { // Draw BOdy
         noFill();
         beginShape();
         vertex(x-35, y+12, z); // Back
@@ -307,7 +311,7 @@ class Ship {
         endShape();
     }
 
-    private void drawEngines(int x, int y) {
+    private void drawEngines(int x, int y) { // Draw Engines
         fill(1, 206, 178); 
         pushMatrix();
         translate(x,y,z+5);
@@ -321,7 +325,7 @@ class Ship {
         stroke(255);
     }
 
-    private void drawWings(int x, int y) {
+    private void drawWings(int x, int y) { // Draw Wings
         fill(1, 206, 178);
         beginShape(); // Left Wing
         vertex(x-27, y, z-30);
@@ -340,7 +344,7 @@ class Ship {
         endShape();
     }
 
-    void drawTutorialMovement() {
+    void drawTutorialMovement() { // Draw Tutorial Movement
         pushMatrix();
         translate(0,0,-50);
         // Draw W above ship, A left of ship, S below ship, D right of ship with triangles pointing in direction of movement
@@ -397,7 +401,7 @@ class Ship {
         return false;
     }
 
-    void animateForwardDrive(int level) {
+    void animateForwardDrive(int level) { // Animation Out
         if (z < -6000) {
             levelHandler.getLevels()[level].trueExit();
             return;
@@ -405,47 +409,50 @@ class Ship {
         z -= 100;
     }
 
-    void resetZ() {
+    void resetZ() { // Reset Z
         z = 0;
     }
 
-    int getZ() {
+    int getZ() { // Get Z
         return z;
     }
 
-    int getLeftHitBox() {
+    int getLeftHitBox() { // GET HB
         return hitBoxLeft;
     }
 
-    int getRightHitBox() {
+    int getRightHitBox() {// GET HB
         return hitBoxRight;
     }
 
-    int getTopHitBox() {
+    int getTopHitBox() {// GET HB
         return hitBoxTop;
     }
 
-    int getBottomHitBox() {
+    int getBottomHitBox() {// GET HB
         return hitBoxBottom;
     }
 
-    int getFrontHitBox() {
+    int getFrontHitBox() {// GET HB
         return hitBoxFront;
     }
 
-    int getBackHitBox() {
+    int getBackHitBox() {// GET HB
         return hitBoxBack;
     }
 
 }
 
+// Lazer Class for Player -- shoot, shoot
 class Lazer {
 
+    // Vars
     int x, y, z;
     int xTarget, yTarget, zTarget;
     int speed, length;
     boolean active = false;
 
+    // Cons
     Lazer(int x, int y, int z, int xTarget, int yTarget, int zTarget) {
         this.x = x;
         this.y = y;
@@ -458,11 +465,12 @@ class Lazer {
         active = true;
     }
 
+    // Cons - Empty
     Lazer() {
         active = false;
     }
 
-    void display() {
+    void display() { // Display
         if (!active) return;
         stroke(255,0,0);
         strokeWeight(2);
@@ -470,7 +478,7 @@ class Lazer {
         line(x, y, z, x + (xTarget - x) / speed, y + (yTarget - y) / speed, z + (zTarget - z) / speed);
     }
 
-    void update() {
+    void update() { // Update -- Move lazer forward
         if (!active) return;
         if (dist(x, y, z, xTarget, yTarget, zTarget) < 10) {
             active = false;
@@ -481,11 +489,11 @@ class Lazer {
         z += (zTarget - z) / speed;
     }
 
-    boolean isActive() {
+    boolean isActive() { // Get is active
         return active;
     }
 
-    boolean isTouching(Enemy enemy) {
+    boolean isTouching(Enemy enemy) { // Check contact on enemy
         
         if (enemy instanceof Asteroid || enemy instanceof StarEater || enemy instanceof BotFly || enemy instanceof enemyShip) {
             if (dist(x, y, enemy.getX(), enemy.getY()) < enemy.getRadius()) return true;
@@ -511,25 +519,27 @@ class Lazer {
 
 }
 
-class Input {
+class Input { // Input class to handle inputs
 
     // Handle input for player
     // WASD - Movement, Mouse1 - Fire
 
+    // Vars
     boolean up, down, left, right, fire;
     boolean wasGoingUp, wasGoingLeft, moving;
 
+    // Cons
     Input() {
         up = false; down = false; left = false; right = false; fire = false;
         wasGoingUp = false; wasGoingLeft = false; 
     }
 
-    void update() {
+    void update() { // Update
         directionCheck();
         
     }
 
-    void kPressed(char key) {
+    void kPressed(char key) { // Key Pressed
         if (dialogueHandler.isInCutscene() && !dialogueHandler.isInChoice() && key == ' ' ) {
             soundHandler.playSound("continueClick");
             dialogueHandler.nextStatement();
@@ -553,7 +563,7 @@ class Input {
         }
     }
 
-    void kReleased(char key) {
+    void kReleased(char key) { // Key released
         moving = false;
         if (key == 'w') up = false;
         if (key == 's') down = false;
@@ -562,7 +572,7 @@ class Input {
         
     }
 
-    void directionCheck() {
+    void directionCheck() { // Direction Checking for ship movement
         // No up or down at the same time
         if (wasGoingUp && up && down && moving) up = true;
         else if (!wasGoingUp && up && down && moving) down = true;
@@ -571,7 +581,7 @@ class Input {
         else if (!wasGoingLeft && left && right && moving) right = true;
     }
 
-    void mPressed() {
+    void mPressed() { // Mouse pressed
         if (dialogueHandler.isInCutscene() && !dialogueHandler.isInChoice()) {
             soundHandler.playSound("continueClick");
             dialogueHandler.nextStatement();
@@ -579,23 +589,23 @@ class Input {
         fire = true;
     }
 
-    void mReleased() {
+    void mReleased() { // Mouse released
         fire = false;
     }
 
-    boolean isGoingUp() {
+    boolean isGoingUp() { // direction getter
         return up;
     }
 
-    boolean isGoingDown() {
+    boolean isGoingDown() { // direction getter
         return down;
     }
 
-    boolean isGoingLeft() {
+    boolean isGoingLeft() { // direction getter
         return left;
     }
 
-    boolean isGoingRight() {
+    boolean isGoingRight() { // direction getter
         return right;
     }
 

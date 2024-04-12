@@ -2,21 +2,21 @@
 
 class dialogueHandler { // Handles the dialogue, Menu updates the dialogue boxes
 
+    // Handler variables
     dialogueTrack currentTrack;
     Menu menu;
     int sceneIndex = 0;
     boolean inCutscene = false, isChoice = false;
 
-    dialogueHandler() {
+    dialogueHandler() { // Constructor
         menu = new Menu();
         currentTrack = DIALOGUE[sceneIndex];
     }
 
-    void update() {
+    void update() { // Update Function -- Constatly Updating
         // Move to next scene
         if (currentTrack.getCurrentStatement().equals("END")) {
             inCutscene = false;
-            
         }
 
         // Set Dialogue Box -----------------------------------
@@ -69,12 +69,12 @@ class dialogueHandler { // Handles the dialogue, Menu updates the dialogue boxes
         menu.update();
     }
 
-    void display() {
+    void display() { // Display Function -- Display Menu
         menu.display();
     }
 
 
-    void reset() {
+    void reset() { // Reset All Vars and scenes
         // Restart the dialogue
         inCutscene = false;
         isChoice = false;
@@ -83,58 +83,58 @@ class dialogueHandler { // Handles the dialogue, Menu updates the dialogue boxes
         currentTrack = DIALOGUE[sceneIndex];
     }
 
-    void resetAllTracks() {
+    void resetAllTracks() { // Reset all Dialogue Tracks
         for (int i = 0; i < DIALOGUE.length; i++) {
             DIALOGUE[i].resetTrack();
         }
     }
 
-    void resetToTrack(int index) {
+    void resetToTrack(int index) { // Change and reset to track
         resetAllTracks();
         currentTrack = DIALOGUE[index];
     }
 
-    Menu menu() {
+    Menu menu() { // Get Menu
         return menu;
     }
 
-    void nextStatement() {
+    void nextStatement() { // Next Track statement
         currentTrack.nextStatement();
     }
 
-    void setCutscene(boolean cutscene) {
+    void setCutscene(boolean cutscene) { // Set cutscene.
         inCutscene = cutscene;
     }
 
-    void setChoice(boolean choice) {
+    void setChoice(boolean choice) { // Set choice.
         isChoice = choice;
     }
 
-    boolean isInCutscene() {
+    boolean isInCutscene() { // Get in cutscene
         return inCutscene;
     }
 
-    boolean isInChoice() {
+    boolean isInChoice() { // Get in choice
         return isChoice;
     }
 
-    String getCurrentSpeaker() {
+    String getCurrentSpeaker() { // Get Speaker
         return currentTrack.getSpeaker();
     }
 
-    String getCurrentStatement() {
+    String getCurrentStatement() { // Get current statement
         return currentTrack.getCurrentStatement();
     }
 
-    int getCurrentTrackStatementIndex() {
+    int getCurrentTrackStatementIndex() { // Get statement index
         return currentTrack.getCurrentStatementIndex();
     }
 
-    void setCurrentTrackStatementIndex(int index) {
+    void setCurrentTrackStatementIndex(int index) { // Set the statement index
         currentTrack.setCurrentStatement(index);
     }
 
-    void nextTrack() {
+    void nextTrack() { // Move to next track.
         sceneIndex++;
         if (sceneIndex < DIALOGUE.length) currentTrack = DIALOGUE[sceneIndex];
         else {
@@ -143,7 +143,7 @@ class dialogueHandler { // Handles the dialogue, Menu updates the dialogue boxes
         }
     }
 
-    int getChoice() {
+    int getChoice() { // Get player choice
         return menu.getChoice();
     }
 
@@ -151,8 +151,10 @@ class dialogueHandler { // Handles the dialogue, Menu updates the dialogue boxes
 
 }
 
+// Dialogue box for speaker class
 class dialogueBox {
 
+    // Vars
     PImage box;
     String name, line1, line2, line3;
     int x, y;
@@ -160,6 +162,7 @@ class dialogueBox {
     int fadeSpeed = 15;
     boolean reversed = false, hidden = false, center = false;
 
+    // Constructor
     dialogueBox(int x, int y, boolean reverse) {
         this.x = x;
         this.y = y;
@@ -170,6 +173,7 @@ class dialogueBox {
         line1 = ""; line2 = ""; line3 = ""; 
     }
 
+    // Second constructor for middle box
     dialogueBox(int x, int y) {
         this.x = x;
         this.y = y;
@@ -180,7 +184,7 @@ class dialogueBox {
         center = true;
     }
 
-    void display() {
+    void display() { // Display function -- draw all boxes, determined show in box itself
         if (hidden) return;
         if (center) drawCenterDialogueBox();
         else if (reversed) drawRightDialogueBox();
@@ -188,15 +192,15 @@ class dialogueBox {
         
     }
 
-    void update() {
+    void update() { // Update function -- Useless.
         if (hidden) return;
     }
 
-    void setSpeaker(String name) {
+    void setSpeaker(String name) { // Set Speaker
         this.name = name;
     }
 
-    void setContent(String l1) {
+    void setContent(String l1) { // Set Content of speaker box
         // if the line exceeds 29 characters, set the second line to the rest of the string.
         // If the line exceeds 58 characters, set second line to 35 characters and third line to the rest of the string.
         // Get last word and start from there
@@ -220,17 +224,17 @@ class dialogueBox {
 
     }
 
-    void fadeIn() {
+    void fadeIn() { // Fade box in 
         y += fadeSpeed;
         if (y >= IN_FRAME_Y) y = IN_FRAME_Y;
     }
     
-    void fadeOut() {
+    void fadeOut() { // fade box out
         y -= fadeSpeed;
         if (y <= OUT_FRAME_Y) y = OUT_FRAME_Y;
     }
 
-    boolean inFrame() {
+    boolean inFrame() { // Check in frame
         if (y >= IN_FRAME_Y) {
             return true;
         } else {
@@ -238,7 +242,7 @@ class dialogueBox {
         }
     }
 
-    boolean outFrame() {
+    boolean outFrame() { // Check out of frame
         if (y <= OUT_FRAME_Y) {
             return true;
         } else {
@@ -246,7 +250,7 @@ class dialogueBox {
         }
     }
 
-    void drawLeftDialogueBox() {
+    void drawLeftDialogueBox() { // Draw left dbox
         pushMatrix();
         rotateX(-cam.getRotX());
         rotateY(-cam.getRotY());
@@ -263,7 +267,7 @@ class dialogueBox {
         popMatrix();
     }
 
-    void drawRightDialogueBox() {
+    void drawRightDialogueBox() { // Draw right box
         pushMatrix();
         rotateX(-cam.getRotX());
         rotateY(-cam.getRotY());
@@ -280,7 +284,7 @@ class dialogueBox {
         popMatrix();
     }
 
-    void drawCenterDialogueBox() {
+    void drawCenterDialogueBox() { // Draw center box
         pushMatrix();
         rotateX(-cam.getRotX());
         rotateY(-cam.getRotY());
@@ -295,7 +299,7 @@ class dialogueBox {
         popMatrix();
     }
 
-    void drawTriangleL() {
+    void drawTriangleL() { // Draw small triangle.
         if (!inFrame()) return;
         fill(255); stroke(255);
         beginShape();
@@ -306,7 +310,7 @@ class dialogueBox {
         endShape();
     }
 
-    void drawTriangleR() {
+    void drawTriangleR() {  // Draw Small triangle
         if (!inFrame()) return;
         fill(255); stroke(255);
         beginShape();
@@ -317,19 +321,21 @@ class dialogueBox {
         endShape();
     }
 
-    void hide() {
+    void hide() { // Hide
         hidden = true;
     }
 
-    void unhide() {
+    void unhide() { // Unhide
         hidden = false;
     }
     
 
 }
 
+// Dialogue menu class for player choices
 class dialogueMenu {
 
+    // Vars
     PImage box;
     String choice1L1, choice1L2, choice2L1, choice2L2, choice3L1, choice3L2;
     int x, y, choice = 0;
@@ -337,7 +343,7 @@ class dialogueMenu {
     int fadeSpeed = 20;
     boolean chosen = false;
 
-    dialogueMenu(int x, int y) {
+    dialogueMenu(int x, int y) { // Constructor
         this.x = x;
         this.y = y;
         box = loadImage("img/dialogue_box.png");
@@ -348,7 +354,7 @@ class dialogueMenu {
         choice3L1 = "OPTION 3"; choice3L2 = "";
     }
 
-    void display() {
+    void display() { // Display Function -- Show box choices
         if (chosen) fadeOut();
         pushMatrix();
         rotateX(-cam.getRotX());
@@ -368,12 +374,12 @@ class dialogueMenu {
         popMatrix();
     }
 
-    void update() {
+    void update() { // Update Function -- Useless
         if (chosen) return;
 
     }
 
-    void setContent(String l1, String l2, String l3) {
+    void setContent(String l1, String l2, String l3) { // Set content of choices
         // If the line exceeds 35 characters, set the second line to the rest of the string
         // Get last word and start from there
         if (l1.length() > 35) {
@@ -402,12 +408,12 @@ class dialogueMenu {
         }
     }
 
-    void fadeIn() {
+    void fadeIn() { // Fade in box
         y -= fadeSpeed;
         if (y <= IN_FRAME_Y) y = IN_FRAME_Y;
     }
     
-    void fadeOut() {
+    void fadeOut() { // Fade out box
         y += fadeSpeed;
         if (y >= OUT_FRAME_Y) {
             y = OUT_FRAME_Y;
@@ -415,7 +421,7 @@ class dialogueMenu {
         }
     }
 
-    boolean inFrame() {
+    boolean inFrame() { // Box in Frame
         if (y <= IN_FRAME_Y) {
             return true;
         } else {
@@ -423,7 +429,7 @@ class dialogueMenu {
         }
     }
 
-    boolean outFrame() {
+    boolean outFrame() { // Box out of frame
         if (y >= OUT_FRAME_Y) {
             return true;
         } else {
@@ -431,7 +437,7 @@ class dialogueMenu {
         }
     }
 
-    void highlightChoice() {
+    void highlightChoice() { // Highlight choice based on mouse
         if (chosen) return;
         // Highlight portion of the menu based on mouse position by adding white rectangle, also sets choice variable
         pushMatrix();
@@ -470,19 +476,20 @@ class dialogueMenu {
         popMatrix();
     }
 
-    int getChoice() {
+    int getChoice() { // Get Player choice
         int temp = choice;
         choice = 0;
         chosen = false;
         return temp;
     }
 
-    boolean isChosen() {
+    boolean isChosen() { // Get if chosen.
         return chosen;
     }
 
 }
 
+// Dialogue Option Class for choices.
 class DialogueOption {
 
     String[] choices;
@@ -499,8 +506,10 @@ class DialogueOption {
 
 }
 
+// Dialogue Tracks for game -- AKA cutscene data
 class dialogueTrack {
     
+    // Vars
     String[] statements;
     String[] responses;
     String[] speaker;
@@ -510,12 +519,14 @@ class dialogueTrack {
     DialogueOption options;
     int currentStatement = 0, optionsAppearAt = 0;
 
+    // Constructor -- No Options
     dialogueTrack(String[] statements, String[] speaker) {
         this.statements = statements;
         this.speaker = speaker;
         options = null;
     }
 
+    // Constructor -- Options
     dialogueTrack(String[] statements, String[] speaker, DialogueOption options, String[] responses, int optionsAppearAt) {
         this.statements = statements;
         this.responses = responses;
@@ -524,68 +535,68 @@ class dialogueTrack {
         this.optionsAppearAt = optionsAppearAt;
     }
 
-    String getCurrentStatement() {
+    String getCurrentStatement() { // Get statement current
         if (currentStatement >= statements.length) return "END";
         return statements[currentStatement];
     }
     
-    String[] getOptions() {
+    String[] getOptions() { // Get Options
         return options.getChoices();
     }
 
-    String getSpeaker() {
+    String getSpeaker() { // Get Speaker
         if (currentStatement >= speaker.length) return "END";
         return speaker[currentStatement];
     }
 
-    void setSpeaker(String name) {
+    void setSpeaker(String name) { // Set Speaker
         speaker[currentStatement] = name;
     }
 
-    boolean optionAtStatement() {
+    boolean optionAtStatement() { // If option at statement
         if (currentStatement == optionsAppearAt) return true;
         return false;
     }
 
-    boolean optionIsFinalStatement() {
+    boolean optionIsFinalStatement() { // REQUIRED for bug -- option at final statement
         if (optionsAppearAt == statements.length-1) return true;
         return false;
     }
 
-    String getResponse(int choice) {
+    String getResponse(int choice) { // Get Response
         return responses[choice-1];
     }
 
-    String getStatement(int index) {
+    String getStatement(int index) { // Get statement
         return statements[index];
     }
 
-    void nextStatement() {
+    void nextStatement() { // Move to next statement
         currentStatement++;
     }
 
-    void setStatementPlaceholder(int choice) {
+    void setStatementPlaceholder(int choice) { // Set statement from response
         statements[currentStatement+1] = responses[choice-1];
     }
 
-    void setSpeakerPlaceholder(String name) {
+    void setSpeakerPlaceholder(String name) { // Set speaker from response
         speaker[currentStatement+1] = name;
     }
 
-    void resetTrack() {
+    void resetTrack() { // Reset track
         currentStatement = 0;
     }
 
-    void playSpeaker(int index) {
+    void playSpeaker(int index) { // UNUSED -- No sound implemented
         currentSound = statementSounds[index];
         currentSound.play();
     }
 
-    int getCurrentStatementIndex() {
+    int getCurrentStatementIndex() { // Get current statement index
         return currentStatement;
     }
 
-    void setCurrentStatement(int index) {
+    void setCurrentStatement(int index) { // Set current statement at index
         currentStatement = index;
     }
 
@@ -593,7 +604,7 @@ class dialogueTrack {
 
 
 
-// ALL DIALOGUE OPTIONS -- 1 Array, 7 dialogueTracks, All scenes have dialogue options
+// ALL DIALOGUE OPTIONS -- 1 Array, 6 dialogueTracks, All scenes have dialogue options
 
 dialogueTrack[] DIALOGUE = {
 

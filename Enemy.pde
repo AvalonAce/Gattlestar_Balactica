@@ -1,27 +1,30 @@
 // Nathan Dejesus - Enemies in the game, includes engines
 
+// Level Engine for each level -- Time, Generation, UI Level Bar
 class levelEngine {
 
+    // Vars
     levelBar progressBar;
     int progress = 0, difficultyTime = 18, currentLevel = 1;
     int MAX_PROGRESS = 100;
     boolean isPaused = false, isLevelOver = false;
     Enemy[] enemies;
 
+    // Constructor
     levelEngine() {
         progress = 0;
         progressBar = new levelBar(width/2-180, -40);
         decideDifficulty();
     }
 
-    void display() {
+    void display() { // Diplay -- Useless
         if (isPaused) return;
 
      }
 
-    void update() {
+    void update() { // Update Function -- Update Constant
         if (isLevelOver) {}
-        if (isPaused) {
+        if (isPaused) { // Engine Paused == Level Over
             if (!enemiesAllDead()) {
                 updateEnemies();
                 removeDeadEnemies();
@@ -46,7 +49,7 @@ class levelEngine {
         updateEnemies();
     }
 
-    void reset() {
+    void reset() { // Reset Engine
         isLevelOver = false;
         isPaused = false;
         progress = 0;
@@ -54,32 +57,32 @@ class levelEngine {
         decideDifficulty();
     }
 
-    void displayLevelBar() {
+    void displayLevelBar() { /// Display Engine
         progressBar.display();
     }
 
-    void hideLevelBar() {
+    void hideLevelBar() { // Hide Bar
         progressBar.hide();
     }
 
-    void unhideLevelBar() {
+    void unhideLevelBar() { // Unhide Bar
         progressBar.unhide();
     }
 
-    void resetLevelBar() {
+    void resetLevelBar() { // Reset bar
         progressBar.reset();
     }
 
-    void pause() {
+    void pause() { // Pause Engine
         isPaused = true;
     }
 
-    void resume() {
+    void resume() { // Resume Engine
         isPaused = false;
     }
 
 
-    void spawn() {
+    void spawn() { // Spawn enemies based on level
         if (isPaused) return;
 
         // Remove dead enemies
@@ -111,7 +114,7 @@ class levelEngine {
         }
     }
 
-    private void displayEnemies() {
+    private void displayEnemies() { // Display Enemies
         for (int i = 0; i < enemies.length; i++) {
             if (enemies[i] != null) {
                 enemies[i].display();
@@ -119,7 +122,7 @@ class levelEngine {
         }
     }
 
-    private void updateEnemies() {
+    private void updateEnemies() { // Update Enemoies
         for (int i = 0; i < enemies.length; i++) {
             if (enemies[i] != null) {
                 enemies[i].update();
@@ -145,7 +148,7 @@ class levelEngine {
 
     }
 
-    void removeDeadEnemies() {
+    void removeDeadEnemies() { // Remove Dead Enemies
         for (int i = 0; i < enemies.length; i++) {
             if (enemies[i] != null && enemies[i].isDead()) {
                 enemies[i] = null;
@@ -153,14 +156,14 @@ class levelEngine {
         }
     }
 
-    boolean enemiesAllDead() {
+    boolean enemiesAllDead() { // Check if enemies all dead
         for (int i = 0; i < enemies.length; i++) {
             if (enemies[i] != null) return false;
         }
         return true;
     }
 
-    private void decideDifficulty() {
+    private void decideDifficulty() { // Decide Level Time and Enemy Amount
         switch (difficulty) {
             case 1:
                 difficultyTime = 18; // 30 Seconds
@@ -195,19 +198,19 @@ class levelEngine {
         }
     }
 
-    boolean levelOver() {
+    boolean levelOver() { // Level Over getter
         return progress >= MAX_PROGRESS;
     }
 
-    void setCurrentLevel(int level) {
+    void setCurrentLevel(int level) { // Set current level
         currentLevel = level;
     }
 
-    boolean isPaused() {
+    boolean isPaused() { // Is paused getter
         return isPaused;
     }
 
-    void gameOver() {
+    void gameOver() { // Level Engine Game over
         
         isLevelOver = true;
         pause();
@@ -227,32 +230,34 @@ class levelEngine {
 }
 
 // Enemy classes ------------------------------
-class Enemy {
+class Enemy { // Universal Enemy Abstract Class
 
+    // Empty Vars
     int health, damage, acc;
     boolean isDead = false;
     int cX, cY, cZ;
 
+    // Empty Constructor
     Enemy() {}
 
-    void display() {}
+    void display() {} // Empty Display
 
-    void update() {
+    void update() { // Update Enemy, dead if off screen
         if (isDead()) return;
         if (ifPassedCamera()) isDead = true;
     }
     
-    boolean isDead() {
+    boolean isDead() { // Is dead getter
         return isDead;
     }
 
     
 
-    boolean ifPassedCamera() {
+    boolean ifPassedCamera() { // Is passed camera/dead getter
         return cZ > 800;
     }
 
-    void takeDamage(int damage) {
+    void takeDamage(int damage) { // Take Damage function for enemy
         health -= damage;
         if (health <= 0) {
             isDead = true;
@@ -260,57 +265,59 @@ class Enemy {
         }
     }
 
-    int getX() {
+    int getX() { // Get X
         return cX;
     }
 
-    int getY() {
+    int getY() { // Get Y
         return cY;
     }
 
-    int getZ() {
+    int getZ() { // Get Z
         return cZ;
     }
 
-    int getRadius() {
+    int getRadius() { // Get Rad
         return 0;
     }
 
-    int getLeftHitBox() {
+    int getLeftHitBox() { // Get HB - Leviathan
         return 0;
     }
 
-    int getRightHitBox() {
+    int getRightHitBox() { // Get HB - Leviathan
         return 0;
     }
 
-    int getTopHitBox() {
+    int getTopHitBox() {// Get HB - Leviathan
         return 0;
     }
 
-    int getBottomHitBox() {
+    int getBottomHitBox() {// Get HB - Leviathan
         return 0;
     }
 
-    int getFrontHitBox() {
+    int getFrontHitBox() {// Get HB - Leviathan
         return 0;
     }
 
-    int getBackHitBox() {
+    int getBackHitBox() {// Get HB - Leviathan
         return 0;
     }
 
-    void invertControls() {}
+    void invertControls() {} // Invert Controls - Bot Fly
 
 }
 
 // Asteroid class
 class Asteroid extends Enemy {
 
+    // Vars
     int ellipseSize = 1;
     int r, g, b;
     randomBox[] boxes;
 
+    // Constructor
     Asteroid() {
         setColor();
         setStats();
@@ -318,6 +325,7 @@ class Asteroid extends Enemy {
         setBoxes(); 
     }
 
+    // Constructor of size and pos
     Asteroid(int x, int y, int z,int size)  {
         this.cX = x;
         this.cY = y; 
@@ -330,21 +338,21 @@ class Asteroid extends Enemy {
         setBoxes();
     }
 
-    void display() {
+    void display() { // Display Function -- Draw Asteroid at pos
         if (isDead()) return;
 
         // Display asteroid
         drawAsteroid();
     }
 
-    void update() {
+    void update() { // Update Function -- Move Asteroid
         if (isDead()) return;
         super.update();
         // Update asteroid
         cZ += acc;
     }
 
-    private void setStats() {
+    private void setStats() { // Set Stats of Asteroid
         // Set stats based on global difficulty
         switch (difficulty) {
             case 1:
@@ -444,8 +452,8 @@ class Asteroid extends Enemy {
                 break;
         }
     }
-
-    void drawAsteroid() {
+ 
+    void drawAsteroid() { // Draw asteroid
         pushMatrix();
 
         translate(cX, cY, cZ);
@@ -467,13 +475,16 @@ class Asteroid extends Enemy {
 
 // Monster classes
 
+// Enemey Leviathan
 class Leviathan extends Enemy {
-    
+
+    // Vars
     int hitBoxLeft, hitBoxRight, hitBoxTop, hitBoxBottom, hitBoxFront, hitBoxBack;
     int shiftType = 1, flySpeed = 15, leviathanHeightSize = 50, leviathanWidthSize = 50;
     color[] colors = new color[3];
     color mainColor;
     
+    // Constructor
     Leviathan() {
         
 
@@ -489,14 +500,14 @@ class Leviathan extends Enemy {
 
     }
 
-    void display() {
+    void display() { // Display Function -- Draw Enemy
         if (isDead()) return;
 
         // Display Leviathan
         drawLeviathan();
     }
 
-    void update() {
+    void update() { // Update Enemy
         if (isDead()) return;
         super.update();
         // Update Monster
@@ -650,7 +661,7 @@ class Leviathan extends Enemy {
         }
     }
 
-    void drawLeviathan() {
+    void drawLeviathan() { // Draw Leviathan
         pushMatrix();
 
         // Leviathan consists of a box as the main body, a sphere as the head on the side of the shifttype, and two smaller boxes as the eyes
@@ -781,23 +792,23 @@ class Leviathan extends Enemy {
     }
 
 
-    private void shiftLeft() {
+    private void shiftLeft() { // Shift Left
         cX -= flySpeed;
     }
 
-    private void shiftRight() {
+    private void shiftRight() { // Shift Right
         cX += flySpeed;
     }
 
-    private void shiftUp() {
+    private void shiftUp() { // Shift UP
         cY -= flySpeed;
     }
 
-    private void shiftDown() {
+    private void shiftDown() { // Shift Down
         cY += flySpeed;
     }
 
-    private void updateHitBox() {
+    private void updateHitBox() { // Update Hitbox based on pos
         hitBoxLeft = cX - leviathanWidthSize;
         hitBoxRight = cX + leviathanWidthSize;
         hitBoxTop = cY + leviathanHeightSize;
@@ -806,49 +817,51 @@ class Leviathan extends Enemy {
         hitBoxBack = cZ + 50;
     }
 
-    int getLeftHitBox() {
+    int getLeftHitBox() { // Get HB
         return hitBoxLeft;
     }
 
-    int getRightHitBox() {
+    int getRightHitBox() { // Get HB
         return hitBoxRight;
     }
 
-    int getTopHitBox() {
+    int getTopHitBox() { // Get HB
         return hitBoxTop;
     }
 
-    int getBottomHitBox() {
+    int getBottomHitBox() { // Get HB
         return hitBoxBottom;
     }
 
-    int getFrontHitBox() {
+    int getFrontHitBox() { // Get HB
         return hitBoxFront;
     }
 
-    int getBackHitBox() {
+    int getBackHitBox() { // Get HB
         return hitBoxBack;
     }
 
 }
 
-class StarEater extends Enemy {
+class StarEater extends Enemy { // Star Eater Enemy Level 2
 
+    // Var
     int ellipseSize = 1;
 
+    // Cons
     StarEater() {
         setStats();
         setPos();
     }
 
-    void display() {
+    void display() { // Display Function
         if (isDead()) return;
 
         // Display Monster
         drawStarEater();
     }
 
-    void update() {
+    void update() { // Update Function
         if (isDead()) return;
         super.update();
         // Update Monster
@@ -885,7 +898,7 @@ class StarEater extends Enemy {
         }
     }
 
-    void setPos() {
+    void setPos() { // Set Position on Spawn
         cX = (int)random(-100, width+100);
         cY = (int)random(-100, height+100);
         cZ = (int)random(-1500, -1000);
@@ -893,7 +906,7 @@ class StarEater extends Enemy {
 
 
 
-    void drawStarEater() {
+    void drawStarEater() { // Draw Enemy -- Star Eater
         pushMatrix();
 
         // StarEater consists of a sphere with custom starfish shaped tentacles, and a mouth
@@ -937,7 +950,7 @@ class StarEater extends Enemy {
         popMatrix();
     }
 
-    int getRadius() {
+    int getRadius() { // Get Rad
         return ellipseSize;
     }
 
@@ -946,23 +959,25 @@ class StarEater extends Enemy {
 }
 
 
-class BotFly extends Enemy {
+class BotFly extends Enemy { // Enemey -- Bot Fly
 
+    // Var
     int ellipseSize = 1;
 
+    // Cons
     BotFly() {
         setStats();
         setPos();
     }
 
-       void display() {
+       void display() { // Display Function
         if (isDead()) return;
 
         // Display Monster
         drawBotFly();
     }
 
-    void update() {
+    void update() { // Update Function
         if (isDead()) return;
         super.update();
         // Update Monster
@@ -1002,14 +1017,14 @@ class BotFly extends Enemy {
         }
     }
 
-    void setPos() {
+    void setPos() { // Set Position on spawn
         cX = (int)random(100, width-100);
         cY = (int)random(100, height-100);
         cZ = (int)random(-1500, -500);
     }
 
 
-    void drawBotFly() {
+    void drawBotFly() { // Draw Bot FLy
         pushMatrix();
 
         // BotFly consists of a sphere with wings made of 2 ellipses
@@ -1030,11 +1045,11 @@ class BotFly extends Enemy {
         popMatrix();
     }
 
-    int getRadius() {
+    int getRadius() { // Get Rad
         return ellipseSize+10;
     }
 
-    void invertControls() {
+    void invertControls() { // Invert player controls on call
         player.invertControls();
     }
 
@@ -1043,12 +1058,14 @@ class BotFly extends Enemy {
 
 
 // Ship classes
-class enemyShip extends Enemy {
+class enemyShip extends Enemy { // Enemy -- Enemy Ship
 
+    // Vars
     int ellipseSize = 1, fireRate = 60;
     int targetX, targetY, targetZ;
     enemyLaser[] lazers;
 
+    // Cons
     enemyShip() {
         setStats();
         setPos();
@@ -1056,14 +1073,14 @@ class enemyShip extends Enemy {
         lazers = new enemyLaser[5];
     }
 
-    void display() {
+    void display() { // Display Function
         if (isDead()) return;
 
         // Display Monster
         drawShip();
     }
 
-    void update() {
+    void update() { // Update Function
         if (isDead()) return;
         super.update();
         // Update Monster
@@ -1105,7 +1122,7 @@ class enemyShip extends Enemy {
         }
     }
 
-    void setPos() {
+    void setPos() { // Set position
         // X and Y points are on a grid, Z is random
         cX = (int)random(-100, width+100) / ellipseSize * ellipseSize;
         cY = (int)random(-100, height+100) / ellipseSize * ellipseSize;
@@ -1166,7 +1183,7 @@ class enemyShip extends Enemy {
     
     }
 
-    void drawShip() {
+    void drawShip() { // Draw Ship
         pushMatrix();
 
         // Ship consists of a diamond shaped body, an small front window, and two wings, purple color
@@ -1225,7 +1242,7 @@ class enemyShip extends Enemy {
         rotateY(angle);
     }
 
-    void updateLazers() {
+    void updateLazers() { // Update Lazer
 
         for (int i = 0; i < lazers.length; i++) { // Reset lazers
             if (lazers[i] != null && !lazers[i].isActive()) lazers[i] = null;
@@ -1248,20 +1265,22 @@ class enemyShip extends Enemy {
         }
     }
 
-    int getRadius() {
+    int getRadius() { // Get Ship Rad
         return ellipseSize+5;
     }
 
 }
 
-class enemyLaser {
+class enemyLaser { // Enemy Lazer
 
+    // Vars
     Player player;
     int x, y, z;
     int xTarget, yTarget, zTarget;
     int speed, length;
     boolean active = false;
 
+    // Cons
     enemyLaser(int x, int y, int z, int xTarget, int yTarget, int zTarget, Player player) {
         this.x = x;
         this.y = y;
@@ -1275,11 +1294,11 @@ class enemyLaser {
         active = true;
     }
 
-    enemyLaser() {
+    enemyLaser() { // Empty Cons
         active = false;
     }
 
-    void display() {
+    void display() { // Dipslay
         if (!active) return;
         stroke(255,0,0);
         strokeWeight(2);
@@ -1292,7 +1311,7 @@ class enemyLaser {
         endShape();
     }
 
-    void update() {
+    void update() { // Update
         if (zTarget < z) {
             active = false;
             return;
@@ -1303,7 +1322,7 @@ class enemyLaser {
         z += abs((zTarget - z) / speed * length);
     }
 
-    boolean isActive() {
+    boolean isActive() { // Get is active
         return active;
     }
 

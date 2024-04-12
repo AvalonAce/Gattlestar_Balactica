@@ -1,15 +1,17 @@
 // Nathan Dejesus - Buttons for the game
 
-boolean mouseClicked = false;
+boolean mouseClicked = false; // Mouse click global var
 
-class rButton {
+class rButton { // Abstract regular button
 
+    // Button Vars
     String text;
     int x, y, z, w, h;
     boolean disabled = false, animating = false;
     levelHandler levelHandler;
     PImage img, uh_img;
 
+    // Constructor
     rButton(String text, int x, int y, int w, int h, levelHandler levelHandler, String img, String uh_img) {
         this.text = text;
         this.x = x;
@@ -22,11 +24,11 @@ class rButton {
         if (uh_img != null) this.uh_img = loadImage("img/" + uh_img);
     }
 
-    void display() {}
+    void display() {} // Empty Display 
 
-    void update() {}
+    void update() {} // Empty Update
 
-    void fadeBack() {
+    void fadeBack() { // Fade Back animation
         // Keep translating button along z-axis until gone
         pushMatrix();
         translate(0, 0, z);
@@ -39,27 +41,27 @@ class rButton {
         
     }
 
-    boolean mouseWithin() {
+    boolean mouseWithin() { // Mouse within button function
         return mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h;
     }
 
-    String getText() {
+    String getText() { // Getter
         return text;
     }
 
-    void setText(String text) {
+    void setText(String text) { // Setter
         this.text = text;
     }
 
-    void disable() {
+    void disable() { // Button Disable
         disabled = true;
     }
 
-    void enable() {
+    void enable() { // Button Enable
         disabled = false;
     }
 
-    void reset() {
+    void reset() { // Reset Button from fadeback
         disabled = false;
         animating = false;
         z = 0 ;
@@ -68,14 +70,15 @@ class rButton {
 
 }
 
-
+// Menu button extention of button
 class menuButton extends rButton {
 
+    // Constructor
     menuButton(String text, int x, int y, levelHandler levelHandler, String img, String uh_img) {
         super(text, x, y, 200, 100, levelHandler, img, uh_img);
     }
 
-    void display() {
+    void display() { // Display function -- called when displaying
 
         // Animation
         if (animating) fadeBack();
@@ -91,7 +94,6 @@ class menuButton extends rButton {
         textAlign(CENTER, CENTER);
 
         // Hover effect
-        
         pushMatrix();
         if (mouseWithin()) {
             textFont(mainFont, 38);
@@ -112,10 +114,10 @@ class menuButton extends rButton {
 
     }
 
-    void update() {
-        if (!disabled && mouseWithin() && mouseClicked) {
+    void update() { // Update Function -- called when updating
+        if (!disabled && mouseWithin() && mouseClicked) { // On click
             System.out.println(text);
-            if (text.equals("Start")) {
+            if (text.equals("Start")) { // Start Game
                 soundHandler.playSound("menuClick");
                 
                 // Start animation
@@ -132,9 +134,9 @@ class menuButton extends rButton {
                 // Auto difficulty if not set
                 if (difficulty == 0) levelHandler.changeDifficulty();
 
-            } else if (text.equals("Quit")) {
+            } else if (text.equals("Quit")) { // Quit Game
                 exit();
-            } else if (text.equals("Difficulty") || text.equals("Easy") || text.equals("Medium") || text.equals("Hard")){
+            } else if (text.equals("Difficulty") || text.equals("Easy") || text.equals("Medium") || text.equals("Hard")){ // Change Difficulty
                 soundHandler.playSound("menuClick");
                 levelHandler.changeDifficulty();
             }
@@ -146,13 +148,15 @@ class menuButton extends rButton {
     }
 }
 
+// Dead screen button extention
 class deathScreenButton extends rButton {
 
+    // Constructor
     deathScreenButton(String text, int x, int y, levelHandler levelHandler, String img, String uh_img) {
         super(text, x, y, 200, 100, levelHandler, img, uh_img);
     }
 
-    void display() {
+    void display() { // Display Function -- On dead screen button display
         
         stroke(255);
         fill(255);
@@ -177,13 +181,13 @@ class deathScreenButton extends rButton {
 
     }
 
-     void update() {
-        if (!disabled && mouseWithin() && mouseClicked) {
+     void update() { // Update Function -- On dead screen button update 
+        if (!disabled && mouseWithin() && mouseClicked) { // On click
             System.out.println(text);
             
-            if (text.equals("Quit")) {
+            if (text.equals("Quit")) { // Quit
                 exit();
-            } else if (text.equals("Restart")) {
+            } else if (text.equals("Restart")) { // Restart
                 soundHandler.playSound("menuClick");
                 player.resetShipToCenter();
 

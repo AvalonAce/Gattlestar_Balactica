@@ -56,35 +56,35 @@ class levelHandler {
     
   }
 
-  void setLevel(int newLevel) {
+  void setLevel(int newLevel) { // Setter
     currentLevel = levels[newLevel];
   }
 
-  void restartSound() {
+  void restartSound() { // Restarts Sound
     restarted = false;
   }
 
-  Level[] getLevels() {
+  Level[] getLevels() { // Getter
     return levels;
   }
 
-  int getPreviousLevel() {
+  int getPreviousLevel() { // Getter
     return previousLevel;
   }
 
-  void setPreviousLevel(int newPreviousLevel) {
+  void setPreviousLevel(int newPreviousLevel) { // Setter
     previousLevel = newPreviousLevel;
   }
 
-  void quit() {
+  void quit() { // Quits
     currentLevel.quit();
   }
 
-  levelEngine getLevelEngine() {
+  levelEngine getLevelEngine() { // Getter
     return currentLevel.getLevelEngine();
   }
 
-  void gameOver() {
+  void gameOver() { // Game Over
     if (!restarted) {
       soundHandler.playSound("gameOver");
       soundHandler.playMusic("pause");
@@ -93,46 +93,47 @@ class levelHandler {
     setLevel(8);
   }
 
-  void newMainMenu() {
+  void newMainMenu() { // New Main Menu
     levels[0] = new mainMenu(this, soundHandler);
   }
 
 }
 
-class Level {
+class Level { // Level Class
 
-  void display() {}
+  void display() {} // Display Function
 
-  void update() {}
+  void update() {} // Update Function
 
-  rButton getButton(String buttonName) {
+  rButton getButton(String buttonName) { // Get Button Function
     return null;
   }
 
-   void quit() {
+   void quit() { // Quit Function
     exit();
   }
 
-  void reset() {}
+  void reset() {} // Reset Function
 
-  levelEngine getLevelEngine() {
+  levelEngine getLevelEngine() { // Get Level Engine Function
     return null;
   }
 
-  void trueExit() {}
-
+  void trueExit() {} // True Exit Function
+ 
 }
 
 boolean tanim = false;
-class mainMenu extends Level {
+class mainMenu extends Level { // Main Menu Class
 
+  // Main Menu Variables
   rButton startButton, quitButton, difficultyButton;
   levelHandler levelHandler;
   soundHandler soundHandler;
   float tHeight = height/4.0;
 
 
-  mainMenu(levelHandler levelHandler, soundHandler soundHandler) {
+  mainMenu(levelHandler levelHandler, soundHandler soundHandler) { // Main Menu Constructor
     this.levelHandler = levelHandler;
     this.soundHandler = soundHandler;
     // Main Menu Buttons ---------------------
@@ -142,7 +143,7 @@ class mainMenu extends Level {
 
   }
 
-  void display() {
+  void display() { // Display Function
     background(0);
     displayTitle();
     startButton.display();
@@ -150,7 +151,7 @@ class mainMenu extends Level {
     difficultyButton.display();
   }
 
-  void update() {
+  void update() { // Update Function
     levelHandler.setPreviousLevel(0);
     startButton.update();
     quitButton.update();
@@ -158,7 +159,7 @@ class mainMenu extends Level {
     soundHandler.playMusic("intro");
   }
 
-  void displayTitle() {
+  void displayTitle() { // Display Title Function
     fill(255);
     textFont(titleFont,148);
     textAlign(CENTER);
@@ -173,7 +174,7 @@ class mainMenu extends Level {
         tHeight = height/2 - 50;
       }
       
-    } else if (tanim && startTime + 4000 < millis()) {
+    } else if (tanim && startTime + 4000 < millis()) { // Reset Title
       tanim = false;
       graphicsHandler.setStarFlag(false);
       graphicsHandler.setTitleFlag(false);
@@ -183,7 +184,7 @@ class mainMenu extends Level {
     }
 
     // Based on difficulty, change add title animation
-    switch (difficulty) {
+    switch (difficulty) {  
       case 1:
         text("Gattlestar\nBalactica", width/2, tHeight);
         break;
@@ -204,7 +205,7 @@ class mainMenu extends Level {
     
   }
 
-  rButton getButton(String buttonName) {
+  rButton getButton(String buttonName) { // Get Button Function 
     if (buttonName == "Start") {
       return startButton;
     } else if (buttonName == "Quit") {
@@ -215,13 +216,13 @@ class mainMenu extends Level {
     return null;
   }
 
-  void reset() {
+  void reset() {  // Reset Function
     tHeight = height/4.0;
     newButtons();
     tanim = false;
   }
 
-  void newButtons() {
+  void newButtons() { // New Buttons Function
     startButton = new menuButton("Start", width/2 - 300, height/2 + 50, levelHandler, "", "menu_button_UH.png");
     quitButton = new menuButton("Quit",width/2 + 100, height/2 + 50, levelHandler, "", "menu_button_UH.png");
     difficultyButton = new menuButton( "Difficulty",width/2 - 100, height/2 + 250, levelHandler, "", "menu_button_UH.png");
@@ -232,25 +233,26 @@ class mainMenu extends Level {
 
 }
 
-class gameLevel1 extends Level {
-
+class gameLevel1 extends Level { // Game Level 1 Class
+  
+    // Game Level 1 Variables
     levelEngine levelEngine;
     boolean introFlag = true, exitFlag = false, trueExitFlag = false;
 
-    gameLevel1() {
+    gameLevel1() { // Game Level 1 Constructor
       levelEngine = new levelEngine();
-    }
+    } 
 
-    void display() {
+    void display() { // Display Function
       background(0);
       levelEngine.setCurrentLevel(1);
       levelEngine.unhideLevelBar();
       levelEngine.displayLevelBar();
 
 
-      if (introFlag) intro();
-      else if (exitFlag) outro();
-      else {
+      if (introFlag) intro(); // Intro
+      else if (exitFlag) outro(); // Outro
+      else { // Level 1
         // Graphics
         graphicsHandler.setFastStarAcc();
 
@@ -283,11 +285,11 @@ class gameLevel1 extends Level {
     
     }
 
-    void update() {
+    void update() { // Update Function
       levelHandler.setPreviousLevel(2);
     }
 
-    void intro() {
+    void intro() { // Intro Function
       graphicsHandler.setStarFlag(true);
       graphicsHandler.setTitleFlag(false);
       graphicsHandler.setSlowStarAcc();
@@ -332,8 +334,8 @@ class gameLevel1 extends Level {
       
     }
 
-    void outro() {
-      // Player
+    void outro() { // Outro Function
+      // Player 
       player.display();
       player.update();
       
@@ -407,41 +409,42 @@ class gameLevel1 extends Level {
     }
 
 
-    levelEngine getLevelEngine() {
+    levelEngine getLevelEngine() { // Get Level Engine Function
       return levelEngine;
     }
 
-    void reset() {
+    void reset() { // Reset Function
       introFlag = true;
       exitFlag = false;
       trueExitFlag = false;
       levelEngine.reset();
     }
 
-    void trueExit() {
+    void trueExit() { // True Exit Function
       trueExitFlag = true;
     }
 
 
 }
 
-class gameLevel2 extends Level {
+class gameLevel2 extends Level { // Game Level 2 Class
 
+  // Game Level 2 Variables
   levelEngine levelEngine;
   boolean introFlag = true, exitFlag = false, trueExitFlag = false;
 
-  gameLevel2() {
+  gameLevel2() { // Game Level 2 Constructor
       levelEngine = new levelEngine();
   }
 
-  void display() {
+  void display() { // Display Function
     background(0);
     levelEngine.setCurrentLevel(2);
     levelEngine.unhideLevelBar();
     levelEngine.displayLevelBar();
 
-    if (introFlag) intro();
-    else if (exitFlag) outro();
+    if (introFlag) intro(); // Intro
+    else if (exitFlag) outro(); // Outro
     else { // Level 2
       // Graphics
       graphicsHandler.setFastStarAcc();
@@ -477,11 +480,11 @@ class gameLevel2 extends Level {
     
   }
 
-  void update() {
+  void update() { // Update Function
     levelHandler.setPreviousLevel(4);
-  }
+  } 
 
-  void intro() {
+  void intro() { // Intro Function
       graphicsHandler.setStarFlag(true);
       graphicsHandler.setTitleFlag(false);
       graphicsHandler.setSlowStarAcc();
@@ -533,7 +536,7 @@ class gameLevel2 extends Level {
     }
   
 
-  void outro() {
+  void outro() { // Outro Function
     // Player
       player.display();
       player.update();
@@ -604,49 +607,50 @@ class gameLevel2 extends Level {
   }
 
 
-  levelEngine getLevelEngine() {
+  levelEngine getLevelEngine() { // Get Level Engine Function
       return levelEngine;
   }
 
-  void reset() {
+  void reset() { // Reset Function
     introFlag = true;
     exitFlag = false;
     levelEngine.reset();
   }
 
-  void trueExit() {
+  void trueExit() { // True Exit Function
       trueExitFlag = true;
   }
 
 }
 
-class gameLevel3 extends Level {
+class gameLevel3 extends Level { // Game Level 3 Class
 
+  // Game Level 3 Variables
   Planet planet;
   levelEngine levelEngine;
   boolean introFlag = true, exitFlag = false, trueExitFlag = false, extraChoice = false;
 
-  gameLevel3() {
+  gameLevel3() { // Game Level 3 Constructor
       levelEngine = new levelEngine();
       planet = new Planet(width/2, height/2,-6000,500);
   }
 
-  void display() {
+  void display() { // Display Function
     background(0);
     levelEngine.setCurrentLevel(3);
     levelEngine.displayLevelBar();
     
     // Planet
-    if (!planet.isHidden()) {
+    if (!planet.isHidden()) { 
       planet.drawPlanet();
       planet.update();
     }
 
-    if (introFlag) intro();
-    else if (exitFlag) outro();
+    if (introFlag) intro(); // Intro
+    else if (exitFlag) outro(); // Outro
     else { // Level 3
       // Graphics
-      graphicsHandler.setFastStarAcc();
+      graphicsHandler.setFastStarAcc(); 
 
       // Level Start
       levelEngine.resume();
@@ -676,11 +680,11 @@ class gameLevel3 extends Level {
     }
   }
 
-  void update() {
+  void update() { // Update Function
     levelHandler.setPreviousLevel(6);
   }
 
-  void intro() {
+  void intro() { // Intro Function
     graphicsHandler.setStarFlag(true);
     graphicsHandler.setTitleFlag(false);
     graphicsHandler.setSlowStarAcc();
@@ -690,7 +694,7 @@ class gameLevel3 extends Level {
     levelEngine.reset();
     levelEngine.pause();
 
-    if (currentSecond() > startTime + 2) {
+    if (currentSecond() > startTime + 2) { // Several Seconds in
       player.disableFire();
 
       // Menu
@@ -725,7 +729,7 @@ class gameLevel3 extends Level {
 
   }
 
-  void outro() {
+  void outro() { // Outro Function
       // Player
       player.display();
       player.update();
@@ -738,7 +742,7 @@ class gameLevel3 extends Level {
       graphicsHandler.setSlowStarAcc();
 
       // Cutscene
-      if (currentSecond() > startTime + 5) {
+      if (currentSecond() > startTime + 5) { // Several Seconds in
         player.disableFire();
         soundHandler.playMusic("outro");
 
@@ -855,22 +859,22 @@ class gameLevel3 extends Level {
 
   }
 
-  levelEngine getLevelEngine() {
+  levelEngine getLevelEngine() { // Get Level Engine Function
       return levelEngine;
   }
 
-  void reset() {
+  void reset() { // Reset Function
     introFlag = true;
     exitFlag = false;
     extraChoice = false;
     levelEngine.reset();
   }
 
-  void trueExit() {
+  void trueExit() { // True Exit Function
       trueExitFlag = true;
   }
-
-  boolean getExtraChoice() {
+ 
+  boolean getExtraChoice() { // Get Extra Choice Function
     return extraChoice;
   }
 
@@ -879,13 +883,14 @@ class gameLevel3 extends Level {
 }
 
 
-class transition extends Level {
+class transition extends Level {  // Transition Class
 
+    // Transition Variables
     String type, title, level;
     SoundFile transitionSound;
     boolean played = false;
 
-    transition(String type) {
+    transition(String type) { // Transition Constructor
       this.type = type;
       title = ""; level = "";
       transitionSound = soundHandler.getFile("transition");
@@ -893,14 +898,14 @@ class transition extends Level {
 
 
 
-    void display() {
+    void display() { // Display Function
       background(0);
       graphicsHandler.setStarFlag(false);
 
-      if (startTime + 8 < currentSecond()) {
+      if (startTime + 8 < currentSecond()) { // Transition Level
         levelDecide();
       }
-      else if (startTime + 6 < currentSecond()) {}
+      else if (startTime + 6 < currentSecond()) {}  // Nothing
       else if (startTime + 3 < currentSecond()) {
         // Transition Word Display
         transitionTitle();
@@ -936,17 +941,17 @@ class transition extends Level {
           played = true;
         }
       }
-      else if (startTime < currentSecond()) {
+      else if (startTime < currentSecond()) { // Start Transition
         soundHandler.playMusic("pause");
       }
       
     }
 
-    void update() {
+    void update() { // Update Function
       player.deactivatePlayerCamera();
     }
 
-    private void transitionTitle() {
+    private void transitionTitle() { // Transition Title Function
       textFont(titleFont); textAlign(CENTER, CENTER);
       switch (type) {
         case "Asteroid":
@@ -973,7 +978,7 @@ class transition extends Level {
 
     }
 
-    private void levelDecide() {
+    private void levelDecide() { // Level Decide Function
       if (type == "Asteroid") {
         dialogueHandler.resetToTrack(0);
         levelHandler.setLevel(2);
@@ -1005,24 +1010,25 @@ class transition extends Level {
 
 }
 
-class deathScreen extends Level {
+class deathScreen extends Level { // Death Screen Class
 
+    // Death Screen Variables
     rButton restartButton, quitButton;
     levelHandler levelHandler;
     
-    deathScreen(levelHandler levelHandler) {
+    deathScreen(levelHandler levelHandler) { // Death Screen Constructor
       restartButton = new deathScreenButton("Restart", width/2 - 300, height/2 + 50, levelHandler, "", "menu_button_UH.png");
       quitButton = new deathScreenButton("Quit",width/2 + 100, height/2 + 50, levelHandler, "", "menu_button_UH.png");
     }
 
-    void display() {
+    void display() { // Display Function
       background(0);
       titleDisplay();
       restartButton.display();
       quitButton.display();
     }
 
-    void update() {
+    void update() { // Update Function
       // Graphics
       graphicsHandler.setStarFlag(false);
       player.deactivatePlayerCamera();
@@ -1030,7 +1036,7 @@ class deathScreen extends Level {
       quitButton.update();
     }
 
-    private void titleDisplay() {
+    private void titleDisplay() { // Title Display Function
       pushMatrix();
       fill(255);
       textFont(titleFont,148);
